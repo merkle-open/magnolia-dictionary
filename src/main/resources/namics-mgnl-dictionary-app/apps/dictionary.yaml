@@ -1,0 +1,239 @@
+appClass: info.magnolia.ui.contentapp.ContentApp
+class: info.magnolia.ui.contentapp.ContentAppDescriptor
+
+subApps:
+  browser:
+    subAppClass: info.magnolia.ui.contentapp.browser.BrowserSubApp
+    class: info.magnolia.ui.contentapp.browser.BrowserSubAppDescriptor
+    actionbar:
+      defaultAction: editLabel
+      sections:
+        - name: label
+          groups:
+            - name: editActions
+              items:
+                - name: editLabel
+                - name: deleteExpired
+            - name: importexport
+              items:
+                - name: exportLabels
+            - name: activateActions
+              items:
+                - name: activate
+                - name: deactivate
+          availability:
+            nodeTypes:
+              - mgnl:label
+        - name: root
+          groups:
+            - name: importexport
+              items:
+                - name: exportLabels
+                - name: importLabels
+            - name: dictionary
+              items:
+                - name: activateAll
+                - name: deleteAllExpired
+          availability:
+            root: true
+    actions:
+      exportLabels:
+        icon: icon-export
+        class: XlsExportActionDefinition
+        properties:
+          - "jcrName"
+          - "name"
+          - "value"
+          - "de"
+          - "fr"
+          - "it"
+          - "mgnl:created"
+          - "mgnl:lastModified"
+          - "mgnl:lastActivated"
+        availability:
+          multiple: true
+          root: true
+          nodeTypes:
+            - mgnl:label
+      importLabels:
+        icon: icon-import
+        name: import
+        dialogName: namics-mgnl-dictionary-app:import/importXlsDialog
+        class: info.magnolia.ui.framework.action.OpenCreateDialogActionDefinition
+        availability:
+          root: true
+          writePermissionRequired: true
+      addLabel:
+        subAppId: detail
+        icon: icon-add-item
+        nodeType: mgnl:label
+        appName: dictionary
+        class: info.magnolia.ui.contentapp.detail.action.CreateItemActionDefinition
+        availability:
+          root: true
+          writePermissionRequired: true
+          nodeTypes:
+            - mgnl:folder
+      addFolder:
+        icon: icon-add-folder
+        class: info.magnolia.ui.framework.action.AddFolderActionDefinition
+        availability:
+          root: true
+          writePermissionRequired: true
+      editFolder:
+        icon: icon-edit
+        dialogName: ui-framework:folder
+        class: info.magnolia.ui.framework.action.OpenEditDialogActionDefinition
+        availability:
+          root: true
+          writePermissionRequired: true
+      deleteFolder:
+        icon: icon-delete
+        class: info.magnolia.ui.framework.action.DeleteItemActionDefinition
+        availability:
+          root: true
+          writePermissionRequired: true
+      editLabel:
+        subAppId: detail
+        icon: icon-edit
+        appName: dictionary
+        class: info.magnolia.ui.contentapp.detail.action.EditItemActionDefinition
+        availability:
+          writePermissionRequired: true
+          nodeTypes:
+            - mgnl:label
+      deleteLabel:
+        icon: icon-delete
+        class: info.magnolia.ui.framework.action.DeleteItemActionDefinition
+        availability:
+          writePermissionRequired: true
+      activate:
+        availability:
+          multiple: true
+          writePermissionRequired: true
+          rules:
+            - implementationClass: info.magnolia.ui.framework.availability.IsNotDeletedRule
+        command: activate
+        icon: icon-publish
+        catalog: versioned
+        class: info.magnolia.ui.framework.action.ActivationActionDefinition
+      deactivate:
+        availability:
+          multiple: true
+          writePermissionRequired: true
+          rules:
+            - implementationClass: info.magnolia.ui.framework.availability.IsNotDeletedRule
+            - implementationClass: info.magnolia.ui.framework.availability.IsPublishedRule
+        command: deactivate
+        icon: icon-unpublish
+        catalog: versioned
+        class: info.magnolia.ui.framework.action.DeactivationActionDefinition
+      activateAll:
+        availability:
+          root: true
+          writePermissionRequired: true
+        command: activateAll
+        icon: icon-publish
+        recursive: true
+        class: info.magnolia.ui.framework.action.ActivationActionDefinition
+      deleteAllExpired:
+        icon: icon-delete
+        implementationClass: DeleteAllExpiredLabelNodeAction
+        class: info.magnolia.ui.api.action.ConfiguredActionDefinition
+        availability:
+          root: true
+          writePermissionRequired: true
+      deleteExpired:
+        icon: icon-delete
+        implementationClass: DeleteExpiredLabelNodeAction
+        class: info.magnolia.ui.api.action.ConfiguredActionDefinition
+        availability:
+          multiple: true
+          writePermissionRequired: true
+    workbench:
+      dropConstraintClass: info.magnolia.ui.workbench.tree.drop.AlwaysTrueDropConstraint
+      editable: false
+      contentViews:
+        - name: tree
+          class: info.magnolia.ui.workbench.tree.TreePresenterDefinition
+          sortable: true
+          columns: &myColumns
+            - name: name
+              editable: true
+              sortable: true
+              propertyName: jcrName
+              class: info.magnolia.ui.workbench.column.definition.PropertyColumnDefinition
+            - name: value
+              editable: true
+              sortable: true
+              propertyName: value
+              class: info.magnolia.ui.workbench.column.definition.PropertyColumnDefinition
+            - name: multi
+              editable: false
+              sortable: false
+              propertyName: multi
+              formatterClass: MultiColumnFormatter
+              class: info.magnolia.ui.workbench.column.definition.PropertyColumnDefinition
+            - name: expired
+              editable: false
+              sortable: true
+              formatterClass: LabelExpiredColumnFormatter
+              class: info.magnolia.ui.workbench.column.definition.PropertyColumnDefinition
+            - name: status
+              width: 45
+              displayInChooseDialog: false
+              formatterClass: info.magnolia.ui.workbench.column.StatusColumnFormatter
+              class: info.magnolia.ui.workbench.column.definition.StatusColumnDefinition
+            - name: moddate
+              width: 160
+              sortable: true
+              displayInChooseDialog: false
+              formatterClass: info.magnolia.ui.workbench.column.DateColumnFormatter
+              propertyName: mgnl:lastModified
+              class: info.magnolia.ui.workbench.column.definition.MetaDataColumnDefinition
+        - name: list
+          class: info.magnolia.ui.workbench.list.ListPresenterDefinition
+          columns: *myColumns
+        - name: search
+          class: info.magnolia.ui.workbench.search.SearchPresenterDefinition
+          columns: *myColumns
+    contentConnector:
+      includeProperties: false
+      workspace: dictionary
+      rootPath: /
+      defaultOrder: jcrName
+      nodeTypes:
+        - name: mgnl:label
+          icon: icon-items
+  detail:
+    subAppClass: info.magnolia.ui.contentapp.detail.DetailSubApp
+    class: info.magnolia.ui.contentapp.detail.DetailSubAppDescriptor
+    actions:
+      commit:
+        implementationClass: info.magnolia.ui.form.action.SaveFormAction
+        class: info.magnolia.ui.form.action.SaveFormActionDefinition
+      cancel:
+        class: info.magnolia.ui.form.action.CancelFormActionDefinition
+    editor:
+      actions:
+        - name: commit
+        - name: cancel
+      form:
+        tabs:
+          - name: label
+            fields:
+              - name: name
+                class: info.magnolia.ui.form.field.definition.TextFieldDefinition
+                readOnly: true
+              - name: value
+                class: info.magnolia.ui.form.field.definition.TextFieldDefinition
+                readOnly: true
+              - name: multi
+                class: MultiTextFieldDefinition
+                label: Translation
+      nodeType:
+        icon: icon-items
+        name: mgnl:label
+    contentConnector:
+      workspace: dictionary
+

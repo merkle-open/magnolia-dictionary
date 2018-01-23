@@ -1,0 +1,17 @@
+##editor:
+#form:
+#  label: blub
+#  tabs:
+#    - name: label
+#      fields:
+#        - name: label
+#          class: info.magnolia.ui.form.field.definition.TextFieldDefinition
+#        - name: value
+#          class: info.magnolia.ui.form.field.definition.TextFieldDefinition
+#actions:
+#  - name: commit
+#  - name: cancel
+#
+##nodeType:
+##  icon: icon-items
+##  name: mgnl:label

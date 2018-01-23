@@ -1,0 +1,12 @@
+# OS
+.DS_Store
+Thumbs.db
+
+target
+
+.idea
+*.iml
+
+#JRebel
+rebel.xml
+codesigning.asc

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module SYSTEM "module.dtd" >
+<module>
+    <name>namics-mgnl-dictionary-app</name>
+    <displayName>Dictionary</displayName>
+    <description>Dictionary app for label translations.</description>
+    <class>com.namics.oss.magnolia.dictionary.DictionaryModule</class>
+    <versionHandler>com.namics.oss.magnolia.dictionary.setup.DictionaryModuleVersionHandler</versionHandler>
+    <version>${project.version}</version>
+
+    <components>
+        <id>main</id>
+        <component>
+            <type>info.magnolia.i18nsystem.TranslationService</type>
+            <implementation>com.namics.oss.magnolia.dictionary.i18nsystem.DictionaryTranslationServiceImpl</implementation>
+        </component>
+        <component>
+            <type>com.namics.oss.magnolia.dictionary.services.XlsExportService</type>
+            <implementation>com.namics.oss.magnolia.dictionary.services.XlsExportService</implementation>
+            <scope>singleton</scope>
+            <lazy>false</lazy>
+        </component>
+    </components>
+
+    <dependencies>
+        <dependency>
+            <name>core</name>
+            <version>5.4/*</version>
+        </dependency>
+        <!--<dependency>-->
+            <!--<name>ui-admincentral</name>-->
+            <!--<version>5.4/*</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<name>ui-contentapp</name>-->
+            <!--<version>5.4/*</version>-->
+            <!--<optional>true</optional>-->
+        <!--</dependency>-->
+        <dependency>
+            <name>site</name>
+            <version>1.0/*</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <name>multisite</name>
+            <version>1.2/*</version>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+
+    <repositories>
+        <repository>
+            <name>magnolia</name>
+            <workspaces>
+                <workspace>dictionary</workspace>
+            </workspaces>
+            <nodeTypeFile>/mgnl-nodetypes/dictionary-app-nodetypes.xml</nodeTypeFile>
+        </repository>
+    </repositories>
+
+</module>

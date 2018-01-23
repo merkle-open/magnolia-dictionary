@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.namics.oss.magnolia</groupId>
+    <artifactId>magnolia-dictionary</artifactId>
+    <version>2.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>${project.artifactId}</name>
+    <description>Magnolia dictionary app to manage i18n labels.</description>
+    <url>https://github.com/namics/magnolia-dictionary</url>
+    <licenses>
+        <license>
+            <name>MIT License 2.0</name>
+            <url>https://opensource.org/licenses/MIT</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Michael Rauch</name>
+            <email>michael.rauch@namics.com</email>
+            <organization>Namics AG</organization>
+            <organizationUrl>http://www.namics.com</organizationUrl>
+        </developer>
+    </developers>
+
+    <properties>
+        <magnolia.version>5.6.1</magnolia.version>
+        <magnolia.blossom.version>3.1.3</magnolia.blossom.version>
+
+        <java.version>1.8</java.version>
+
+        <!-- Maven Plugins -->
+        <mvn.release.plugin.version>2.5.3</mvn.release.plugin.version>
+        <mvn.compiler.plugin.version>3.5.1</mvn.compiler.plugin.version>
+
+        <maven.build.timestamp.format>yyyy-MM-dd-z-HH-mm-ss</maven.build.timestamp.format>
+
+        <encoding>UTF-8</encoding>
+        <project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
+
+        <git.build.time>${maven.build.timestamp}</git.build.time>
+        <git.branch>unknown</git.branch>
+        <git.commit.id>unknown</git.commit.id>
+        <git.commit.time>unknown</git.commit.time>
+
+        <sonar.language>java</sonar.language>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>info.magnolia</groupId>
+            <artifactId>magnolia-core</artifactId>
+            <version>${magnolia.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>info.magnolia.site</groupId>
+            <artifactId>magnolia-site</artifactId>
+            <version>1.0.4</version>
+        </dependency>
+        <dependency>
+            <groupId>info.magnolia.publishing</groupId>
+            <artifactId>magnolia-publishing-core</artifactId>
+            <version>1.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>info.magnolia.ui</groupId>
+            <artifactId>magnolia-ui-form</artifactId>
+            <version>${magnolia.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>info.magnolia.ui</groupId>
+            <artifactId>magnolia-ui-admincentral</artifactId>
+            <version>${magnolia.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>info.magnolia.ui</groupId>
+            <artifactId>magnolia-ui-contentapp</artifactId>
+            <version>${magnolia.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>info.magnolia.blossom</groupId>
+            <artifactId>magnolia-module-blossom</artifactId>
+            <version>${magnolia.blossom.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.namics.mgnl</groupId>
+            <artifactId>namics-mgnl-commons</artifactId>
+            <version>3.1.1</version>
+        </dependency>
+
+        <!-- TESTING DEPENDENCIES -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>3.16</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>3.16</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${mvn.compiler.plugin.version}</version>
+                    <configuration>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>${mvn.release.plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>external.atlassian.jgitflow</groupId>
+                    <artifactId>jgitflow-maven-plugin</artifactId>
+                    <version>1.0-m1</version>
+                    <configuration>
+                        <pushReleases>true</pushReleases>
+                        <pushHotfixes>true</pushHotfixes>
+                        <pushFeatures>true</pushFeatures>
+                        <pullDevelop>true</pullDevelop>
+                        <pullMaster>true</pullMaster>
+                        <noDeploy>true</noDeploy>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>external.atlassian.jgitflow</groupId>
+                <artifactId>jgitflow-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+
+        <!-- default resources configuration which will filter your module descriptors -->
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
+            <resource>
+                <filtering>true</filtering>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>META-INF/magnolia/*</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
+
+    <repositories>
+        <!-- Magnolia -->
+        <repository>
+            <id>magnolia.public.group</id>
+            <url>https://nexus.magnolia-cms.com/content/groups/public</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>magnolia.enterprise.group</id>
+            <url>https://nexus.magnolia-cms.com/content/groups/enterprise</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>magnolia.enterprise.releases</id>
+            <url>https://nexus.magnolia-cms.com/content/repositories/magnolia.enterprise.releases</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+
+        <!-- Namics -->
+        <repository>
+            <id>namics-projects.nexus.namics.com</id>
+            <name>Namics Projects</name>
+            <url>http://nexus.namics.com/content/repositories/namics-projects</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>snapshot.namics-projects.nexus.namics.com</id>
+            <name>Namics Projects Snapshot</name>
+            <url>http://nexus.namics.com/content/repositories/namics-projects-snapshot</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+
+        <!-- Vaadin -->
+        <repository>
+            <id>vaadin-addons</id>
+            <url>http://maven.vaadin.com/vaadin-addons</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
+    <scm>
+        <url>https://github.com/namics/magnolia-dictionary</url>
+        <connection>scm:git:git@github.com:namics/magnolia-dictionary.git</connection>
+        <developerConnection>scm:git:git@github.com:namics/magnolia-dictionary.git</developerConnection>
+    </scm>
+    <profiles>
+        <profile>
+            <id>ossrh</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <configuration>
+                            <failOnError>false</failOnError>
+                            <additionalparam>-Xdoclint:none</additionalparam>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>3.0.1</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.5</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>1.6.7</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>ossrh</serverId>
+                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>deploy-to-sonatype</id>
+                                <phase>deploy</phase>
+                                <goals>
+                                    <goal>deploy</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>

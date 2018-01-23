@@ -1,0 +1,22 @@
+actions:
+  commit:
+    class: XlsImportActionDefinition
+    command: import
+    properties:
+      - "jcrName"
+      - "name"
+      - "value"
+      - "de"
+      - "fr"
+      - "it"
+  cancel:
+    class: info.magnolia.ui.dialog.action.CancelDialogActionDefinition
+form:
+  tabs:
+    import:
+      fields:
+        name:
+          allowedMimeTypePattern: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+          binaryNodeName: import
+          class: info.magnolia.ui.form.field.definition.BasicUploadFieldDefinition
+          required: true
