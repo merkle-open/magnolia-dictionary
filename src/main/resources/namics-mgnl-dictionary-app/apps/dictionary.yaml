@@ -39,7 +39,7 @@ subApps:
     actions:
       exportLabels:
         icon: icon-export
-        class: XlsExportActionDefinition
+        class: com.namics.oss.magnolia.dictionary.actions.XlsExportActionDefinition
         properties:
           - "jcrName"
           - "name"
@@ -138,14 +138,14 @@ subApps:
         class: info.magnolia.ui.framework.action.ActivationActionDefinition
       deleteAllExpired:
         icon: icon-delete
-        implementationClass: DeleteAllExpiredLabelNodeAction
+        implementationClass: com.namics.oss.magnolia.dictionary.action.DeleteAllExpiredLabelNodeAction
         class: info.magnolia.ui.api.action.ConfiguredActionDefinition
         availability:
           root: true
           writePermissionRequired: true
       deleteExpired:
         icon: icon-delete
-        implementationClass: DeleteExpiredLabelNodeAction
+        implementationClass: com.namics.oss.magnolia.dictionary.action.DeleteExpiredLabelNodeAction
         class: info.magnolia.ui.api.action.ConfiguredActionDefinition
         availability:
           multiple: true
@@ -172,12 +172,12 @@ subApps:
               editable: false
               sortable: false
               propertyName: multi
-              formatterClass: MultiColumnFormatter
+              formatterClass: com.namics.oss.magnolia.dictionary.workbench.column.MultiColumnFormatter
               class: info.magnolia.ui.workbench.column.definition.PropertyColumnDefinition
             - name: expired
               editable: false
               sortable: true
-              formatterClass: LabelExpiredColumnFormatter
+              formatterClass: com.namics.oss.magnolia.dictionary.column.LabelExpiredColumnFormatter
               class: info.magnolia.ui.workbench.column.definition.PropertyColumnDefinition
             - name: status
               width: 45
@@ -229,7 +229,7 @@ subApps:
                 class: info.magnolia.ui.form.field.definition.TextFieldDefinition
                 readOnly: true
               - name: multi
-                class: MultiTextFieldDefinition
+                class: com.namics.oss.magnolia.dictionary.field.MultiTextFieldDefinition
                 label: Translation
       nodeType:
         icon: icon-items
