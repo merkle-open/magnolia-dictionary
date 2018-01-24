@@ -1,11 +1,10 @@
 package com.namics.oss.magnolia.dictionary.i18nsystem;
 
 import com.google.common.base.Predicate;
-import com.namics.mgnl.commons.utils.MagnoliaConfigurationConstants;
-import com.namics.mgnl.commons.utils.NodeUtil;
-import com.namics.mgnl.commons.utils.PropertyUtil;
 import com.namics.oss.magnolia.dictionary.DictionaryConfiguration;
 import com.namics.oss.magnolia.dictionary.util.DictionaryUtils;
+import com.namics.oss.magnolia.dictionary.util.NodeUtil;
+import info.magnolia.jcr.util.PropertyUtil;
 import info.magnolia.resourceloader.Resource;
 import info.magnolia.resourceloader.ResourceOrigin;
 import info.magnolia.resourceloader.util.FileResourceCollectorVisitor;
@@ -31,73 +30,75 @@ import java.util.Properties;
  */
 public class DictionaryMessageBundlesInstaller {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DictionaryMessageBundlesInstaller.class);
-    public static final String LAST_LOADED_TIME = "lastLoadedTime";
+	private static final Logger LOG = LoggerFactory.getLogger(DictionaryMessageBundlesInstaller.class);
+	public static final String LAST_LOADED_TIME = "lastLoadedTime";
 
-    private static final Predicate<Resource> DIRECTORY_PREDICATE = Functions.pathStartsWith("/");
-    private static final Predicate<Resource> RESOURCE_PREDICATE = Functions.pathMatches("(/*/i18n/.*dictionary-messages.*\\.properties|/mgnl-i18n/.*dictionary-messages.*\\.properties)");
+	private static final Predicate<Resource> DIRECTORY_PREDICATE = Functions.pathStartsWith("/");
+	private static final Predicate<Resource> RESOURCE_PREDICATE = Functions.pathMatches("(/*/i18n/.*dictionary-messages.*\\.properties|/mgnl-i18n/.*dictionary-messages.*\\.properties)");
 
-    private final Properties messages = new Properties();
+	private static final String NAMICS_SYSTEM_CONFIG_NODE_TYPE = "mgnl:namicsSystemConfig";
 
-    @Inject
-    public DictionaryMessageBundlesInstaller(ResourceOrigin resourceOrigin) {
-        loadMessages(resourceOrigin, newVisitor());
-    }
+	private final Properties messages = new Properties();
 
-    private FileResourceCollectorVisitor newVisitor() {
-        return FileResourceCollectorVisitor.on(DIRECTORY_PREDICATE, RESOURCE_PREDICATE);
-    }
+	@Inject
+	public DictionaryMessageBundlesInstaller(ResourceOrigin resourceOrigin) {
+		loadMessages(resourceOrigin, newVisitor());
+	}
 
-    private void loadMessages(ResourceOrigin resourceOrigin, FileResourceCollectorVisitor visitor) {
-        resourceOrigin.traverseWith(visitor);
-        final Collection<Resource> collected = visitor.getCollectedResources();
-        for (Resource propertyFile : collected) {
-            loadResources(propertyFile);
-        }
-    }
+	private FileResourceCollectorVisitor newVisitor() {
+		return FileResourceCollectorVisitor.on(DIRECTORY_PREDICATE, RESOURCE_PREDICATE);
+	}
 
-    private void loadResources(Resource propertiesFile) {
-        try (InputStream in = propertiesFile.openStream()) {
-            LOG.debug("Loading properties file at [{}]...", propertiesFile);
+	private void loadMessages(ResourceOrigin resourceOrigin, FileResourceCollectorVisitor visitor) {
+		resourceOrigin.traverseWith(visitor);
+		final Collection<Resource> collected = visitor.getCollectedResources();
+		for (Resource propertyFile : collected) {
+			loadResources(propertyFile);
+		}
+	}
 
-            final Reader inStream = new InputStreamReader(new BOMInputStream(in), "UTF-8");
-            final Properties properties = new Properties();
-            properties.load(inStream);
+	private void loadResources(Resource propertiesFile) {
+		try (InputStream in = propertiesFile.openStream()) {
+			LOG.debug("Loading properties file at [{}]...", propertiesFile);
 
-            messages.putAll(properties);
-        } catch (IOException e) {
-            LOG.warn("An IO error occurred while trying to read properties file at [{}]", propertiesFile, e);
-        }
-    }
+			final Reader inStream = new InputStreamReader(new BOMInputStream(in), "UTF-8");
+			final Properties properties = new Properties();
+			properties.load(inStream);
 
-    public void loadLabelsToDictionary() {
-        Node dictionaryRoot = NodeUtil.getNodeByPathOrNull(DictionaryConfiguration.REPOSITORY, "/");
-        try {
-            NodeUtil.overwriteOrCreateNode(dictionaryRoot, LAST_LOADED_TIME, MagnoliaConfigurationConstants.NAMICS_SYSTEM_CONFIG_NODE_TYPE); // lastLoadedTime = node.lastModifiedTime
-        } catch (RepositoryException e) {
-            LOG.error("Could not set time when labels were last loaded. Manually check labels which should get removed.", e);
-        }
-        for (Map.Entry<Object, Object> message : messages.entrySet()) {
+			messages.putAll(properties);
+		} catch (IOException e) {
+			LOG.warn("An IO error occurred while trying to read properties file at [{}]", propertiesFile, e);
+		}
+	}
 
-            String messageName = message.getKey().toString();
-            String messageNodeName = DictionaryUtils.getValidMessageNodeName(messageName);
-            if (!messageName.equals(messageNodeName)) {
-                LOG.info("Label name changed from {} to {}", message.getKey().toString(), messageNodeName);
-            }
+	public void loadLabelsToDictionary() {
+		Node dictionaryRoot = NodeUtil.getNodeByPathOrNull(DictionaryConfiguration.REPOSITORY, "/");
+		try {
+			NodeUtil.overwriteOrCreateNode(dictionaryRoot, LAST_LOADED_TIME, NAMICS_SYSTEM_CONFIG_NODE_TYPE); // lastLoadedTime = node.lastModifiedTime
+		} catch (RepositoryException e) {
+			LOG.error("Could not set time when labels were last loaded. Manually check labels which should get removed.", e);
+		}
+		for (Map.Entry<Object, Object> message : messages.entrySet()) {
 
-            Node node = NodeUtil.getOrCreateNode(dictionaryRoot, messageNodeName, DictionaryConfiguration.NODE_TYPE);
-            try {
-                PropertyUtil.setProperty(node, "name", message.getKey().toString());
-                PropertyUtil.setProperty(node, "value", message.getValue().toString());
-                node.getSession().save();
-            } catch (RepositoryException e) {
-                LOG.debug("Could not create label: {}", e.toString()); // use toString so that stacktrace does not get printed
-            }
-        }
-    }
+			String messageName = message.getKey().toString();
+			String messageNodeName = DictionaryUtils.getValidMessageNodeName(messageName);
+			if (!messageName.equals(messageNodeName)) {
+				LOG.info("Label name changed from {} to {}", message.getKey().toString(), messageNodeName);
+			}
 
-    public Properties getMessages() {
-        return messages;
-    }
+			Node node = NodeUtil.getOrCreateNode(dictionaryRoot, messageNodeName, DictionaryConfiguration.NODE_TYPE);
+			try {
+				PropertyUtil.setProperty(node, "name", message.getKey().toString());
+				PropertyUtil.setProperty(node, "value", message.getValue().toString());
+				node.getSession().save();
+			} catch (RepositoryException e) {
+				LOG.debug("Could not create label: {}", e.toString()); // use toString so that stacktrace does not get printed
+			}
+		}
+	}
+
+	public Properties getMessages() {
+		return messages;
+	}
 
 }

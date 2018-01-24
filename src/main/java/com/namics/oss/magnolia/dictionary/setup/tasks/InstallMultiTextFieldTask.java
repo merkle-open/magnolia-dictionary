@@ -12,7 +12,7 @@ import info.magnolia.repository.RepositoryConstants;
 
 import javax.jcr.RepositoryException;
 
-import static com.namics.mgnl.commons.nodeoperations.CommonOps.setOrAddProperty;
+import static com.namics.oss.magnolia.dictionary.util.NodeUtil.setOrAddProperty;
 import static info.magnolia.jcr.nodebuilder.Ops.getOrAddNode;
 
 /**
@@ -21,25 +21,25 @@ import static info.magnolia.jcr.nodebuilder.Ops.getOrAddNode;
  */
 public class InstallMultiTextFieldTask extends AbstractRepositoryTask {
 
-    public static final String MODULE_NAME = "namics-mgnl-dictionary-app";
+	public static final String MODULE_NAME = "namics-mgnl-dictionary-app";
 
-    public InstallMultiTextFieldTask() {
-        super("", "");
-    }
+	public InstallMultiTextFieldTask() {
+		super("", "");
+	}
 
-    @Override
-    protected void doExecute(InstallContext installContext) throws RepositoryException, TaskExecutionException {
-        new NodeBuilderTask("Install MultiTextField", "", ErrorHandling.logging, RepositoryConstants.CONFIG,
-                "/modules",
-                getOrAddNode(MODULE_NAME, NodeTypes.Content.NAME).then(
-                        getOrAddNode("fieldTypes", NodeTypes.Content.NAME).then(
-                                getOrAddNode("multi", NodeTypes.ContentNode.NAME).then(
-                                        setOrAddProperty("definitionClass", MultiTextFieldDefinition.class.getName()),
-                                        setOrAddProperty("factoryClass", MultiTextFieldFactory.class.getName())
-                                )
-                        )
-                )
+	@Override
+	protected void doExecute(InstallContext installContext) throws RepositoryException, TaskExecutionException {
+		new NodeBuilderTask("Install MultiTextField", "", ErrorHandling.logging, RepositoryConstants.CONFIG,
+				"/modules",
+				getOrAddNode(MODULE_NAME, NodeTypes.Content.NAME).then(
+						getOrAddNode("fieldTypes", NodeTypes.Content.NAME).then(
+								getOrAddNode("multi", NodeTypes.ContentNode.NAME).then(
+										setOrAddProperty("definitionClass", MultiTextFieldDefinition.class.getName()),
+										setOrAddProperty("factoryClass", MultiTextFieldFactory.class.getName())
+								)
+						)
+				)
 
-        ).execute(installContext);
-    }
+		).execute(installContext);
+	}
 }

@@ -88,11 +88,6 @@
             <artifactId>magnolia-module-blossom</artifactId>
             <version>${magnolia.blossom.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.namics.mgnl</groupId>
-            <artifactId>namics-mgnl-commons</artifactId>
-            <version>3.1.1</version>
-        </dependency>
 
         <!-- TESTING DEPENDENCIES -->
         <dependency>

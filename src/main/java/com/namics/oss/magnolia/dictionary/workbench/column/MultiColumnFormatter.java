@@ -1,8 +1,8 @@
 package com.namics.oss.magnolia.dictionary.workbench.column;
 
-import com.namics.mgnl.commons.utils.PropertyUtil;
 import com.namics.oss.magnolia.dictionary.util.LocaleUtils;
 import com.vaadin.v7.ui.Table;
+import info.magnolia.jcr.util.PropertyUtil;
 import info.magnolia.ui.workbench.column.AbstractColumnFormatter;
 import info.magnolia.ui.workbench.column.definition.PropertyColumnDefinition;
 import org.apache.commons.lang.StringUtils;

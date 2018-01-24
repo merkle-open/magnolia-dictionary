@@ -1,6 +1,6 @@
 package com.namics.oss.magnolia.dictionary.commands;
 
-import com.namics.mgnl.commons.utils.NodeUtil;
+import com.namics.oss.magnolia.dictionary.util.NodeUtil;
 import info.magnolia.cms.core.version.VersionManager;
 import info.magnolia.context.Context;
 import info.magnolia.objectfactory.ComponentProvider;

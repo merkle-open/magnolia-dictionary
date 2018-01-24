@@ -11,7 +11,7 @@ import info.magnolia.repository.RepositoryConstants;
 
 import javax.jcr.RepositoryException;
 
-import static com.namics.mgnl.commons.nodeoperations.CommonOps.setOrAddProperty;
+import static com.namics.oss.magnolia.dictionary.util.NodeUtil.setOrAddProperty;
 import static info.magnolia.jcr.nodebuilder.Ops.getOrAddNode;
 
 public class InstallRootActivationCommandTask extends AbstractRepositoryTask {

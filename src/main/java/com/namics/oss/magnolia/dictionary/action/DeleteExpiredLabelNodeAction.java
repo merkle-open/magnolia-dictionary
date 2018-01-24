@@ -1,9 +1,9 @@
 package com.namics.oss.magnolia.dictionary.action;
 
-import com.namics.mgnl.commons.utils.PropertyUtil;
 import com.namics.oss.magnolia.dictionary.util.DictionaryUtils;
 import info.magnolia.event.EventBus;
 import info.magnolia.jcr.util.NodeTypes;
+import info.magnolia.jcr.util.PropertyUtil;
 import info.magnolia.ui.api.action.AbstractAction;
 import info.magnolia.ui.api.action.ActionExecutionException;
 import info.magnolia.ui.api.action.ConfiguredActionDefinition;

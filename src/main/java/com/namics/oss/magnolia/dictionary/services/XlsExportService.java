@@ -1,6 +1,6 @@
 package com.namics.oss.magnolia.dictionary.services;
 
-import com.namics.mgnl.commons.utils.NodeUtil;
+import com.namics.oss.magnolia.dictionary.util.NodeUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.PropertyUtil;
 import org.apache.commons.collections.CollectionUtils;

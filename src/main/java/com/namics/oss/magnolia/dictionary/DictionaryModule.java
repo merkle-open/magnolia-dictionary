@@ -1,4 +1,3 @@
-
 package com.namics.oss.magnolia.dictionary;
 
 import com.namics.oss.magnolia.dictionary.i18nsystem.DictionaryMessageBundlesInstaller;
@@ -18,36 +17,36 @@ import javax.jcr.observation.EventListener;
 
 public class DictionaryModule implements ModuleLifecycle {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DictionaryModule.class);
+	private static final Logger LOG = LoggerFactory.getLogger(DictionaryModule.class);
 
-    private EventListener listener;
-    private DictionaryMessageBundlesInstaller messagesInstaller;
+	private EventListener listener;
+	private DictionaryMessageBundlesInstaller messagesInstaller;
 
-    @Inject
-    public DictionaryModule(final ComponentProvider componentProvider, final ResourceOrigin resourceOrigin) {
-        messagesInstaller = componentProvider.newInstance(DictionaryMessageBundlesInstaller.class, resourceOrigin);
-    }
+	@Inject
+	public DictionaryModule(final ComponentProvider componentProvider, final ResourceOrigin resourceOrigin) {
+		messagesInstaller = componentProvider.newInstance(DictionaryMessageBundlesInstaller.class, resourceOrigin);
+	}
 
-    @Override
-    public void start(ModuleLifecycleContext moduleLifecycleContext) {
-        DictionaryTranslationServiceImpl dictionaryTranslationService = (DictionaryTranslationServiceImpl) Components.getComponentProvider().getComponent(TranslationService.class);
-        this.listener = ObservationUtil.instanciateDeferredEventListener(dictionaryTranslationService, 100, 3000);
+	@Override
+	public void start(ModuleLifecycleContext moduleLifecycleContext) {
+		DictionaryTranslationServiceImpl dictionaryTranslationService = (DictionaryTranslationServiceImpl) Components.getComponentProvider().getComponent(TranslationService.class);
+		this.listener = ObservationUtil.instanciateDeferredEventListener(dictionaryTranslationService, 100, 3000);
 
-        try {
-            ObservationUtil.registerChangeListener(DictionaryConfiguration.REPOSITORY, "/", listener);
-        } catch (Exception e) {
-            LOG.warn("Failed to register observation for repository {} due to {}", DictionaryConfiguration.REPOSITORY, e.getMessage());
-        }
+		try {
+			ObservationUtil.registerChangeListener(DictionaryConfiguration.REPOSITORY, "/", listener);
+		} catch (Exception e) {
+			LOG.warn("Failed to register observation for repository {} due to {}", DictionaryConfiguration.REPOSITORY, e.getMessage());
+		}
 
-        messagesInstaller.loadLabelsToDictionary();
-    }
+		messagesInstaller.loadLabelsToDictionary();
+	}
 
-    @Override
-    public void stop(ModuleLifecycleContext moduleLifecycleContext) {
-        try {
-            ObservationUtil.unregisterChangeListener(DictionaryConfiguration.REPOSITORY, listener);
-        } catch (Exception e) {
-            LOG.warn("Failed to unregister observation for repository {} due to {}", DictionaryConfiguration.REPOSITORY, e.getMessage());
-        }
-    }
+	@Override
+	public void stop(ModuleLifecycleContext moduleLifecycleContext) {
+		try {
+			ObservationUtil.unregisterChangeListener(DictionaryConfiguration.REPOSITORY, listener);
+		} catch (Exception e) {
+			LOG.warn("Failed to unregister observation for repository {} due to {}", DictionaryConfiguration.REPOSITORY, e.getMessage());
+		}
+	}
 }

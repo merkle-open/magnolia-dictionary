@@ -1,10 +1,10 @@
 package com.namics.oss.magnolia.dictionary.i18nsystem;
 
-import com.namics.mgnl.commons.utils.NodeUtil;
-import com.namics.mgnl.commons.utils.PropertyUtil;
 import com.namics.oss.magnolia.dictionary.DictionaryConfiguration;
 import com.namics.oss.magnolia.dictionary.util.LocaleUtils;
+import com.namics.oss.magnolia.dictionary.util.NodeUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.util.PropertyUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
