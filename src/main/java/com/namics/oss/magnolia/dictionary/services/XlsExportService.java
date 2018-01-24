@@ -19,10 +19,7 @@ import javax.jcr.RepositoryException;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class XlsExportService {
 	private static final Logger LOG = LoggerFactory.getLogger(XlsExportService.class);
@@ -50,8 +47,12 @@ public class XlsExportService {
 				if ("jcrName".equals(property)) {
 					cell.setCellValue(node.getName());
 				} else if ("mgnl:created".equals(property) || "mgnl:lastModified".equals(property) || "mgnl:lastActivated".equals(property)) {
-					cell.setCellValue(PropertyUtil.getDate(node, property));
-
+					Calendar date = PropertyUtil.getDate(node, property);
+					if(date != null) {
+						cell.setCellValue(date);
+					} else {
+						cell.setCellValue(StringUtils.EMPTY);
+					}
 				} else {
 					cell.setCellValue(PropertyUtil.getString(node, property, StringUtils.EMPTY));
 				}
