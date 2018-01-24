@@ -60,7 +60,7 @@ public class XlsExportService {
 
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		workbook.write(outputStream);
-		workbook.close();
+		//workbook.close();
 
 		return outputStream;
 	}
@@ -106,17 +106,17 @@ public class XlsExportService {
 					String property = properties.get(colNumber);
 					Cell cell = nextRow.getCell(colNumber);
 					if (cell != null) {
-						switch (cell.getCellTypeEnum()) {
-							case STRING:
+						switch (cell.getCellType()) {
+							case Cell.CELL_TYPE_STRING:
 								value = StringUtils.defaultIfEmpty(cell.getStringCellValue(), null);
 								break;
-							case BOOLEAN:
+							case Cell.CELL_TYPE_BOOLEAN:
 								value = cell.getBooleanCellValue();
 								break;
-							case NUMERIC:
+							case Cell.CELL_TYPE_NUMERIC:
 								value = cell.getNumericCellValue();
 								break;
-							case BLANK:
+							case Cell.CELL_TYPE_BLANK:
 								value = null;
 								break;
 						}
@@ -132,7 +132,7 @@ public class XlsExportService {
 			startNode.getSession().save();
 		}
 
-		workbook.close();
+		//workbook.close();
 		inputStream.close();
 	}
 }
