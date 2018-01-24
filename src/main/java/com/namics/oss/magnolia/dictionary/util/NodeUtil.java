@@ -68,12 +68,6 @@ public class NodeUtil extends info.magnolia.jcr.util.NodeUtil {
 		return getOrCreateNode(node, relPath, NodeTypes.Content.NAME);
 	}
 
-	/**
-	 * @param node                the node to get the child from
-	 * @param relPath             the relative path of the child to return
-	 * @param primaryNodeTypeName the nodetype to use to create a new node
-	 * @return the child node if found, or a newly created node with the given nodeType
-	 */
 	public static Node getOrCreateNode(Node node, String relPath, String primaryNodeTypeName) {
 		Node childNode = null;
 		try {
@@ -89,22 +83,10 @@ public class NodeUtil extends info.magnolia.jcr.util.NodeUtil {
 		return childNode;
 	}
 
-	/**
-	 * Deletes a node and recreates it at the original position.
-	 * <p/>
-	 * If the node already existed, use the original node type for the new node
-	 * If the node not existed yet, use the {@code nodeTypeIfMissing} node type for the new node. If {@code nodeTypeIfMissing} is null, fall back to parent node type.
-	 */
 	public static Node overwriteOrCreateNode(Node parentNode, String nodeName, String nodeTypeIfMissing) throws RepositoryException {
 		return overwriteOrCreateNode(parentNode, nodeName, nodeTypeIfMissing, null);
 	}
 
-	/**
-	 * Deletes a node and recreates it at the original position.
-	 * <p/>
-	 * If {@code nodeTypeForced} is not null, use this node type for the new node.
-	 * Else behaves like {@link NodeUtil#overwriteOrCreateNode(javax.jcr.Node, String, String)}
-	 */
 	public static Node overwriteOrCreateNode(Node parentNode, String nodeName, String nodeTypeIfMissing, String nodeTypeForced) throws RepositoryException {
 		if (parentNode == null) {
 			throw new NullPointerException("parentNode cannot be null");
