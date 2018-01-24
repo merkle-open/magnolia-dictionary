@@ -194,24 +194,6 @@
             </snapshots>
         </repository>
 
-        <!-- Namics -->
-        <repository>
-            <id>namics-projects.nexus.namics.com</id>
-            <name>Namics Projects</name>
-            <url>http://nexus.namics.com/content/repositories/namics-projects</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>snapshot.namics-projects.nexus.namics.com</id>
-            <name>Namics Projects Snapshot</name>
-            <url>http://nexus.namics.com/content/repositories/namics-projects-snapshot</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-
         <!-- Vaadin -->
         <repository>
             <id>vaadin-addons</id>
