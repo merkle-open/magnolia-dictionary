@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE module SYSTEM "module.dtd" >
 <module>
-    <name>namics-mgnl-dictionary-app</name>
+    <name>magnolia-dictionary</name>
     <displayName>Dictionary</displayName>
     <description>Dictionary app for label translations.</description>
     <class>com.namics.oss.magnolia.dictionary.DictionaryModule</class>
