@@ -54,7 +54,7 @@
             <workspaces>
                 <workspace>dictionary</workspace>
             </workspaces>
-            <nodeTypeFile>/mgnl-nodetypes/dictionary-app-nodetypes.xml</nodeTypeFile>
+            <nodeTypeFile>/mgnl-nodetypes/magnolia-dictionary-nodetypes.xml</nodeTypeFile>
         </repository>
     </repositories>
 
