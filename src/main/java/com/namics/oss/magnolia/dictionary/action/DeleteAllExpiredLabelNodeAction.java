@@ -26,10 +26,7 @@ public class DeleteAllExpiredLabelNodeAction extends AbstractRepositoryAction<Co
 	private UiContext uiContext;
 
 	@Inject
-	protected DeleteAllExpiredLabelNodeAction(ConfiguredActionDefinition definition,
-	                                          JcrItemAdapter item,
-	                                          @Named("admincentral") EventBus eventBus,
-	                                          UiContext uiContext) {
+	protected DeleteAllExpiredLabelNodeAction(ConfiguredActionDefinition definition, JcrItemAdapter item, @Named("admincentral") EventBus eventBus, UiContext uiContext) {
 		super(definition, item, eventBus);
 		this.uiContext = uiContext;
 	}

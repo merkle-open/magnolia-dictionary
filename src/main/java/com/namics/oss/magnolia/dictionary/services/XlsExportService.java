@@ -48,7 +48,7 @@ public class XlsExportService {
 					cell.setCellValue(node.getName());
 				} else if ("mgnl:created".equals(property) || "mgnl:lastModified".equals(property) || "mgnl:lastActivated".equals(property)) {
 					Calendar date = PropertyUtil.getDate(node, property);
-					if(date != null) {
+					if (date != null) {
 						cell.setCellValue(date);
 					} else {
 						cell.setCellValue(StringUtils.EMPTY);
@@ -61,7 +61,6 @@ public class XlsExportService {
 
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		workbook.write(outputStream);
-		//workbook.close();
 
 		return outputStream;
 	}
@@ -133,7 +132,6 @@ public class XlsExportService {
 			startNode.getSession().save();
 		}
 
-		//workbook.close();
 		inputStream.close();
 	}
 }

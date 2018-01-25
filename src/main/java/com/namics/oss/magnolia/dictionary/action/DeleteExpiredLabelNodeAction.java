@@ -32,17 +32,11 @@ public class DeleteExpiredLabelNodeAction extends AbstractAction<ConfiguredActio
 	private boolean stillInUse = false;
 	private final Set<JcrItemId> changedItemIds = new HashSet<>();
 
-	public DeleteExpiredLabelNodeAction(ConfiguredActionDefinition definition,
-	                                    JcrItemAdapter item,
-	                                    @Named("admincentral") EventBus eventBus,
-	                                    UiContext uiContext) {
+	public DeleteExpiredLabelNodeAction(ConfiguredActionDefinition definition, JcrItemAdapter item, @Named("admincentral") EventBus eventBus, UiContext uiContext) {
 		this(definition, Collections.singletonList(item), eventBus, uiContext);
 	}
 
-	public DeleteExpiredLabelNodeAction(ConfiguredActionDefinition definition,
-	                                    List<JcrItemAdapter> items,
-	                                    @Named("admincentral") EventBus eventBus,
-	                                    UiContext uiContext) {
+	public DeleteExpiredLabelNodeAction(ConfiguredActionDefinition definition, List<JcrItemAdapter> items, @Named("admincentral") EventBus eventBus, UiContext uiContext) {
 		super(definition);
 		this.uiContext = uiContext;
 		this.items = items;

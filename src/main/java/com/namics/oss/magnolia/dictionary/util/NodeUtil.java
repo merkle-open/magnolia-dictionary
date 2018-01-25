@@ -7,6 +7,8 @@ import info.magnolia.jcr.nodebuilder.NodeOperation;
 import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.jcr.util.PropertyUtil;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -17,6 +19,7 @@ import java.util.List;
  * @author haug, Namics AG
  */
 public class NodeUtil extends info.magnolia.jcr.util.NodeUtil {
+	private static final Logger LOG = LoggerFactory.getLogger(NodeUtil.class);
 
 	public static Node getWorkspaceRootNode(String workspaceName) throws RepositoryException {
 		return MgnlContext.getJCRSession(workspaceName).getRootNode();
@@ -29,8 +32,8 @@ public class NodeUtil extends info.magnolia.jcr.util.NodeUtil {
 			if (node.hasNode(relPath)) {
 				childNode = node.getNode(relPath);
 			}
-		} catch (RepositoryException var4) {
-
+		} catch (RepositoryException e) {
+			LOG.debug("Could not get node", e);
 		}
 
 		return childNode;
@@ -41,7 +44,7 @@ public class NodeUtil extends info.magnolia.jcr.util.NodeUtil {
 
 		try {
 			node = MgnlContext.getJCRSession(workspace).getNode(path);
-		} catch (RepositoryException var4) {
+		} catch (RepositoryException e) {
 			node = null;
 		}
 
@@ -77,7 +80,7 @@ public class NodeUtil extends info.magnolia.jcr.util.NodeUtil {
 				childNode = node.addNode(relPath, primaryNodeTypeName);
 			}
 		} catch (RepositoryException e) {
-
+			LOG.debug("Could not get or create node", e);
 		}
 
 		return childNode;
