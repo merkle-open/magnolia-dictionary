@@ -21,7 +21,7 @@ import static info.magnolia.jcr.nodebuilder.Ops.getOrAddNode;
  */
 public class InstallMultiTextFieldTask extends AbstractRepositoryTask {
 
-	public static final String MODULE_NAME = "namics-mgnl-dictionary-app";
+	public static final String MODULE_NAME = "namics-oss-magnolia-dictionary-app";
 
 	public InstallMultiTextFieldTask() {
 		super("", "");
