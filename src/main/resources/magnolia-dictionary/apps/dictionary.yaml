@@ -58,7 +58,7 @@ subApps:
       importLabels:
         icon: icon-import
         name: import
-        dialogName: namics-mgnl-dictionary-app:import/importXlsDialog
+        dialogName: magnolia-dictionary:import/importXlsDialog
         class: info.magnolia.ui.framework.action.OpenCreateDialogActionDefinition
         availability:
           root: true
