@@ -28,11 +28,8 @@ public class DictionaryModuleVersionHandler extends DefaultModuleVersionHandler 
 	protected final List<Task> getExtraInstallTasks(InstallContext installContext) { //when module node does not exist
 		List<Task> installTasks = new LinkedList<Task>();
 
-
 		installTasks.addAll(super.getExtraInstallTasks(installContext));
-
 		installTasks.addAll(tasks);
-
 
 		return installTasks;
 	}
@@ -41,11 +38,8 @@ public class DictionaryModuleVersionHandler extends DefaultModuleVersionHandler 
 	protected final List<Task> getDefaultUpdateTasks(Version forVersion) { //on every module update
 		List<Task> installTasks = new LinkedList<Task>();
 
-
 		installTasks.addAll(super.getDefaultUpdateTasks(forVersion));
-
 		installTasks.addAll(tasks);
-
 
 		return installTasks;
 	}
@@ -55,11 +49,9 @@ public class DictionaryModuleVersionHandler extends DefaultModuleVersionHandler 
 		List<Task> installTasks = new LinkedList<Task>();
 		Version forVersion = getVersionFromInstallContext(installContext);
 
-
 		if (isSnapshot(forVersion)) {
 			installTasks.addAll(tasks);
 		}
-
 
 		return installTasks;
 	}

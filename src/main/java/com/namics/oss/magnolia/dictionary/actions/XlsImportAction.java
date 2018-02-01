@@ -51,7 +51,7 @@ import java.io.InputStream;
  */
 public class XlsImportAction extends AbstractAction<XlsImportActionDefinition> {
 
-	private static final Logger log = LoggerFactory.getLogger(XlsImportAction.class);
+	private static final Logger LOG = LoggerFactory.getLogger(XlsImportAction.class);
 
 	private final Item item;
 	private EditorValidator validator;
@@ -85,7 +85,7 @@ public class XlsImportAction extends AbstractAction<XlsImportActionDefinition> {
 			}
 			callback.onSuccess(getDefinition().getName());
 		} else {
-			log.info("Validation error(s) occurred. No Import performed.");
+			LOG.info("Validation error(s) occurred. No Import performed.");
 		}
 	}
 }

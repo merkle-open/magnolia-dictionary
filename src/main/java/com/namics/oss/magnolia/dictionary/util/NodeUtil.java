@@ -100,18 +100,18 @@ public class NodeUtil extends info.magnolia.jcr.util.NodeUtil {
 		Node nodeToOverwrite = NodeUtil.getNode(parentNode, nodeName);
 		Node siblingAfter = null;
 
-		if (nodeToOverwrite != null) { //node exists. use original node type
+		if (nodeToOverwrite != null) { // node exists. use original node type
 			newNodeType = nodeToOverwrite.getPrimaryNodeType().getName();
 			siblingAfter = getSiblingAfter(nodeToOverwrite);
 			nodeToOverwrite.remove();
-		} else if (nodeTypeIfMissing != null) { //use missing node type if provided
+		} else if (nodeTypeIfMissing != null) { // use missing node type if provided
 			newNodeType = nodeTypeIfMissing;
-		} else { //use parent node type as fallback
+		} else { // use parent node type as fallback
 			String parentNodeType = parentNode.getPrimaryNodeType().getName();
 			newNodeType = parentNodeType;
 		}
 
-		//use forced node type if provided
+		// use forced node type if provided
 		if (nodeTypeForced != null) {
 			newNodeType = nodeTypeForced;
 		}
@@ -121,7 +121,7 @@ public class NodeUtil extends info.magnolia.jcr.util.NodeUtil {
 		if (siblingAfter != null) {
 			orderBefore(newNode, siblingAfter.getName());
 		} else {
-			//the node is already at the bottom which is correct
+			// the node is already at the bottom which is correct
 		}
 
 		return newNode;
@@ -137,7 +137,7 @@ public class NodeUtil extends info.magnolia.jcr.util.NodeUtil {
 					value = Long.valueOf((Integer) value);
 				}
 
-				StringUtils.trim(name); //prevent "trailing spaces not allowed exception
+				StringUtils.trim(name); // prevent "trailing spaces not allowed exception
 
 				PropertyUtil.setProperty(context, name, value);
 				return context;

@@ -25,6 +25,12 @@
             <organization>Namics AG</organization>
             <organizationUrl>http://www.namics.com</organizationUrl>
         </developer>
+        <developer>
+            <name>Patrick Lötscher</name>
+            <email>patrick.loetscher@namics.com</email>
+            <organization>Namics AG</organization>
+            <organizationUrl>http://www.namics.com</organizationUrl>
+        </developer>
     </developers>
 
     <properties>

@@ -12,8 +12,6 @@ import javax.jcr.Node;
 import java.util.Locale;
 
 /**
- * MultiColumnFormatter.
- *
  * @author mrauch, Namics AG
  * @since 15.11.2016
  */

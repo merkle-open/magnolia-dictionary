@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class MultiTextFieldFactory<D extends MultiTextFieldDefinition> extends AbstractFieldFactory<D, PropertysetItem> {
 
-	private static final Logger log = LoggerFactory.getLogger(MultiTextFieldFactory.class);
+	private static final Logger LOG = LoggerFactory.getLogger(MultiTextFieldFactory.class);
 	private FieldFactoryFactory fieldFactoryFactory;
 	private ComponentProvider componentProvider;
 	private final I18NAuthoringSupport i18nAuthoringSupport;
@@ -40,7 +40,7 @@ public class MultiTextFieldFactory<D extends MultiTextFieldDefinition> extends A
 
 		// we do not support multi text fields themselves to be required. Definition is overwritten here. Can't set it on the field after its creation cause otherwise the required asterisk is displayed.
 		if (definition.isRequired()) {
-			log.warn("Definition of the multi text field named [{}] is configured as required which is not supported.", definition.getName());
+			LOG.warn("Definition of the multi text field named [{}] is configured as required which is not supported.", definition.getName());
 			definition.setRequired(false);
 		}
 		return new MultiTextField(definition, fieldFactoryFactory, componentProvider, item, i18nAuthoringSupport);

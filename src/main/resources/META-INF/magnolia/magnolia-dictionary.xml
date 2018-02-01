@@ -27,15 +27,6 @@
             <name>core</name>
             <version>5.4/*</version>
         </dependency>
-        <!--<dependency>-->
-            <!--<name>ui-admincentral</name>-->
-            <!--<version>5.4/*</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<name>ui-contentapp</name>-->
-            <!--<version>5.4/*</version>-->
-            <!--<optional>true</optional>-->
-        <!--</dependency>-->
         <dependency>
             <name>site</name>
             <version>1.0/*</version>
