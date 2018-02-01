@@ -43,10 +43,10 @@
         <mvn.release.plugin.version>2.5.3</mvn.release.plugin.version>
         <mvn.compiler.plugin.version>3.5.1</mvn.compiler.plugin.version>
 
-        <maven.build.timestamp.format>yyyy-MM-dd-z-HH-mm-ss</maven.build.timestamp.format>
-
         <encoding>UTF-8</encoding>
         <project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
+        
+        <maven.build.timestamp.format>yyyy-MM-dd-z-HH-mm-ss</maven.build.timestamp.format>
 
         <git.build.time>${maven.build.timestamp}</git.build.time>
         <git.branch>unknown</git.branch>
@@ -94,6 +94,7 @@
             <artifactId>magnolia-module-blossom</artifactId>
             <version>${magnolia.blossom.version}</version>
         </dependency>
+        
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
@@ -104,6 +105,7 @@
             <artifactId>poi</artifactId>
             <version>3.9</version>
         </dependency>
+        
         <!-- TESTING DEPENDENCIES -->
         <dependency>
             <groupId>junit</groupId>
@@ -209,7 +211,6 @@
         </repository>
     </repositories>
 
-
     <distributionManagement>
         <snapshotRepository>
             <id>ossrh</id>
@@ -226,6 +227,7 @@
         <connection>scm:git:git@github.com:namics/magnolia-dictionary.git</connection>
         <developerConnection>scm:git:git@github.com:namics/magnolia-dictionary.git</developerConnection>
     </scm>
+    
     <profiles>
         <profile>
             <id>ossrh</id>
