@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.namics.oss.magnolia</groupId>
@@ -12,8 +13,8 @@
     <url>https://github.com/namics/magnolia-dictionary</url>
     <licenses>
         <license>
-            <name>MIT License 2.0</name>
-            <url>https://opensource.org/licenses/MIT</url>
+            <name>GNU General Public License version 3 (GPLv3)</name>
+            <url>http://www.gnu.org/licenses/gpl-3.0.txt</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
@@ -45,7 +46,7 @@
 
         <encoding>UTF-8</encoding>
         <project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
-        
+
         <maven.build.timestamp.format>yyyy-MM-dd-z-HH-mm-ss</maven.build.timestamp.format>
 
         <git.build.time>${maven.build.timestamp}</git.build.time>
@@ -94,7 +95,7 @@
             <artifactId>magnolia-module-blossom</artifactId>
             <version>${magnolia.blossom.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
@@ -105,7 +106,7 @@
             <artifactId>poi</artifactId>
             <version>3.9</version>
         </dependency>
-        
+
         <!-- TESTING DEPENDENCIES -->
         <dependency>
             <groupId>junit</groupId>
@@ -227,7 +228,7 @@
         <connection>scm:git:git@github.com:namics/magnolia-dictionary.git</connection>
         <developerConnection>scm:git:git@github.com:namics/magnolia-dictionary.git</developerConnection>
     </scm>
-    
+
     <profiles>
         <profile>
             <id>ossrh</id>
