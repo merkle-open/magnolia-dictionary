@@ -14,22 +14,22 @@ import java.util.Locale;
  */
 public class LocaleUtils {
 
-    public static String getLocaleString(Locale locale) {
-        return locale.toString();
-    }
+	public static String getLocaleString(Locale locale) {
+		return locale.toString();
+	}
 
-    public static List<Locale> getLocalesOfAllSiteDefinitions() {
-        List<Locale> locales = new ArrayList<>();
+	public static List<Locale> getLocalesOfAllSiteDefinitions() {
+		List<Locale> locales = new ArrayList<>();
 
-        SiteManager manager = Components.getComponent(SiteManager.class);
-        for (Site site : manager.getSites()) {
-            if (site.getI18n() != null) {
-                site.getI18n().getLocales().stream()
-                        .filter(locale -> !locales.contains(locale))
-                        .forEach(locales::add);
-            }
-        }
+		SiteManager manager = Components.getComponent(SiteManager.class);
+		for (Site site : manager.getSites()) {
+			if (site.getI18n() != null) {
+				site.getI18n().getLocales().stream()
+						.filter(locale -> !locales.contains(locale))
+						.forEach(locales::add);
+			}
+		}
 
-        return locales;
-    }
+		return locales;
+	}
 }

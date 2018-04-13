@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.namics.oss.magnolia</groupId>
     <artifactId>magnolia-dictionary</artifactId>
-    <version>0.0.0</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>${project.artifactId}</name>
@@ -12,8 +13,8 @@
     <url>https://github.com/namics/magnolia-dictionary</url>
     <licenses>
         <license>
-            <name>MIT License 2.0</name>
-            <url>https://opensource.org/licenses/MIT</url>
+            <name>GNU General Public License version 3 (GPLv3)</name>
+            <url>http://www.gnu.org/licenses/gpl-3.0.txt</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
@@ -22,6 +23,12 @@
         <developer>
             <name>Michael Rauch</name>
             <email>michael.rauch@namics.com</email>
+            <organization>Namics AG</organization>
+            <organizationUrl>http://www.namics.com</organizationUrl>
+        </developer>
+        <developer>
+            <name>Patrick Lötscher</name>
+            <email>patrick.loetscher@namics.com</email>
             <organization>Namics AG</organization>
             <organizationUrl>http://www.namics.com</organizationUrl>
         </developer>
@@ -37,10 +44,10 @@
         <mvn.release.plugin.version>2.5.3</mvn.release.plugin.version>
         <mvn.compiler.plugin.version>3.5.1</mvn.compiler.plugin.version>
 
-        <maven.build.timestamp.format>yyyy-MM-dd-z-HH-mm-ss</maven.build.timestamp.format>
-
         <encoding>UTF-8</encoding>
         <project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
+
+        <maven.build.timestamp.format>yyyy-MM-dd-z-HH-mm-ss</maven.build.timestamp.format>
 
         <git.build.time>${maven.build.timestamp}</git.build.time>
         <git.branch>unknown</git.branch>
@@ -88,10 +95,16 @@
             <artifactId>magnolia-module-blossom</artifactId>
             <version>${magnolia.blossom.version}</version>
         </dependency>
+
         <dependency>
-            <groupId>com.namics.mgnl</groupId>
-            <artifactId>namics-mgnl-commons</artifactId>
-            <version>3.1.1</version>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>3.9</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>3.9</version>
         </dependency>
 
         <!-- TESTING DEPENDENCIES -->
@@ -100,16 +113,6 @@
             <artifactId>junit</artifactId>
             <version>4.12</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi-ooxml</artifactId>
-            <version>3.16</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi</artifactId>
-            <version>3.16</version>
         </dependency>
     </dependencies>
 
@@ -199,24 +202,6 @@
             </snapshots>
         </repository>
 
-        <!-- Namics -->
-        <repository>
-            <id>namics-projects.nexus.namics.com</id>
-            <name>Namics Projects</name>
-            <url>http://nexus.namics.com/content/repositories/namics-projects</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>snapshot.namics-projects.nexus.namics.com</id>
-            <name>Namics Projects Snapshot</name>
-            <url>http://nexus.namics.com/content/repositories/namics-projects-snapshot</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-
         <!-- Vaadin -->
         <repository>
             <id>vaadin-addons</id>
@@ -226,7 +211,6 @@
             </snapshots>
         </repository>
     </repositories>
-
 
     <distributionManagement>
         <snapshotRepository>
@@ -244,6 +228,7 @@
         <connection>scm:git:git@github.com:namics/magnolia-dictionary.git</connection>
         <developerConnection>scm:git:git@github.com:namics/magnolia-dictionary.git</developerConnection>
     </scm>
+
     <profiles>
         <profile>
             <id>ossrh</id>
@@ -252,9 +237,9 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>3.0.0</version>
                         <configuration>
                             <failOnError>false</failOnError>
-                            <additionalparam>-Xdoclint:none</additionalparam>
                         </configuration>
                         <executions>
                             <execution>

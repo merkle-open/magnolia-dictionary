@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE module SYSTEM "module.dtd" >
 <module>
-    <name>namics-mgnl-dictionary-app</name>
+    <name>magnolia-dictionary</name>
     <displayName>Dictionary</displayName>
     <description>Dictionary app for label translations.</description>
     <class>com.namics.oss.magnolia.dictionary.DictionaryModule</class>
@@ -27,15 +27,6 @@
             <name>core</name>
             <version>5.4/*</version>
         </dependency>
-        <!--<dependency>-->
-            <!--<name>ui-admincentral</name>-->
-            <!--<version>5.4/*</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<name>ui-contentapp</name>-->
-            <!--<version>5.4/*</version>-->
-            <!--<optional>true</optional>-->
-        <!--</dependency>-->
         <dependency>
             <name>site</name>
             <version>1.0/*</version>
@@ -54,7 +45,7 @@
             <workspaces>
                 <workspace>dictionary</workspace>
             </workspaces>
-            <nodeTypeFile>/mgnl-nodetypes/dictionary-app-nodetypes.xml</nodeTypeFile>
+            <nodeTypeFile>/mgnl-nodetypes/magnolia-dictionary-nodetypes.xml</nodeTypeFile>
         </repository>
     </repositories>
 

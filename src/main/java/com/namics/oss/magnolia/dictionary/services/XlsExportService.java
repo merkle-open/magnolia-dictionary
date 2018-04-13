@@ -1,6 +1,6 @@
 package com.namics.oss.magnolia.dictionary.services;
 
-import com.namics.mgnl.commons.utils.NodeUtil;
+import com.namics.oss.magnolia.dictionary.util.NodeUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.PropertyUtil;
 import org.apache.commons.collections.CollectionUtils;
@@ -19,10 +19,7 @@ import javax.jcr.RepositoryException;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class XlsExportService {
 	private static final Logger LOG = LoggerFactory.getLogger(XlsExportService.class);
@@ -50,8 +47,12 @@ public class XlsExportService {
 				if ("jcrName".equals(property)) {
 					cell.setCellValue(node.getName());
 				} else if ("mgnl:created".equals(property) || "mgnl:lastModified".equals(property) || "mgnl:lastActivated".equals(property)) {
-					cell.setCellValue(PropertyUtil.getDate(node, property));
-
+					Calendar date = PropertyUtil.getDate(node, property);
+					if (date != null) {
+						cell.setCellValue(date);
+					} else {
+						cell.setCellValue(StringUtils.EMPTY);
+					}
 				} else {
 					cell.setCellValue(PropertyUtil.getString(node, property, StringUtils.EMPTY));
 				}
@@ -60,7 +61,6 @@ public class XlsExportService {
 
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		workbook.write(outputStream);
-		workbook.close();
 
 		return outputStream;
 	}
@@ -106,17 +106,17 @@ public class XlsExportService {
 					String property = properties.get(colNumber);
 					Cell cell = nextRow.getCell(colNumber);
 					if (cell != null) {
-						switch (cell.getCellTypeEnum()) {
-							case STRING:
+						switch (cell.getCellType()) {
+							case Cell.CELL_TYPE_STRING:
 								value = StringUtils.defaultIfEmpty(cell.getStringCellValue(), null);
 								break;
-							case BOOLEAN:
+							case Cell.CELL_TYPE_BOOLEAN:
 								value = cell.getBooleanCellValue();
 								break;
-							case NUMERIC:
+							case Cell.CELL_TYPE_NUMERIC:
 								value = cell.getNumericCellValue();
 								break;
-							case BLANK:
+							case Cell.CELL_TYPE_BLANK:
 								value = null;
 								break;
 						}
@@ -132,7 +132,6 @@ public class XlsExportService {
 			startNode.getSession().save();
 		}
 
-		workbook.close();
 		inputStream.close();
 	}
 }

@@ -1,9 +1,9 @@
 package com.namics.oss.magnolia.dictionary.actions;
 
-import com.namics.mgnl.commons.utils.NodeUtil;
 import com.namics.oss.magnolia.dictionary.services.XlsExportService;
 import com.vaadin.server.Page;
 import com.vaadin.server.StreamResource;
+import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.ui.api.action.AbstractAction;
 import info.magnolia.ui.api.action.ActionExecutionException;
 import info.magnolia.ui.api.context.UiContext;
