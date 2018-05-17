@@ -62,11 +62,13 @@
             <groupId>info.magnolia</groupId>
             <artifactId>magnolia-core</artifactId>
             <version>${magnolia.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>info.magnolia.site</groupId>
             <artifactId>magnolia-site</artifactId>
             <version>1.0.4</version>
+	        <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>info.magnolia.publishing</groupId>
@@ -94,6 +96,7 @@
             <groupId>info.magnolia.blossom</groupId>
             <artifactId>magnolia-module-blossom</artifactId>
             <version>${magnolia.blossom.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
