@@ -36,7 +36,7 @@ public class DictionaryMessageBundlesInstaller {
 	private static final Predicate<Resource> DIRECTORY_PREDICATE = Functions.pathStartsWith("/");
 	private static final Predicate<Resource> RESOURCE_PREDICATE = Functions.pathMatches("(/*/i18n/.*dictionary-messages.*\\.properties|/mgnl-i18n/.*dictionary-messages.*\\.properties)");
 
-	private static final String NAMICS_SYSTEM_CONFIG_NODE_TYPE = "mgnl:namicsSystemConfig";
+	private static final String MGNL_DICTIONARY_CONFIG_NODE_TYPE = "mgnl:dictionaryConfig";
 
 	private final Properties messages = new Properties();
 
@@ -74,7 +74,7 @@ public class DictionaryMessageBundlesInstaller {
 	public void loadLabelsToDictionary() {
 		Node dictionaryRoot = NodeUtil.getNodeByPathOrNull(DictionaryConfiguration.REPOSITORY, "/");
 		try {
-			NodeUtil.overwriteOrCreateNode(dictionaryRoot, LAST_LOADED_TIME, NAMICS_SYSTEM_CONFIG_NODE_TYPE); // lastLoadedTime = node.lastModifiedTime
+			NodeUtil.overwriteOrCreateNode(dictionaryRoot, LAST_LOADED_TIME, MGNL_DICTIONARY_CONFIG_NODE_TYPE); // lastLoadedTime = node.lastModifiedTime
 		} catch (RepositoryException e) {
 			LOG.error("Could not set time when labels were last loaded. Manually check labels which should get removed.", e);
 		}

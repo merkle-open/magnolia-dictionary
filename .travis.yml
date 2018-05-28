@@ -2,34 +2,50 @@ language: java
 env:
   global:
     - # ^^ OSSRH_USERNAME
-    - secure: "LFMLxniDmR91OQel8PeoBu1JAxLqdlpo3LSnBZaDILuG95eZjf5n8WGmuQc3QgP8xqfFLjbRBSpiQN/5j+Re7Ixfc3z6hi8rcxeqIRrVdUuWWZeLhRwgRGCD6ZkVxz4Lpkan05Ke5uj6kmb2qThKezn6UHV0NA6/uCz7bwZ+hMwEJftbDhhzShYj0ZNS1HoITCSjFU7pGYb8fGyP33/RD6zNSo/o6ST4jEef7N8gE4aqE1um0XAiBELQlHKy/5yDCpgPkEzO9zhoKNSQkbvOpqVBNxNopM/BklLGlMDrMcTveoBk143VhyntqQtd+5Q4GmNfYe/CgUuBc1oMfMNqS0jfNxQaXX8qsGzJw3Ff227zkGyjnA4lKZ9MirYXFDDAycRXW859T0/wEw8yleKcHJyJiOqp0H8VFeCIKgcrVfyg9UlYFC8buK9daZLjAJnbR78Npo+mEHmhPwlSLQpAzCDCCTXMvUSEYoJH98nV/DVbO0/FZFy5WCa9XlfEFGSCtD5xRbtruL88gflJlVeAj6mGomY51QHFgRdqj0TpNRBcDnEZs4vaQrG2Mp7gGp0cXlTdw6G/dmSSXlg1PdhFSnRgIRGKYuT983x4a0GC7pYS1pMalz9xhv0YAnZK+336Jy6+LQHCJIpwBFNeMG0JLZK0MHZQFwhKNaR0wPyWRe0="
+    - secure: LFMLxniDmR91OQel8PeoBu1JAxLqdlpo3LSnBZaDILuG95eZjf5n8WGmuQc3QgP8xqfFLjbRBSpiQN/5j+Re7Ixfc3z6hi8rcxeqIRrVdUuWWZeLhRwgRGCD6ZkVxz4Lpkan05Ke5uj6kmb2qThKezn6UHV0NA6/uCz7bwZ+hMwEJftbDhhzShYj0ZNS1HoITCSjFU7pGYb8fGyP33/RD6zNSo/o6ST4jEef7N8gE4aqE1um0XAiBELQlHKy/5yDCpgPkEzO9zhoKNSQkbvOpqVBNxNopM/BklLGlMDrMcTveoBk143VhyntqQtd+5Q4GmNfYe/CgUuBc1oMfMNqS0jfNxQaXX8qsGzJw3Ff227zkGyjnA4lKZ9MirYXFDDAycRXW859T0/wEw8yleKcHJyJiOqp0H8VFeCIKgcrVfyg9UlYFC8buK9daZLjAJnbR78Npo+mEHmhPwlSLQpAzCDCCTXMvUSEYoJH98nV/DVbO0/FZFy5WCa9XlfEFGSCtD5xRbtruL88gflJlVeAj6mGomY51QHFgRdqj0TpNRBcDnEZs4vaQrG2Mp7gGp0cXlTdw6G/dmSSXlg1PdhFSnRgIRGKYuT983x4a0GC7pYS1pMalz9xhv0YAnZK+336Jy6+LQHCJIpwBFNeMG0JLZK0MHZQFwhKNaR0wPyWRe0=
     - # ^^ OSSRH_PASSWORD
-    -   secure: "YZsAVJfA6nw8pLA2zdF7rw5bo4SBa1ZBEfIfYEfkvdjRtndHh4FOf8Mu305sgIFTTMvwwQPQ4wxWrppgbj4JYKdEiwV3FdFvbKK5CQ9Q/bIAoI0NvzicmvxwtHncvZqKeBnBJ5hvfAy/nGO08IebP1iaaoeSx/YxQO1IuXXn55LVlFG+/FF+2A6gdxTKBA5PyjMQmzkS/bco1T7hou4N6Z34pnbDMSL/Ljiq6agXh8eEgivajHrFofqGXWR2WZnDZ/HJC9OM5cR3wXmJN1FTGZcCRHS1jM1IxcLh6dE1IRkWkkzGLKnU9sxRy3aj0G5st4rnZK+TzgR3h88dF7rprxNsAmHvcG3zJ822VYfDTrLgZJs8inJmkQcUbqDZSpR2LI+waKWPZSxe2/nJLoKxMzladMe9TfJWLqPNIneQ93ghlKAAkgRjuieobXlmZn75f7rhPUAJ2NVFMn3VfJCe7tZwO3EhMPpqeYwZAVY8SDwg2sAmbummfnyyzmpNx3O58KWNKfuVy1oWhVSnJ5UThb5wvfnEK0yNDP1P7zDJqPLiRl+T7eaCzjfw1XRV8bDg7WN414jLBrkzUR7b8G94ounWh65ndnvzZxXESgvXB5RfRR8KvQpgR4BNQVYVzdk4wyAr+XGgDu8o8gfKCH6sCCIgceA4LgiIEn32KhodA6U="
+    - secure: YZsAVJfA6nw8pLA2zdF7rw5bo4SBa1ZBEfIfYEfkvdjRtndHh4FOf8Mu305sgIFTTMvwwQPQ4wxWrppgbj4JYKdEiwV3FdFvbKK5CQ9Q/bIAoI0NvzicmvxwtHncvZqKeBnBJ5hvfAy/nGO08IebP1iaaoeSx/YxQO1IuXXn55LVlFG+/FF+2A6gdxTKBA5PyjMQmzkS/bco1T7hou4N6Z34pnbDMSL/Ljiq6agXh8eEgivajHrFofqGXWR2WZnDZ/HJC9OM5cR3wXmJN1FTGZcCRHS1jM1IxcLh6dE1IRkWkkzGLKnU9sxRy3aj0G5st4rnZK+TzgR3h88dF7rprxNsAmHvcG3zJ822VYfDTrLgZJs8inJmkQcUbqDZSpR2LI+waKWPZSxe2/nJLoKxMzladMe9TfJWLqPNIneQ93ghlKAAkgRjuieobXlmZn75f7rhPUAJ2NVFMn3VfJCe7tZwO3EhMPpqeYwZAVY8SDwg2sAmbummfnyyzmpNx3O58KWNKfuVy1oWhVSnJ5UThb5wvfnEK0yNDP1P7zDJqPLiRl+T7eaCzjfw1XRV8bDg7WN414jLBrkzUR7b8G94ounWh65ndnvzZxXESgvXB5RfRR8KvQpgR4BNQVYVzdk4wyAr+XGgDu8o8gfKCH6sCCIgceA4LgiIEn32KhodA6U=
     - # ^^ GPG_KEY_NAME
-    - secure: "XJePvovWit+qKfuMZaA2TJoKkmoyFLpf7ggWsu/t7jfkqey5IounLO7Cv96XwgQAlVf/tZ0iU8THtzmf2N0GFrmWaJY/ZX+ykeeJNLkXz3r+Bc9ZGEjmyMy1O26h6KEnfFy1EFlmeBABqshWUghMb6e1TWQSlB9XiHwmST7xH7Fko+Inoi7lj7djBjHuRmNLAha65Ql/Xck9XRhD9GrxtsJyjK1mYTox7CZl5ybbkZ/qVyGWL2UwsK+5Uh0jimvWMxglHnTf7P4cc6n0kVkW7byL862IYpJzLn8yZ0tuMTb4JNdn3aivS4zkjc2EKTQYYCCshtKLPWA34b945sQE8yvjhHRlwu7SYcT/NPPZRnCQIBNVSD9tzprLZO+uw6ctBxRDkqHqQWpbWdEZbmh/U8G81dIAD0+zn6XFiY2c30M7I5Ys9iM4OV2oh9YEAMupKQdk5wjH0tUuVwqnu7DGIzjB1MF/XMEbtsJXhxBS0PseP9zBlffUoDO9ytRzlbTJlyTk04i9CoWVGP1lOB5BWEJ70aFDXBefPWRCGL3KppzoRU7ws21Z9SEFjYzKAiBKY5U8eIIUxL5/649m1Fr3WaiLTi0mOo5VvkxtUCaDbv//zqGYiCfIVFF4BUvwIlUsxFtfwzEPlciuZbaLz/EZvhwDWecR+4HuVNcGq9lRNiw="
+    - secure: XJePvovWit+qKfuMZaA2TJoKkmoyFLpf7ggWsu/t7jfkqey5IounLO7Cv96XwgQAlVf/tZ0iU8THtzmf2N0GFrmWaJY/ZX+ykeeJNLkXz3r+Bc9ZGEjmyMy1O26h6KEnfFy1EFlmeBABqshWUghMb6e1TWQSlB9XiHwmST7xH7Fko+Inoi7lj7djBjHuRmNLAha65Ql/Xck9XRhD9GrxtsJyjK1mYTox7CZl5ybbkZ/qVyGWL2UwsK+5Uh0jimvWMxglHnTf7P4cc6n0kVkW7byL862IYpJzLn8yZ0tuMTb4JNdn3aivS4zkjc2EKTQYYCCshtKLPWA34b945sQE8yvjhHRlwu7SYcT/NPPZRnCQIBNVSD9tzprLZO+uw6ctBxRDkqHqQWpbWdEZbmh/U8G81dIAD0+zn6XFiY2c30M7I5Ys9iM4OV2oh9YEAMupKQdk5wjH0tUuVwqnu7DGIzjB1MF/XMEbtsJXhxBS0PseP9zBlffUoDO9ytRzlbTJlyTk04i9CoWVGP1lOB5BWEJ70aFDXBefPWRCGL3KppzoRU7ws21Z9SEFjYzKAiBKY5U8eIIUxL5/649m1Fr3WaiLTi0mOo5VvkxtUCaDbv//zqGYiCfIVFF4BUvwIlUsxFtfwzEPlciuZbaLz/EZvhwDWecR+4HuVNcGq9lRNiw=
     - # ^^ GPG_PASSPHRASE
-    - secure: "Cz0lzvPDYN4zNRX7d6SWCvpwZlb4q7pe6lA5Kk/lFJDJNqsZAlon5Gj+dVKjCTosQPFFTeofvmwQn5H4bNOkOquWrvnpMw1+LOpzrgBCz2IQfJXdTikU3aH58Ag+he5o/mWNPM6BkqGvOg35VLl7m3WEtTMDwC+nvlA9gMTW0fqwlWyEwLUmj6pfoAJRavDlZN7MG1mZWQOJxM/kWrTXwqXrhaMmODaw3/kOf6SeRQWt+4ZcNW0U5s9zJ3Nn7Gm66rONXbd3/0E9IGpzN44pmjqeBDBsu9NQz8xnS27ePYBB86Wk2ZEn1XOMhN3d6BC5MlFWLcoQQItWeFEF1ZfhRx3oe83/DFv4J03pVKetUFBVXrQUQcKgvClJU9luoYwAnyAK7kfoJOC1C/0gmNyTAOVIZ53ZpqXGEq18FuTrE6syP81OIqBm/jd0H/fwKQxu2Z8/XwlEOSEO3D5SjtshqJ/Wopbo3iXvMBwIyBua4OlhM02iSsAdUjbpl0hnPK3KmcAbalyFCmdvzf3Yxz974nf+fGNGinPJ3iWGmu7TPHFrz6YobRgWDSCyjL6/Tm+KsUajfKj6bjeiyNCPGGZuUj0cNIOSXakksHTqw/XMHVupwrIv63PYKqIwxDgh26nnuqFfRwUAon5qnKTZ7ziT5rnpDzyIO3zzb03JhaRqz5A="
-before_install:
-  - openssl aes-256-cbc -K $encrypted_67ec11152530_key -iv $encrypted_67ec11152530_iv -in codesigning.asc.enc -out codesigning.asc -d
-  - gpg --yes --batch --import codesigning.asc
+    - secure: Cz0lzvPDYN4zNRX7d6SWCvpwZlb4q7pe6lA5Kk/lFJDJNqsZAlon5Gj+dVKjCTosQPFFTeofvmwQn5H4bNOkOquWrvnpMw1+LOpzrgBCz2IQfJXdTikU3aH58Ag+he5o/mWNPM6BkqGvOg35VLl7m3WEtTMDwC+nvlA9gMTW0fqwlWyEwLUmj6pfoAJRavDlZN7MG1mZWQOJxM/kWrTXwqXrhaMmODaw3/kOf6SeRQWt+4ZcNW0U5s9zJ3Nn7Gm66rONXbd3/0E9IGpzN44pmjqeBDBsu9NQz8xnS27ePYBB86Wk2ZEn1XOMhN3d6BC5MlFWLcoQQItWeFEF1ZfhRx3oe83/DFv4J03pVKetUFBVXrQUQcKgvClJU9luoYwAnyAK7kfoJOC1C/0gmNyTAOVIZ53ZpqXGEq18FuTrE6syP81OIqBm/jd0H/fwKQxu2Z8/XwlEOSEO3D5SjtshqJ/Wopbo3iXvMBwIyBua4OlhM02iSsAdUjbpl0hnPK3KmcAbalyFCmdvzf3Yxz974nf+fGNGinPJ3iWGmu7TPHFrz6YobRgWDSCyjL6/Tm+KsUajfKj6bjeiyNCPGGZuUj0cNIOSXakksHTqw/XMHVupwrIv63PYKqIwxDgh26nnuqFfRwUAon5qnKTZ7ziT5rnpDzyIO3zzb03JhaRqz5A=
+    - # ^^ GITHUB_TOKEN
+    - secure: DINF7jmHaCp6No8vsnxZa/anGnPR4HrIH2eHagLrf6aDCgCWVvbYTF3nnmEkHudJhL/lHhYxaRhjbbVFmpolCdghvg86Oy2wfxx25ypwnntCNGz/bkkGKg7zVIT2uA7kMPMmjjOLmGevk4hVJMoQybHFWYdoMlqtNtuGseF1rc1LcZ+2jMCCOUY/xCcgNmkXFUPoaQ8dPrAfQ/bWCmHWQvxNSXNmW/JnCIKsiPmb4CHcQpFh9QyeRMwd0pA2tirToyYuG1tC9NUt8lW2Th03d3I6VKueX1wC/cVVLO9/ypx/79YLWqHqFoZU3CgbAksrVYrfXUc7UTFjisz1tn4ApDCaJNWqcNFapq0rF6CGa39aV+UGDq6UY/rWiBjZT+f9jdkH+bPPzqP9ChKqxBLGqD3j002yUW664OooR6y4p4ZEJRSvcuiZJpmdUCconJtCNCr5lGmeMu3qIuIg5UD6ukAlu0NpfmqfNrAm6Mq8iXogBVwR+A8uHI4A/Gq+Qve/YDWOvowi+P7hx1Vg5qc4fSG7enmADPDlAPBf0B6q5tRjBJLEORsydzco64jgZss4Z05ritf5EP5UugxyNN+x89rlekD/UZVhe6k/0VJ7DTEWrTQoPqcpsN0GEY84OBfAwyuPS2eduyS8nGHptIcYF8olOzomBQ866OgQoCkZ/C0=
 jdk:
   - oraclejdk8
-install: mvn clean install -P !ossrh -DskipTests=true -Dmaven.javadoc.skip=true -B -V -U
-script:
-- mvn deploy -P ossrh --settings mvnsettings.xml
+before_install:
+  - source ci/setup-git.sh
+install: mvn clean install -P !ossrh -DskipTests=true -Dmaven.javadoc.skip=true -B -V -U  --settings ci/mvnsettings.xml
+script: mvn verify -P !ossrh -B --settings ci/mvnsettings.xml
+after_failure:
+  - find . -size +1k -regex  ".*/surefire-reports/.*\.txt" -exec cat {} +
 cache:
   directories:
-    - ~/.m2/repository
-branches:
-  only:
-    - master
-    - develop
-    - /^feature.*/
-    - /^hotfix.*/
+  - "~/.m2/repository"
 notifications:
   email:
-    on_success: change
-    on_failure: change
+    on_success: never
+    on_failure: never
+deploy:
+  - provider: script
+    skip-cleanup: true
+    script: bash ci/mvn-release.sh
+    on:
+      branch: master
+  - provider: script
+    skip-cleanup: true
+    script: bash ci/mvn-deploy.sh
+    on:
+      branch: develop
+  - provider: script
+    skip-cleanup: true
+    script: bash ci/mvn-deploy.sh
+    on:
+      tags: true
+addons:
+  apt:
+    packages:
+    - libxml2-utils
 
 
 

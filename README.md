@@ -3,7 +3,7 @@ System        | Status
 --------------|------------------------------------------------
 CI master     | [![Build Status][travis-master]][travis-url]
 CI develop    | [![Build Status][travis-develop]][travis-url]
-Dependency    | [![Maven Central][maven-central-version]][maven-central]
+Dependency    | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.namics.oss.magnolia/magnolia-dictionary/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.namics.oss.magnolia/magnolia-dictionary)
 
 
 Magnolia dictionary app to manage i18n labels.
@@ -15,10 +15,10 @@ Magnolia dictionary app to manage i18n labels.
 	<dependency>
 		<groupId>com.namics.oss.magnolia</groupId>
 		<artifactId>magnolia-dictionary</artifactId>
-		<version>1.0.0</version>
+		<version>1.0.1</version>
 	</dependency>
 
-[![Maven Central][maven-central-version]][maven-central]
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.namics.oss.magnolia/magnolia-dictionary/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.namics.oss.magnolia/magnolia-dictionary)
 
 ### Available Languages
 

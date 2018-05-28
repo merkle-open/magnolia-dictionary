@@ -4,4 +4,9 @@
             <supertype>mgnl:content</supertype>
         </supertypes>
     </nodeType>
+    <nodeType name="mgnl:dictionaryConfig" isMixin="false" hasOrderableChildNodes="true" primaryItemName="">
+        <supertypes>
+            <supertype>mgnl:content</supertype>
+        </supertypes>
+    </nodeType>
 </nodeTypes>
