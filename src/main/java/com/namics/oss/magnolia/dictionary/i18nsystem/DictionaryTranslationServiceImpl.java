@@ -3,12 +3,14 @@ package com.namics.oss.magnolia.dictionary.i18nsystem;
 import com.namics.oss.magnolia.dictionary.util.DictionaryUtils;
 import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.event.EventBus;
 import info.magnolia.event.SystemEventBus;
 import info.magnolia.i18nsystem.LocaleProvider;
 import info.magnolia.i18nsystem.TranslationService;
 import info.magnolia.i18nsystem.TranslationServiceImpl;
 import info.magnolia.i18nsystem.module.I18nModule;
+import info.magnolia.module.site.ExtendedAggregationState;
 import info.magnolia.module.site.Site;
 import info.magnolia.module.site.SiteManager;
 import info.magnolia.objectfactory.ComponentProvider;
@@ -25,6 +27,7 @@ import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.Properties;
 
 /**
@@ -134,17 +137,32 @@ public class DictionaryTranslationServiceImpl implements TranslationService, Eve
 
 	protected I18nContentSupport getSiteI18n() {
 		try {
-			Site currentSite = Components.getComponent(SiteManager.class).getCurrentSite();
-			return currentSite.getI18n();
-		} catch (Exception e) {
-			return null;
+			if (isSitePresent()) {
+				Site currentSite = Components.getComponent(SiteManager.class).getCurrentSite();
+				return currentSite.getI18n();
+			}
+		} catch (RuntimeException e) {
+			LOG.debug("Error while getting I18nContentSupport", e);
 		}
+		return null;
+	}
+
+	private boolean isSitePresent() {
+		// If a translation is requested before the site is
+		// set in the aggregationState, the SiteManager will
+		// log a warning (see info.magnolia.module.site.DefaultSiteManager.getCurrentSite).
+		// This happens, if the translation is requested in a
+		// filter which is located before the info.magnolia.multisite.filters.MultiSiteFilter.
+		// This is the case in Magnolia 5.7 info.magnolia.personalization.visitor.VisitorDetectorFilter.
+		return Optional.ofNullable(MgnlContext.getAggregationState())
+				.filter(state -> state instanceof ExtendedAggregationState)
+				.map(state -> ((ExtendedAggregationState) state).getSite())
+				.isPresent();
 	}
 
 	protected Locale getFallbackLocale() {
 		return MessagesManager.getInstance().getDefaultLocale();
 	}
-
 
 	@Override
 	public void reloadMessageBundles() {
