@@ -40,6 +40,7 @@
         <git.commit.time>unknown</git.commit.time>
 
         <sonar.language>java</sonar.language>
+        <poi.version>4.0.1</poi.version>
     </properties>
 
     <dependencyManagement>
@@ -63,7 +64,7 @@
         <dependency>
             <groupId>info.magnolia.site</groupId>
             <artifactId>magnolia-site</artifactId>
-	        <scope>provided</scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>info.magnolia.publishing</groupId>
@@ -95,12 +96,13 @@
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
-            <version>3.9</version>
+            <version>${poi.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
-            <version>3.9</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- TESTING DEPENDENCIES -->
