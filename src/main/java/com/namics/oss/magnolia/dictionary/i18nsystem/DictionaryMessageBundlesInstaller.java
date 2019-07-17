@@ -1,6 +1,5 @@
 package com.namics.oss.magnolia.dictionary.i18nsystem;
 
-import com.google.common.base.Predicate;
 import com.namics.oss.magnolia.dictionary.DictionaryConfiguration;
 import com.namics.oss.magnolia.dictionary.util.DictionaryUtils;
 import com.namics.oss.magnolia.dictionary.util.NodeUtil;
@@ -23,11 +22,8 @@ import java.io.Reader;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Properties;
+import java.util.function.Predicate;
 
-/**
- * @author ploetscher, Namics AG
- * @since 01.04.2016
- */
 public class DictionaryMessageBundlesInstaller {
 
 	private static final Logger LOG = LoggerFactory.getLogger(DictionaryMessageBundlesInstaller.class);
