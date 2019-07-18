@@ -5,7 +5,7 @@
 
     <groupId>com.namics.oss.magnolia</groupId>
     <artifactId>magnolia-dictionary</artifactId>
-    <version>1.0.3-SNAPSHOT</version>
+    <version>1.1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>${project.artifactId}</name>
@@ -19,32 +19,15 @@
         </license>
     </licenses>
 
-    <developers>
-        <developer>
-            <name>Michael Rauch</name>
-            <email>michael.rauch@namics.com</email>
-            <organization>Namics AG</organization>
-            <organizationUrl>http://www.namics.com</organizationUrl>
-        </developer>
-        <developer>
-            <name>Patrick Lötscher</name>
-            <email>patrick.loetscher@namics.com</email>
-            <organization>Namics AG</organization>
-            <organizationUrl>http://www.namics.com</organizationUrl>
-        </developer>
-    </developers>
-
     <properties>
-        <magnolia.version>5.7</magnolia.version>
-        <magnolia.blossom.version>3.2</magnolia.blossom.version>
-        <magnolia.site.version>1.2.2</magnolia.site.version>
-        <magnolia.publishing.core.version>1.0</magnolia.publishing.core.version>
+        <magnolia.version>6.1</magnolia.version>
+        <magnolia.blossom.version>3.2.1</magnolia.blossom.version>
 
         <java.version>1.8</java.version>
 
         <!-- Maven Plugins -->
         <mvn.release.plugin.version>2.5.3</mvn.release.plugin.version>
-        <mvn.compiler.plugin.version>3.7.0</mvn.compiler.plugin.version>
+        <mvn.compiler.plugin.version>3.8.1</mvn.compiler.plugin.version>
 
         <encoding>UTF-8</encoding>
         <project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
@@ -57,41 +40,50 @@
         <git.commit.time>unknown</git.commit.time>
 
         <sonar.language>java</sonar.language>
+        <poi.version>4.0.1</poi.version>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>info.magnolia.bundle</groupId>
+                <artifactId>magnolia-bundle-parent</artifactId>
+                <version>${magnolia.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
             <groupId>info.magnolia</groupId>
             <artifactId>magnolia-core</artifactId>
-            <version>${magnolia.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>info.magnolia.site</groupId>
             <artifactId>magnolia-site</artifactId>
-            <version>${magnolia.site.version}</version>
-	        <scope>provided</scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>info.magnolia.publishing</groupId>
             <artifactId>magnolia-publishing-core</artifactId>
-            <version>${magnolia.publishing.core.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>info.magnolia.ui</groupId>
             <artifactId>magnolia-ui-form</artifactId>
-            <version>${magnolia.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>info.magnolia.ui</groupId>
             <artifactId>magnolia-ui-admincentral</artifactId>
-            <version>${magnolia.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>info.magnolia.ui</groupId>
             <artifactId>magnolia-ui-contentapp</artifactId>
-            <version>${magnolia.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -104,12 +96,13 @@
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
-            <version>3.9</version>
+            <version>${poi.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
-            <version>3.9</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- TESTING DEPENDENCIES -->
@@ -242,7 +235,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>3.0.0</version>
+                        <version>3.1.1</version>
                         <configuration>
                             <failOnError>false</failOnError>
                         </configuration>
@@ -258,7 +251,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
-                        <version>3.0.1</version>
+                        <version>3.1.0</version>
                         <executions>
                             <execution>
                                 <id>attach-sources</id>
@@ -271,7 +264,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.5</version>
+                        <version>1.6</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>
@@ -285,7 +278,7 @@
                     <plugin>
                         <groupId>org.sonatype.plugins</groupId>
                         <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>1.6.7</version>
+                        <version>1.6.8</version>
                         <extensions>true</extensions>
                         <configuration>
                             <serverId>ossrh</serverId>

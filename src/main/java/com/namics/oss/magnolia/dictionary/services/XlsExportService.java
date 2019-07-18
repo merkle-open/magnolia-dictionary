@@ -107,16 +107,16 @@ public class XlsExportService {
 					Cell cell = nextRow.getCell(colNumber);
 					if (cell != null) {
 						switch (cell.getCellType()) {
-							case Cell.CELL_TYPE_STRING:
+							case STRING:
 								value = StringUtils.defaultIfEmpty(cell.getStringCellValue(), null);
 								break;
-							case Cell.CELL_TYPE_BOOLEAN:
+							case BOOLEAN:
 								value = cell.getBooleanCellValue();
 								break;
-							case Cell.CELL_TYPE_NUMERIC:
+							case NUMERIC:
 								value = cell.getNumericCellValue();
 								break;
-							case Cell.CELL_TYPE_BLANK:
+							case BLANK:
 								value = null;
 								break;
 						}

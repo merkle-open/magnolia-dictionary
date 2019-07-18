@@ -28,7 +28,7 @@ Languages are read from the configured sites.
 
 #### Magnolia Version
 
-- Magnolia: 5.6
+- Magnolia: 6.1
 
 #### Java Version
 
