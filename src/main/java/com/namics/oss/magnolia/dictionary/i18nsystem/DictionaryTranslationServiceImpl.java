@@ -6,6 +6,7 @@ import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.event.EventBus;
 import info.magnolia.event.SystemEventBus;
+import info.magnolia.i18nsystem.DefaultMessageBundlesLoader;
 import info.magnolia.i18nsystem.LocaleProvider;
 import info.magnolia.i18nsystem.TranslationService;
 import info.magnolia.i18nsystem.TranslationServiceImpl;
@@ -93,7 +94,7 @@ public class DictionaryTranslationServiceImpl implements TranslationService, Eve
 	protected String lookUpKeyInDictionary(String[] keys, Locale locale) {
 		String message;
 
-		LOG.debug("Looking up in dictionary message bundle with key [{}] and Locale [{}]", Arrays.asList(keys), locale);
+		LOG.trace("Looking up in dictionary message bundle with key [{}] and Locale [{}]", Arrays.asList(keys), locale);
 		message = this.doGetMessage(keys, locale);
 
 		if (message == null) {
@@ -142,7 +143,8 @@ public class DictionaryTranslationServiceImpl implements TranslationService, Eve
 				return currentSite.getI18n();
 			}
 		} catch (RuntimeException e) {
-			LOG.debug("Error while getting I18nContentSupport", e);
+			LOG.debug("Error while getting I18nContentSupport: '{}'", e.getMessage());
+			LOG.trace("Error while getting I18nContentSupport", e);
 		}
 		return null;
 	}
@@ -154,10 +156,13 @@ public class DictionaryTranslationServiceImpl implements TranslationService, Eve
 		// This happens, if the translation is requested in a
 		// filter which is located before the info.magnolia.multisite.filters.MultiSiteFilter.
 		// This is the case in Magnolia 5.7 info.magnolia.personalization.visitor.VisitorDetectorFilter.
-		return Optional.ofNullable(MgnlContext.getAggregationState())
-				.filter(state -> state instanceof ExtendedAggregationState)
-				.map(state -> ((ExtendedAggregationState) state).getSite())
-				.isPresent();
+		if (MgnlContext.isWebContext()) {
+			return Optional.ofNullable(MgnlContext.getAggregationState())
+					.filter(state -> state instanceof ExtendedAggregationState)
+					.map(state -> ((ExtendedAggregationState) state).getSite())
+					.isPresent();
+		}
+		return Boolean.FALSE;
 	}
 
 	protected Locale getFallbackLocale() {
