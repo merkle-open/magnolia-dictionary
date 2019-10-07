@@ -3,7 +3,7 @@ package com.namics.oss.magnolia.dictionary.services;
 import com.namics.oss.magnolia.dictionary.util.NodeUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.PropertyUtil;
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
