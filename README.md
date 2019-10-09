@@ -15,7 +15,7 @@ Magnolia dictionary app to manage i18n labels.
 	<dependency>
 		<groupId>com.namics.oss.magnolia</groupId>
 		<artifactId>magnolia-dictionary</artifactId>
-		<version>1.0.2</version>
+		<version>1.1.2</version>
 	</dependency>
 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.namics.oss.magnolia/magnolia-dictionary/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.namics.oss.magnolia/magnolia-dictionary)
@@ -28,7 +28,7 @@ Languages are read from the configured sites.
 
 #### Magnolia Version
 
-- Magnolia: 6.1
+- Magnolia: 6.1.2
 
 #### Java Version
 
