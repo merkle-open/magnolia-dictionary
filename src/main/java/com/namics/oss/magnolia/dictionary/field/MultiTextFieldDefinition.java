@@ -41,6 +41,7 @@ public class MultiTextFieldDefinition extends TextFieldDefinition {
 			textField.setValidators(this.getValidators());
 			textField.setName(LocaleUtils.getLocaleString(locale));
 			textField.setLabel(locale.getDisplayName());
+			textField.setPlaceholder(locale.getDisplayName());
 			fields.add(textField);
 		}
 

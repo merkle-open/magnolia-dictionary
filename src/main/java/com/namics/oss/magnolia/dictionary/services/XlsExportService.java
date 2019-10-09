@@ -3,7 +3,7 @@ package com.namics.oss.magnolia.dictionary.services;
 import com.namics.oss.magnolia.dictionary.util.NodeUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.PropertyUtil;
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -107,16 +107,16 @@ public class XlsExportService {
 					Cell cell = nextRow.getCell(colNumber);
 					if (cell != null) {
 						switch (cell.getCellType()) {
-							case Cell.CELL_TYPE_STRING:
+							case STRING:
 								value = StringUtils.defaultIfEmpty(cell.getStringCellValue(), null);
 								break;
-							case Cell.CELL_TYPE_BOOLEAN:
+							case BOOLEAN:
 								value = cell.getBooleanCellValue();
 								break;
-							case Cell.CELL_TYPE_NUMERIC:
+							case NUMERIC:
 								value = cell.getNumericCellValue();
 								break;
-							case Cell.CELL_TYPE_BLANK:
+							case BLANK:
 								value = null;
 								break;
 						}
