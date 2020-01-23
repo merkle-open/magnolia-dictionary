@@ -1,16 +1,19 @@
 package com.namics.oss.magnolia.dictionary.action;
 
 import com.namics.oss.magnolia.dictionary.DictionaryConfiguration;
-import com.namics.oss.magnolia.dictionary.util.DictionaryUtils;
 import com.namics.oss.magnolia.dictionary.util.NodeUtil;
+import com.namics.oss.magnolia.dictionary.util.predicates.LabelExpiredPredicate;
+import com.namics.oss.magnolia.dictionary.util.predicates.SystemNodeFilteringPredicate;
+import com.vaadin.ui.Notification;
 import info.magnolia.event.EventBus;
-import info.magnolia.jcr.util.NodeTypes;
-import info.magnolia.jcr.util.PropertyUtil;
+import info.magnolia.ui.AlertBuilder;
+import info.magnolia.ui.api.action.AbstractAction;
+import info.magnolia.ui.api.action.ActionExecutionException;
 import info.magnolia.ui.api.action.ConfiguredActionDefinition;
-import info.magnolia.ui.api.context.UiContext;
-import info.magnolia.ui.framework.action.AbstractRepositoryAction;
-import info.magnolia.ui.vaadin.integration.jcr.JcrItemAdapter;
-import info.magnolia.ui.vaadin.overlay.MessageStyleTypeEnum;
+import info.magnolia.ui.api.event.ContentChangedEvent;
+import info.magnolia.ui.vaadin.integration.jcr.JcrItemId;
+import info.magnolia.ui.vaadin.integration.jcr.JcrItemUtil;
+import org.apache.jackrabbit.commons.predicate.Predicates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,36 +21,41 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
-import java.util.Optional;
+import java.lang.invoke.MethodHandles;
 
-public class DeleteAllExpiredLabelNodeAction extends AbstractRepositoryAction<ConfiguredActionDefinition> {
-	private static final Logger LOG = LoggerFactory.getLogger(DeleteAllExpiredLabelNodeAction.class);
+public class DeleteAllExpiredLabelNodeAction extends AbstractAction<ConfiguredActionDefinition> {
+	private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	private UiContext uiContext;
+	private final EventBus eventBus;
 
 	@Inject
-	protected DeleteAllExpiredLabelNodeAction(ConfiguredActionDefinition definition, JcrItemAdapter item, @Named("admincentral") EventBus eventBus, UiContext uiContext) {
-		super(definition, item, eventBus);
-		this.uiContext = uiContext;
+	public DeleteAllExpiredLabelNodeAction(ConfiguredActionDefinition definition, @Named("admincentral") EventBus eventBus) {
+		super(definition);
+		this.eventBus = eventBus;
 	}
 
 	@Override
-	protected void onExecute(JcrItemAdapter jcrItemAdapter) throws RepositoryException {
-		Optional<Long> lastLoadedTime = DictionaryUtils.getLastLoadedTime();
-		if (lastLoadedTime.isPresent()) {
-			Node rootNode = NodeUtil.getWorkspaceRootNode(DictionaryConfiguration.REPOSITORY);
-			Iterable<Node> allChildNodes = info.magnolia.jcr.util.NodeUtil.collectAllChildren(rootNode);
-			for (Node childNode : allChildNodes) {
-				Long lastModified = PropertyUtil.getLong(childNode, NodeTypes.LastModified.LAST_MODIFIED);
-				if (lastModified != null) {
-					if (lastModified < lastLoadedTime.get()) {
-						childNode.remove();
-					}
-				} else {
-					LOG.error("last modified time not set on node {}. this should never occur.", childNode);
-				}
+	public void execute() throws ActionExecutionException {
+		try {
+			Node dictionaryRoot = NodeUtil.getWorkspaceRootNode(DictionaryConfiguration.REPOSITORY);
+			var expiredNodesPredicate = Predicates.and(new LabelExpiredPredicate(), new SystemNodeFilteringPredicate());
+			Iterable<Node> expiredNodes = NodeUtil.getNodes(dictionaryRoot, expiredNodesPredicate);
+			for (Node expiredNode : expiredNodes) {
+				JcrItemId itemId = JcrItemUtil.getItemId(expiredNode);
+				expiredNode.remove();
+				eventBus.fireEvent(new ContentChangedEvent(itemId));
 			}
+			dictionaryRoot.getSession().save();
+		} catch (RepositoryException e) {
+			LOG.error("Could not delete nodes.", e);
+			throw new ActionExecutionException(e);
 		}
-		uiContext.openNotification(MessageStyleTypeEnum.INFO, false, "Expired Labels deleted.");
+
+		AlertBuilder.alert("delete expired nodes")
+				.withLevel(Notification.Type.ASSISTIVE_NOTIFICATION)
+				.withTitle("Deleted expired labels")
+				.withBody("All expired labels were deleted")
+				.withOkButtonCaption("Ok")
+				.buildAndOpen();
 	}
 }
