@@ -19,11 +19,20 @@
         </license>
     </licenses>
 
+    <developers>
+        <developer>
+            <name>Namics Magnolia</name>
+            <email>magnolia@namics.com</email>
+            <organization>Namics AG</organization>
+            <organizationUrl>http://www.namics.com</organizationUrl>
+        </developer>
+    </developers>
+
     <properties>
-        <magnolia.version>6.1.2</magnolia.version>
+        <magnolia.version>6.1.4</magnolia.version>
         <magnolia.blossom.version>3.3</magnolia.blossom.version>
 
-        <java.version>1.8</java.version>
+        <java.version>11</java.version>
 
         <!-- Maven Plugins -->
         <mvn.release.plugin.version>2.5.3</mvn.release.plugin.version>
@@ -39,7 +48,6 @@
         <git.commit.id>unknown</git.commit.id>
         <git.commit.time>unknown</git.commit.time>
 
-        <sonar.language>java</sonar.language>
         <poi.version>4.0.1</poi.version>
     </properties>
 
@@ -73,7 +81,7 @@
         </dependency>
         <dependency>
             <groupId>info.magnolia.ui</groupId>
-            <artifactId>magnolia-ui-form</artifactId>
+            <artifactId>magnolia-ui-framework-compatibility</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -105,13 +113,6 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- TESTING DEPENDENCIES -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <build>
@@ -131,19 +132,6 @@
                     <artifactId>maven-release-plugin</artifactId>
                     <version>${mvn.release.plugin.version}</version>
                 </plugin>
-                <plugin>
-                    <groupId>external.atlassian.jgitflow</groupId>
-                    <artifactId>jgitflow-maven-plugin</artifactId>
-                    <version>1.0-m1</version>
-                    <configuration>
-                        <pushReleases>true</pushReleases>
-                        <pushHotfixes>true</pushHotfixes>
-                        <pushFeatures>true</pushFeatures>
-                        <pullDevelop>true</pullDevelop>
-                        <pullMaster>true</pullMaster>
-                        <noDeploy>true</noDeploy>
-                    </configuration>
-                </plugin>
             </plugins>
         </pluginManagement>
 
@@ -151,10 +139,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>external.atlassian.jgitflow</groupId>
-                <artifactId>jgitflow-maven-plugin</artifactId>
             </plugin>
         </plugins>
 
