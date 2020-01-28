@@ -22,6 +22,11 @@ jobs:
       - name: Set up Git
         env:
           - REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          chmod +x ci/setup-git.sh
+          ci/setup-git.sh
       # Run maven verify (creation of tag triggers deployment)
       - name: Release (GitFlow)
-        run: ci/mvn-release.sh
+        run: |
+          chmod +x ci/mvn-release.sh
+          ci/mvn-release.sh
