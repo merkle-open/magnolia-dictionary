@@ -25,16 +25,16 @@
     <dependencies>
         <dependency>
             <name>core</name>
-            <version>5.4/*</version>
+            <version>*</version>
         </dependency>
         <dependency>
             <name>site</name>
-            <version>1.0/*</version>
+            <version>*</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <name>multisite</name>
-            <version>1.2/*</version>
+            <version>*</version>
             <optional>true</optional>
         </dependency>
     </dependencies>
