@@ -1,85 +1,89 @@
 package com.namics.oss.magnolia.dictionary.action;
 
-import com.namics.oss.magnolia.dictionary.util.DictionaryUtils;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import com.namics.oss.magnolia.dictionary.DictionaryConfiguration;
+import com.vaadin.ui.Notification;
 import info.magnolia.event.EventBus;
-import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.jcr.util.PropertyUtil;
+import info.magnolia.ui.AlertBuilder;
 import info.magnolia.ui.api.action.AbstractAction;
 import info.magnolia.ui.api.action.ActionExecutionException;
 import info.magnolia.ui.api.action.ConfiguredActionDefinition;
-import info.magnolia.ui.api.context.UiContext;
 import info.magnolia.ui.api.event.ContentChangedEvent;
 import info.magnolia.ui.vaadin.integration.jcr.JcrItemAdapter;
-import info.magnolia.ui.vaadin.integration.jcr.JcrItemId;
 import info.magnolia.ui.vaadin.integration.jcr.JcrItemUtil;
-import info.magnolia.ui.vaadin.overlay.MessageStyleTypeEnum;
-import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Named;
-import javax.jcr.Item;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
-import java.util.*;
+import java.lang.invoke.MethodHandles;
 
 public class DeleteExpiredLabelNodeAction extends AbstractAction<ConfiguredActionDefinition> {
-	private Logger LOG = LoggerFactory.getLogger(DeleteExpiredLabelNodeAction.class);
+	private Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	private UiContext uiContext;
-	List<JcrItemAdapter> items;
-	EventBus eventBus;
-	private boolean stillInUse = false;
-	private final Set<JcrItemId> changedItemIds = new HashSet<>();
+	private final JcrItemAdapter item;
+	private final EventBus eventBus;
 
-	public DeleteExpiredLabelNodeAction(ConfiguredActionDefinition definition, JcrItemAdapter item, @Named("admincentral") EventBus eventBus, UiContext uiContext) {
-		this(definition, Collections.singletonList(item), eventBus, uiContext);
-	}
-
-	public DeleteExpiredLabelNodeAction(ConfiguredActionDefinition definition, List<JcrItemAdapter> items, @Named("admincentral") EventBus eventBus, UiContext uiContext) {
+	@Inject
+	public DeleteExpiredLabelNodeAction(ConfiguredActionDefinition definition, JcrItemAdapter item, @Named("admincentral") EventBus eventBus) {
 		super(definition);
-		this.uiContext = uiContext;
-		this.items = items;
+		this.item = item;
 		this.eventBus = eventBus;
 	}
 
 	@Override
 	public void execute() throws ActionExecutionException {
-		try {
-			Optional<Long> lastLoadedTime = DictionaryUtils.getLastLoadedTime();
-			lastLoadedTime.ifPresent(lastLoaded -> items.forEach(item -> {
-				try {
-					Item jcrItem = item.getJcrItem();
-					if (jcrItem.isNode()) {
-						Node itemNode = (Node) jcrItem;
-						Long lastModified = PropertyUtil.getLong(itemNode, NodeTypes.LastModified.LAST_MODIFIED);
-						if (lastModified != null) {
-							if (lastModified < lastLoaded) {
-								itemNode.remove();
-								itemNode.getSession().save();
-								changedItemIds.add(JcrItemUtil.getItemId(jcrItem));
-							} else {
-								stillInUse = true;
-							}
-						} else {
-							LOG.error("last modified time not set on node {}. this should never occur.", itemNode);
-						}
-					}
-				} catch (RepositoryException e) {
-					LOG.error("Could not read property.", e);
-				}
-			}));
-		} catch (RepositoryException e) {
-			LOG.error("Could not read last loaded time.", e);
-		} finally {
-			if (stillInUse) {
-				uiContext.openNotification(MessageStyleTypeEnum.ERROR, false, "Selected label is still used.");
-			}
+		if (!item.isNode()) {
+			fail("The selected item does not seem to be a valid JCR node.");
+			return;
+		}
 
-			if (CollectionUtils.isNotEmpty(changedItemIds)) {
-				eventBus.fireEvent(new ContentChangedEvent(changedItemIds));
-				uiContext.openNotification(MessageStyleTypeEnum.INFO, false, "Selected expired label deleted.");
-			}
+		Node labelNode = (Node) item.getJcrItem();
+
+		if (!isExpired(labelNode)) {
+			fail("The selected label is not expired.");
+			return;
+		}
+
+		String labelName = PropertyUtil.getString(labelNode, DictionaryConfiguration.Prop.NAME, StringUtils.EMPTY);
+		deleteLabel(labelNode);
+		success(labelName);
+	}
+
+	private boolean isExpired(Node labelNode) {
+		return PropertyUtil.getBoolean(labelNode, DictionaryConfiguration.Prop.EXPIRED, false);
+	}
+
+	private void deleteLabel(Node labelNode) throws ActionExecutionException {
+		try {
+			labelNode.remove();
+			labelNode.getSession().save();
+			eventBus.fireEvent(new ContentChangedEvent(JcrItemUtil.getItemId(item.getJcrItem())));
+		} catch (RepositoryException e) {
+			LOG.error("Could not delete node", e);
+			throw new ActionExecutionException(e);
 		}
 	}
+
+	private void success(String info) {
+		AlertBuilder.alert("delete expired node")
+				.withLevel(Notification.Type.ASSISTIVE_NOTIFICATION)
+				.withTitle("Selected label was deleted")
+				.withBody("The following label was deleted: " + info)
+				.withOkButtonCaption("Ok")
+				.buildAndOpen();
+	}
+
+	private void fail(String reason) {
+		AlertBuilder.alert("delete expired node")
+				.withLevel(Notification.Type.ERROR_MESSAGE)
+				.withTitle("Can't delete selected label")
+				.withBody(reason)
+				.withOkButtonCaption("Ok")
+				.buildAndOpen();
+	}
+
 }
