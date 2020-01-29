@@ -24,9 +24,9 @@ jobs:
         run: mvn verify -P !ossrh --batch-mode
       # Publish
       - name: Release Maven package
-          uses: samuelmeuli/action-maven-publish@v1
-          with:
-            gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
-            gpg_passphrase: ${{ secrets.GPG_PASSPHRASE }}
-            nexus_username: ${{ secrets.OSSRH_USER }}
-            nexus_password: ${{ secrets.OSSRH_PASSWORD }}
+        uses: samuelmeuli/action-maven-publish@v1
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          gpg_passphrase: ${{ secrets.GPG_PASSPHRASE }}
+          nexus_username: ${{ secrets.OSSRH_USER }}
+          nexus_password: ${{ secrets.OSSRH_PASSWORD }}
