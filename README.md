@@ -1,8 +1,8 @@
 # Magnolia Dictionary
 System        | Status
 --------------|------------------------------------------------
-CI master     | [![Build Status][travis-master]][travis-url]
-CI develop    | [![Build Status][travis-develop]][travis-url]
+CI master     | TODO: Add badge
+CI develop    | TODO: Add badge
 Dependency    | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.namics.oss.magnolia/magnolia-dictionary/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.namics.oss.magnolia/magnolia-dictionary)
 
 
@@ -35,8 +35,5 @@ Languages are read from the configured sites.
 - Java: JDK 11
 
 
-[travis-master]: https://travis-ci.org/namics/magnolia-dictionary.svg?branch=master
-[travis-develop]: https://travis-ci.org/namics/magnolia-dictionary.svg?branch=develop
-[travis-url]: https://travis-ci.org/namics/magnolia-dictionary
 [maven-central-version]: https://maven-badges.herokuapp.com/maven-central/com.namics.oss/magnolia-dictionary/badge.svg
 [maven-central]: https://maven-badges.herokuapp.com/maven-central/com.namics.oss/magnolia-dictionary
