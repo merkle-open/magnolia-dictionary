@@ -1,14 +1,12 @@
-name: deploy
+name: deploy snapshot
 
 on:
   push:
     branches:
       - develop
-    tags:
-      - '*'
 
 jobs:
-  deploy:
+  deploy-snapshot:
 
     runs-on: ubuntu-latest
 
@@ -24,12 +22,11 @@ jobs:
       # Run maven verify
       - name: Maven verify
         run: mvn verify -P !ossrh --batch-mode
-      # Run maven deploy
-      - name: Maven deploy
-        env:
-          OSSRH_USER: ${{ secrets.OSSRH_USER }}
-          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
-          GPG_KEY_NAME: ${{ secrets.GPG_KEY_NAME }}
-          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-        run: mvn deploy -P ossrh --batch-mode --settings ci/mvnsettings.xml
-
+      # Publish
+      - name: Release Maven package
+          uses: samuelmeuli/action-maven-publish@v1
+          with:
+            gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+            gpg_passphrase: ${{ secrets.GPG_PASSPHRASE }}
+            nexus_username: ${{ secrets.OSSRH_USER }}
+            nexus_password: ${{ secrets.OSSRH_PASSWORD }}
