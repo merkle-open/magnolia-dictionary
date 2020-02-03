@@ -1,8 +1,8 @@
 # Magnolia Dictionary
 System        | Status
 --------------|------------------------------------------------
-CI master     | TODO: Add badge
-CI develop    | TODO: Add badge
+CI master     | ![release](https://github.com/namics/magnolia-dictionary/workflows/release%20and%20deploy/badge.svg)
+CI develop    | ![snapshot](https://github.com/namics/magnolia-dictionary/workflows/deploy%20snapshot/badge.svg)
 Dependency    | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.namics.oss.magnolia/magnolia-dictionary/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.namics.oss.magnolia/magnolia-dictionary)
 
 
