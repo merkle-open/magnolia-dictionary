@@ -22,4 +22,4 @@ jobs:
           java-version: 11
       # Run maven verify
       - name: Maven verify
-        run: mvn verify -P !ossrh --batch-mode
+        run: mvn verify --batch-mode
