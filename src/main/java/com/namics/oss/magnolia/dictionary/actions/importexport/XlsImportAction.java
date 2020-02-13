@@ -30,7 +30,7 @@
  * Any modifications to this file must keep this entire header
  * intact.
  */
-package com.namics.oss.magnolia.dictionary.actions;
+package com.namics.oss.magnolia.dictionary.actions.importexport;
 
 import com.namics.oss.magnolia.dictionary.services.XlsExportService;
 import com.vaadin.v7.data.Item;

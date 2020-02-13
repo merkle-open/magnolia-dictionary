@@ -22,12 +22,9 @@ public class RootPublicationCommand extends PublicationCommand {
 
 	@Override
 	public boolean execute(Context ctx) throws Exception {
-
 		final Node originalState = getJCRNode(ctx);
-
 		Sender sender = Components.getComponentProvider().newInstance(Sender.class);
 		sender.publish(NodeUtil.asList(originalState.getNodes()), getRule());
-
 		return true;
 	}
 }

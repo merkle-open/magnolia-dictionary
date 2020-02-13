@@ -30,7 +30,7 @@
  * Any modifications to this file must keep this entire header
  * intact.
  */
-package com.namics.oss.magnolia.dictionary.actions;
+package com.namics.oss.magnolia.dictionary.actions.importexport;
 
 import com.namics.oss.magnolia.dictionary.DictionaryConfiguration;
 import info.magnolia.ui.api.action.CommandActionDefinition;

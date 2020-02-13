@@ -1,4 +1,4 @@
-package com.namics.oss.magnolia.dictionary.actions;
+package com.namics.oss.magnolia.dictionary.actions.importexport;
 
 import com.namics.oss.magnolia.dictionary.services.XlsExportService;
 import com.vaadin.server.Page;
