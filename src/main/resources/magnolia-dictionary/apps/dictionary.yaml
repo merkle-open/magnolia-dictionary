@@ -40,17 +40,6 @@ subApps:
       exportLabels:
         icon: icon-export
         class: com.namics.oss.magnolia.dictionary.actions.importexport.XlsExportActionDefinition
-        properties:
-          - "jcrName"
-          - "name"
-          - "value"
-          - "en"
-          - "de"
-          - "fr"
-          - "it"
-          - "mgnl:created"
-          - "mgnl:lastModified"
-          - "mgnl:lastActivated"
         availability:
           multiple: true
           root: true
