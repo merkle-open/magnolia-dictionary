@@ -16,10 +16,13 @@ import static info.magnolia.jcr.nodebuilder.Ops.getOrAddNode;
 
 public class InstallRootActivationCommandTask extends AbstractRepositoryTask {
 
-	public static final String MODULE_NAME = "activation";
+	public static final String MODULE_NAME = "publishing-core";
 
 	public InstallRootActivationCommandTask() {
-		super("", "");
+		super(
+				"Install dictionary root activation command",
+				"Install dictionary root activation command"
+		);
 	}
 
 	@Override
@@ -28,14 +31,13 @@ public class InstallRootActivationCommandTask extends AbstractRepositoryTask {
 				"/modules",
 				getOrAddNode(MODULE_NAME, NodeTypes.Content.NAME).then(
 						getOrAddNode("commands", NodeTypes.Content.NAME).then(
-								getOrAddNode("default", NodeTypes.Content.NAME).then(
-										getOrAddNode("activateAll", NodeTypes.ContentNode.NAME).then(
+								getOrAddNode("versioned", NodeTypes.Content.NAME).then(
+										getOrAddNode("publishAll", NodeTypes.ContentNode.NAME).then(
 												setOrAddProperty("class", RootPublicationCommand.class.getName())
 										)
 								)
 						)
 				)
-
 		).execute(installContext);
 	}
 }

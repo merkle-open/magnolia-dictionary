@@ -1,4 +1,4 @@
-package com.namics.oss.magnolia.dictionary.column;
+package com.namics.oss.magnolia.dictionary.workbench.column;
 
 import com.vaadin.v7.ui.Table;
 import info.magnolia.jcr.util.PropertyUtil;

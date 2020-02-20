@@ -1,4 +1,4 @@
-package com.namics.oss.magnolia.dictionary.action;
+package com.namics.oss.magnolia.dictionary.actions.delete;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;

@@ -39,7 +39,7 @@ subApps:
     actions:
       exportLabels:
         icon: icon-export
-        class: com.namics.oss.magnolia.dictionary.actions.XlsExportActionDefinition
+        class: com.namics.oss.magnolia.dictionary.actions.importexport.XlsExportActionDefinition
         properties:
           - "jcrName"
           - "name"
@@ -73,27 +73,6 @@ subApps:
         availability:
           root: true
           writePermissionRequired: true
-          nodeTypes:
-            - mgnl:folder
-      addFolder:
-        icon: icon-add-folder
-        class: info.magnolia.ui.framework.action.AddFolderActionDefinition
-        availability:
-          root: true
-          writePermissionRequired: true
-      editFolder:
-        icon: icon-edit
-        dialogName: ui-framework:folder
-        class: info.magnolia.ui.framework.action.OpenEditDialogActionDefinition
-        availability:
-          root: true
-          writePermissionRequired: true
-      deleteFolder:
-        icon: icon-delete
-        class: info.magnolia.ui.framework.action.DeleteItemActionDefinition
-        availability:
-          root: true
-          writePermissionRequired: true
       editLabel:
         subAppId: detail
         icon: icon-edit
@@ -114,7 +93,7 @@ subApps:
           writePermissionRequired: true
           rules:
             - implementationClass: info.magnolia.ui.framework.availability.IsNotDeletedRule
-        command: activate
+        command: publish
         icon: icon-publish
         catalog: versioned
         class: info.magnolia.ui.framework.action.ActivationActionDefinition
@@ -125,28 +104,30 @@ subApps:
           rules:
             - implementationClass: info.magnolia.ui.framework.availability.IsNotDeletedRule
             - implementationClass: info.magnolia.ui.framework.availability.IsPublishedRule
-        command: deactivate
+        command: unpublish
         icon: icon-unpublish
         catalog: versioned
-        class: info.magnolia.ui.framework.action.DeactivationActionDefinition
+        class: info.magnolia.ui.framework.action.ActivationActionDefinition
       activateAll:
         availability:
           root: true
           writePermissionRequired: true
-        command: activateAll
+        command: publishAll
+        catalog: versioned
         icon: icon-publish
         recursive: true
+        asynchronous: true
         class: info.magnolia.ui.framework.action.ActivationActionDefinition
       deleteAllExpired:
         icon: icon-delete
-        implementationClass: com.namics.oss.magnolia.dictionary.action.DeleteAllExpiredLabelNodeAction
+        implementationClass: com.namics.oss.magnolia.dictionary.actions.delete.DeleteAllExpiredLabelNodeAction
         class: info.magnolia.ui.api.action.ConfiguredActionDefinition
         availability:
           root: true
           writePermissionRequired: true
       deleteExpired:
         icon: icon-delete
-        implementationClass: com.namics.oss.magnolia.dictionary.action.DeleteExpiredLabelNodeAction
+        implementationClass: com.namics.oss.magnolia.dictionary.actions.delete.DeleteExpiredLabelNodeAction
         class: info.magnolia.ui.api.action.ConfiguredActionDefinition
         availability:
           multiple: true
@@ -178,7 +159,7 @@ subApps:
             - name: expired
               editable: false
               sortable: true
-              formatterClass: com.namics.oss.magnolia.dictionary.column.LabelExpiredColumnFormatter
+              formatterClass: com.namics.oss.magnolia.dictionary.workbench.column.LabelExpiredColumnFormatter
               class: info.magnolia.ui.workbench.column.definition.PropertyColumnDefinition
             - name: status
               width: 45
@@ -237,4 +218,3 @@ subApps:
         name: mgnl:label
     contentConnector:
       workspace: dictionary
-

@@ -1,4 +1,4 @@
-package com.namics.oss.magnolia.dictionary.action;
+package com.namics.oss.magnolia.dictionary.actions.delete;
 
 import com.namics.oss.magnolia.dictionary.DictionaryConfiguration;
 import com.namics.oss.magnolia.dictionary.util.NodeUtil;

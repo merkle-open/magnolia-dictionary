@@ -1,6 +1,6 @@
 actions:
   commit:
-    class: com.namics.oss.magnolia.dictionary.actions.XlsImportActionDefinition
+    class: com.namics.oss.magnolia.dictionary.actions.importexport.XlsImportActionDefinition
     command: import
     properties:
       - "jcrName"
