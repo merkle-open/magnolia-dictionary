@@ -126,7 +126,7 @@ public class XlsImportService {
 			}
 		});
 
-		Boolean startsWithJcrName = importProps.stream()
+		boolean startsWithJcrName = importProps.stream()
 				.findFirst()
 				.map(prop -> StringUtils.equals(prop, ImportExport.JCR_NAME))
 				.orElse(false);
