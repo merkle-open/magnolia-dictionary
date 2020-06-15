@@ -6,6 +6,7 @@ import info.magnolia.jcr.nodebuilder.ErrorHandler;
 import info.magnolia.jcr.nodebuilder.NodeOperation;
 import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.jcr.util.PropertyUtil;
+import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +38,14 @@ public class NodeUtil extends info.magnolia.jcr.util.NodeUtil {
 		}
 
 		return childNode;
+	}
+
+	public static Iterable<Node> getNodes(Node node, String nodeTypeName) {
+		try {
+			return info.magnolia.jcr.util.NodeUtil.getNodes(node, nodeTypeName);
+		} catch (RepositoryException e) {
+			return IterableUtils.emptyIterable();
+		}
 	}
 
 	public static Node getNodeByPathOrNull(String workspace, String path) {
@@ -143,5 +152,13 @@ public class NodeUtil extends info.magnolia.jcr.util.NodeUtil {
 				return context;
 			}
 		};
+	}
+
+	public static boolean hasNode(Node node, String childName) {
+		try {
+			return node.hasNode(childName);
+		} catch (RepositoryException e) {
+			return false;
+		}
 	}
 }

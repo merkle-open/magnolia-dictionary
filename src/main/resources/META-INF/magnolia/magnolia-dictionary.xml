@@ -20,6 +20,12 @@
             <scope>singleton</scope>
             <lazy>false</lazy>
         </component>
+        <component>
+            <type>com.namics.oss.magnolia.dictionary.services.XlsImportService</type>
+            <implementation>com.namics.oss.magnolia.dictionary.services.XlsImportService</implementation>
+            <scope>singleton</scope>
+            <lazy>false</lazy>
+        </component>
     </components>
 
     <dependencies>
