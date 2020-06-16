@@ -1,14 +1,7 @@
 actions:
   commit:
-    class: com.namics.oss.magnolia.dictionary.actions.XlsImportActionDefinition
+    class: com.namics.oss.magnolia.dictionary.actions.importexport.XlsImportActionDefinition
     command: import
-    properties:
-      - "jcrName"
-      - "name"
-      - "value"
-      - "de"
-      - "fr"
-      - "it"
   cancel:
     class: info.magnolia.ui.dialog.action.CancelDialogActionDefinition
 form:

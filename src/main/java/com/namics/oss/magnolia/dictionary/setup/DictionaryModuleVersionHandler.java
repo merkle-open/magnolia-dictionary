@@ -26,7 +26,7 @@ public class DictionaryModuleVersionHandler extends DefaultModuleVersionHandler 
 
 	@Override
 	protected final List<Task> getExtraInstallTasks(InstallContext installContext) { //when module node does not exist
-		List<Task> installTasks = new LinkedList<Task>();
+		List<Task> installTasks = new LinkedList<>();
 
 		installTasks.addAll(super.getExtraInstallTasks(installContext));
 		installTasks.addAll(tasks);
@@ -36,7 +36,7 @@ public class DictionaryModuleVersionHandler extends DefaultModuleVersionHandler 
 
 	@Override
 	protected final List<Task> getDefaultUpdateTasks(Version forVersion) { //on every module update
-		List<Task> installTasks = new LinkedList<Task>();
+		List<Task> installTasks = new LinkedList<>();
 
 		installTasks.addAll(super.getDefaultUpdateTasks(forVersion));
 		installTasks.addAll(tasks);
@@ -46,7 +46,7 @@ public class DictionaryModuleVersionHandler extends DefaultModuleVersionHandler 
 
 	@Override
 	protected final List<Task> getStartupTasks(InstallContext installContext) {
-		List<Task> installTasks = new LinkedList<Task>();
+		List<Task> installTasks = new LinkedList<>();
 		Version forVersion = getVersionFromInstallContext(installContext);
 
 		if (isSnapshot(forVersion)) {

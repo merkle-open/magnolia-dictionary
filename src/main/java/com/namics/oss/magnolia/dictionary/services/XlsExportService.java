@@ -1,14 +1,16 @@
 package com.namics.oss.magnolia.dictionary.services;
 
-import com.namics.oss.magnolia.dictionary.util.NodeUtil;
-import info.magnolia.context.MgnlContext;
+import com.namics.oss.magnolia.dictionary.DictionaryConfiguration;
+import com.namics.oss.magnolia.dictionary.DictionaryConfiguration.ImportExport;
+import com.namics.oss.magnolia.dictionary.util.LocaleUtils;
+import com.vaadin.server.StreamResource;
 import info.magnolia.jcr.util.PropertyUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
@@ -16,46 +18,48 @@ import org.slf4j.LoggerFactory;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.*;
+import java.lang.invoke.MethodHandles;
+import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static com.namics.oss.magnolia.dictionary.DictionaryConfiguration.ImportExport.FILENAME_TEMPLATE;
 
 public class XlsExportService {
-	private static final Logger LOG = LoggerFactory.getLogger(XlsExportService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	public ByteArrayOutputStream exportXls(List<Node> nodes, Collection<String> properties) throws IOException, RepositoryException {
-		LOG.debug("Start node export for {} nodes with properties {}", CollectionUtils.size(nodes), properties);
+	public ByteArrayOutputStream exportXls(List<Node> nodes) throws IOException, RepositoryException {
+		List<String> exportProperties = getExportProperties();
 		XSSFWorkbook workbook = new XSSFWorkbook();
-		XSSFSheet sheet = workbook.createSheet("export");
+		XSSFSheet sheet = workbook.createSheet(ImportExport.SHEET_NAME);
+		CellStyle dateCellStyle = getDateCellStyle(workbook);
+
+		LOG.info("Start node export for '{}' nodes with properties '{}'", CollectionUtils.size(nodes), exportProperties);
 
 		int rowNum = 0;
+		int headColNum = 0;
 
 		Row headRow = sheet.createRow(rowNum++);
-		int headColNum = 0;
-		for (String property : properties) {
+
+		for (String property : exportProperties) {
 			Cell cell = headRow.createCell(headColNum++);
 			cell.setCellValue(property);
 		}
 
 		for (Node node : nodes) {
-			LOG.trace("Exporting node {}", node.getName());
+			LOG.debug("Exporting node '{}'", node.getName());
 			Row row = sheet.createRow(rowNum++);
 			int colNum = 0;
-			for (String property : properties) {
+			for (String property : exportProperties) {
 				Cell cell = row.createCell(colNum++);
-				if ("jcrName".equals(property)) {
-					cell.setCellValue(node.getName());
-				} else if ("mgnl:created".equals(property) || "mgnl:lastModified".equals(property) || "mgnl:lastActivated".equals(property)) {
-					Calendar date = PropertyUtil.getDate(node, property);
-					if (date != null) {
-						cell.setCellValue(date);
-					} else {
-						cell.setCellValue(StringUtils.EMPTY);
-					}
-				} else {
-					cell.setCellValue(PropertyUtil.getString(node, property, StringUtils.EMPTY));
-				}
+				setCellValue(node, cell, property, dateCellStyle);
 			}
 		}
 
@@ -65,73 +69,54 @@ public class XlsExportService {
 		return outputStream;
 	}
 
-	public void importXls(String repository, String path, boolean createNodes, InputStream inputStream) throws IOException, RepositoryException {
-		LOG.debug("Star import to repository {} on path {} creating not existion nodes {}", repository, path, createNodes);
-		Workbook workbook = new XSSFWorkbook(inputStream);
-		Sheet firstSheet = workbook.getSheetAt(0);
+	public CellStyle getDateCellStyle(XSSFWorkbook workbook) {
+		CellStyle dateCellStyle = workbook.createCellStyle();
+		CreationHelper createHelper = workbook.getCreationHelper();
+		dateCellStyle.setDataFormat(createHelper.createDataFormat().getFormat(ImportExport.DATE_FORMAT_PATTERN));
+		return dateCellStyle;
+	}
 
-		Node rootNode = MgnlContext.getJCRSession(repository).getRootNode();
-		Node startNode = "/".equals(path) ? rootNode : rootNode.getNode(path);
-
-		if (firstSheet.iterator().hasNext()) {
-			Row firstRow = firstSheet.iterator().next();
-			List<String> properties = new ArrayList<>();
-			Iterator<Cell> firstRowCellIterator = firstRow.cellIterator();
-			while (firstRowCellIterator.hasNext()) {
-				Cell cell = firstRowCellIterator.next();
-				properties.add(cell.getStringCellValue());
-			}
-
-			LOG.debug("Properties to import {}", properties);
-
-			if (CollectionUtils.isEmpty(properties) || !StringUtils.equals(properties.get(0), "jcrName")) {
-				throw new IllegalArgumentException("Wrong format in input file");
-			}
-
-			for (Row nextRow : firstSheet) {
-				int colNumber = 1;
-				Cell jcrNameCell = nextRow.getCell(0);
-
-				if (!createNodes && !startNode.hasNode(jcrNameCell.getStringCellValue())) {
-					LOG.debug("Skip importing node {} due tu createNodes is false", jcrNameCell.getStringCellValue());
-					continue;
-				}
-
-				Node node = NodeUtil.getOrCreateNode(startNode, jcrNameCell.getStringCellValue());
-				LOG.debug("Start importing on node {}", node.getPath());
-
-				while (colNumber < properties.size()) {
-
-					Object value = null;
-					String property = properties.get(colNumber);
-					Cell cell = nextRow.getCell(colNumber);
-					if (cell != null) {
-						switch (cell.getCellType()) {
-							case STRING:
-								value = StringUtils.defaultIfEmpty(cell.getStringCellValue(), null);
-								break;
-							case BOOLEAN:
-								value = cell.getBooleanCellValue();
-								break;
-							case NUMERIC:
-								value = cell.getNumericCellValue();
-								break;
-							case BLANK:
-								value = null;
-								break;
-						}
-					}
-
-					LOG.trace("Set value {} on property {}");
-					PropertyUtil.setProperty(node, property, value);
-
-					colNumber++;
-				}
-			}
-
-			startNode.getSession().save();
+	private void setCellValue(Node node, Cell cell, String property, CellStyle dateCellStyle) throws RepositoryException {
+		if (ImportExport.JCR_NAME.equals(property)) {
+			cell.setCellValue(node.getName());
+			return;
 		}
 
-		inputStream.close();
+		if (ImportExport.DATE_EXPORT_PROPERTIES.contains(property)) {
+			cell.setCellStyle(dateCellStyle);
+			Optional.ofNullable(PropertyUtil.getDate(node, property))
+					.ifPresentOrElse(
+							cell::setCellValue,
+							() -> cell.setCellValue(StringUtils.EMPTY)
+					);
+			return;
+		}
+
+		cell.setCellValue(PropertyUtil.getString(node, property, StringUtils.EMPTY));
+	}
+
+	public StreamResource getDownloadStream(ByteArrayOutputStream outputStream) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat(ImportExport.DATE_FORMAT_PATTERN);
+		StreamResource.StreamSource source = (StreamResource.StreamSource) () -> new ByteArrayInputStream(outputStream.toByteArray());
+		String filename = MessageFormat.format(FILENAME_TEMPLATE, DictionaryConfiguration.REPOSITORY, dateFormat.format(new Date()));
+		StreamResource resource = new StreamResource(source, filename);
+		resource.setCacheTime(-1);
+		resource.getStream().setParameter("Content-Disposition", "attachment; filename=" + filename);
+		return resource;
+	}
+
+	private List<String> getExportProperties() {
+		List<String> props = new LinkedList<>();
+		props.addAll(ImportExport.STATIC_EXPORT_PROPERTIES);
+		props.addAll(getAllLanguages());
+		props.addAll(ImportExport.DATE_EXPORT_PROPERTIES);
+		props.addAll(ImportExport.STATUS_EXPORT_PROPERTIES);
+		return props;
+	}
+
+	private List<String> getAllLanguages() {
+		return LocaleUtils.getLocalesOfAllSiteDefinitions().stream()
+				.map(LocaleUtils::getLocaleString)
+				.collect(Collectors.toList());
 	}
 }
