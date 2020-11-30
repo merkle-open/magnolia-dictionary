@@ -8,6 +8,7 @@ import info.magnolia.i18nsystem.DefaultMessageBundlesLoader;
 import info.magnolia.i18nsystem.LocaleProvider;
 import info.magnolia.i18nsystem.TranslationService;
 import info.magnolia.i18nsystem.TranslationServiceImpl;
+import info.magnolia.i18nsystem.I18nText;
 import info.magnolia.i18nsystem.module.I18nModule;
 import info.magnolia.module.site.ExtendedAggregationState;
 import info.magnolia.module.site.Site;
@@ -64,6 +65,11 @@ public class DictionaryTranslationServiceImpl implements TranslationService, Eve
 
 	@Override
 	public String translate(LocaleProvider localeProvider, String[] keys) {
+		return translationService.translate(localeProvider, keys, I18nText.NO_FALLBACK);
+	}
+
+	@Override
+	public String translate(LocaleProvider localeProvider, String[] keys, String fallback) {
 		final Locale locale = localeProvider.getLocale();
 		if (locale == null) {
 			throw new IllegalArgumentException("Locale can't be null");
@@ -77,7 +83,7 @@ public class DictionaryTranslationServiceImpl implements TranslationService, Eve
 			return message;
 		}
 		// not found in dictionary, translate using Magnolia's default service
-		return translationService.translate(localeProvider, keys);
+		return translationService.translate(localeProvider, keys, fallback);
 	}
 
 	@Override
