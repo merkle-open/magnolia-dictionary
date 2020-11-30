@@ -8,6 +8,7 @@ import info.magnolia.i18nsystem.DefaultMessageBundlesLoader;
 import info.magnolia.i18nsystem.LocaleProvider;
 import info.magnolia.i18nsystem.TranslationService;
 import info.magnolia.i18nsystem.TranslationServiceImpl;
+import info.magnolia.i18nsystem.I18nText;
 import info.magnolia.i18nsystem.module.I18nModule;
 import info.magnolia.module.site.ExtendedAggregationState;
 import info.magnolia.module.site.Site;
