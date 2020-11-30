@@ -29,8 +29,8 @@
     </developers>
 
     <properties>
-        <magnolia.version>6.2.1</magnolia.version>
-        <magnolia.blossom.version>3.4.1</magnolia.blossom.version>
+        <magnolia.version>6.2.5</magnolia.version>
+        <magnolia.blossom.version>3.4.4</magnolia.blossom.version>
 
         <java.version>11</java.version>
 
