@@ -65,7 +65,7 @@ public class DictionaryTranslationServiceImpl implements TranslationService, Eve
 
 	@Override
 	public String translate(LocaleProvider localeProvider, String[] keys) {
-		return translate(localeProvider, keys, I18nText.NO_FALLBACK);
+		return this.translate(localeProvider, keys, I18nText.NO_FALLBACK);
 	}
 
 	@Override
