@@ -26,7 +26,7 @@ public class DictionaryModule implements ModuleLifecycle {
 	private static final long EVENT_DELAY_MAX = 30000;
 	private static final String OBSERVATION_PATH = "/";
 
-	private DictionaryMessageBundlesInstaller messagesInstaller;
+	private final DictionaryMessageBundlesInstaller messagesInstaller;
 	private WorkspaceEventListenerRegistration.Handle handle;
 
 	@Inject

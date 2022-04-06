@@ -2,14 +2,13 @@ package com.namics.oss.magnolia.dictionary.i18nsystem;
 
 import com.namics.oss.magnolia.dictionary.DictionaryConfiguration;
 import com.namics.oss.magnolia.dictionary.util.DictionaryUtils;
+import com.namics.oss.magnolia.dictionary.util.Lazy;
 import com.namics.oss.magnolia.dictionary.util.NodeUtil;
 import com.namics.oss.magnolia.dictionary.util.predicates.NodeNameFilteringPredicate;
 import com.namics.oss.magnolia.dictionary.util.predicates.SystemNodeFilteringPredicate;
 import info.magnolia.jcr.util.PropertyUtil;
 import info.magnolia.resourceloader.Resource;
 import info.magnolia.resourceloader.ResourceOrigin;
-import info.magnolia.resourceloader.util.FileResourceCollectorVisitor;
-import info.magnolia.resourceloader.util.Functions;
 import org.apache.commons.io.input.BOMInputStream;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.commons.predicate.Predicates;
@@ -19,54 +18,48 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.invoke.MethodHandles;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.function.Predicate;
 
 public class DictionaryMessageBundlesInstaller {
-
 	private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-
-	private static final Predicate<Resource> DIRECTORY_PREDICATE = Functions.pathStartsWith("/");
-	private static final Predicate<Resource> RESOURCE_PREDICATE = Functions.pathMatches("(/*/i18n/.*dictionary-messages.*\\.properties|/mgnl-i18n/.*dictionary-messages.*\\.properties)");
-
 	public static final String LAST_LOADED_TIME = "lastLoadedTime";
 
-	private final Properties messages;
+	private final Lazy<Properties> messages;
 
 	@Inject
-	public DictionaryMessageBundlesInstaller(ResourceOrigin resourceOrigin) {
-		this.messages = new Properties();
-		loadMessages(resourceOrigin, newVisitor());
+	public DictionaryMessageBundlesInstaller(
+			final I18nResourcesProvider i18nResourcesProvider,
+			final ResourceOrigin resourceOrigin) {
+		this.messages = Lazy.of(() ->
+				loadProperties(i18nResourcesProvider.getI18nResources(resourceOrigin))
+		);
 	}
 
-	private FileResourceCollectorVisitor newVisitor() {
-		return FileResourceCollectorVisitor.on(DIRECTORY_PREDICATE, RESOURCE_PREDICATE);
+	private Properties loadProperties(final Collection<Resource> resources) {
+		final Properties properties = new Properties();
+		resources.stream().map(this::loadProperties).forEach(properties::putAll);
+		return properties;
 	}
 
-	private void loadMessages(ResourceOrigin resourceOrigin, FileResourceCollectorVisitor visitor) {
-		resourceOrigin.traverseWith(visitor);
-		final Collection<Resource> collected = visitor.getCollectedResources();
-		collected.forEach(this::loadResources);
-	}
-
-	private void loadResources(Resource propertiesFile) {
-		try (InputStream in = propertiesFile.openStream()) {
-			LOG.debug("Loading properties file at '{}'", propertiesFile);
-
+	private Properties loadProperties(final Resource resource) {
+		final Properties properties = new Properties();
+		try (InputStream in = resource.openStream()) {
+			LOG.debug("Loading properties from '{}'", resource);
 			final Reader inStream = new InputStreamReader(new BOMInputStream(in), StandardCharsets.UTF_8);
-			final Properties properties = new Properties();
 			properties.load(inStream);
-
-			messages.putAll(properties);
-		} catch (IOException e) {
-			LOG.error("An IO error occurred while trying to read properties file at '{}'", propertiesFile, e);
+		} catch (Exception e) {
+			LOG.error("Failed to read properties from '{}', skipping properties file...", resource, e);
 		}
+		return properties;
+	}
+
+	public Properties getMessages() {
+		return messages.get();
 	}
 
 	public void loadLabelsToDictionary() {
@@ -75,7 +68,7 @@ public class DictionaryMessageBundlesInstaller {
 
 		List<String> notExpired = new ArrayList<>();
 
-		for (Map.Entry<Object, Object> message : messages.entrySet()) {
+		for (Map.Entry<Object, Object> message : getMessages().entrySet()) {
 			String messageValue = message.getValue().toString();
 			String messageName = message.getKey().toString();
 			String messageNodeName = DictionaryUtils.getValidMessageNodeName(messageName);
@@ -124,9 +117,4 @@ public class DictionaryMessageBundlesInstaller {
 			LOG.error("Could not set time when labels were last loaded. Manually check labels which should get removed.", e);
 		}
 	}
-
-	public Properties getMessages() {
-		return messages;
-	}
-
 }

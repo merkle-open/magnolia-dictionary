@@ -15,6 +15,10 @@
             <implementation>com.namics.oss.magnolia.dictionary.i18nsystem.DictionaryTranslationServiceImpl</implementation>
         </component>
         <component>
+            <type>com.namics.oss.magnolia.dictionary.i18nsystem.I18nResourcesProvider</type>
+            <implementation>com.namics.oss.magnolia.dictionary.i18nsystem.DefaultI18nResourcesProvider</implementation>
+        </component>
+        <component>
             <type>com.namics.oss.magnolia.dictionary.services.XlsExportService</type>
             <implementation>com.namics.oss.magnolia.dictionary.services.XlsExportService</implementation>
             <scope>singleton</scope>
