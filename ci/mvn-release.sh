@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-CURRENT_VERSION=`xmllint --xpath '/*[local-name()="project"]/*[local-name()="version"]/text()' pom.xml`
+function getVersion() {
+  xmllint --xpath '/*[local-name()="project"]/*[local-name()="version"]/text()' pom.xml
+}
 
+CURRENT_VERSION=$(getVersion)
 if [[ $CURRENT_VERSION == *-SNAPSHOT ]]; then
-	NEW_VERSION=${CURRENT_VERSION%'-SNAPSHOT'}
-	NEXT_VERSION=`bash ci/semver.sh -p $NEW_VERSION`
-	NEXT_SNAPSHOT="$NEXT_VERSION-SNAPSHOT"
-	echo "perform release of $NEW_VERSION from $CURRENT_VERSION and set next develop version $NEXT_SNAPSHOT"
-
-	mvn versions:set -DnewVersion=$NEW_VERSION versions:commit --no-transfer-progress
+	echo "perform release"
+	mvn versions:set -DremoveSnapshot versions:commit --no-transfer-progress
+  NEW_VERSION=$(getVersion)
 
  	echo "commit new release version"
 	git commit -a -m "Release $NEW_VERSION: set master to new release version"
@@ -23,8 +23,8 @@ if [[ $CURRENT_VERSION == *-SNAPSHOT ]]; then
 	echo "update develop version"
 	git fetch --all
 	git checkout develop
-	mvn versions:set -DnewVersion=$NEXT_SNAPSHOT versions:commit --no-transfer-progress
-
+	mvn versions:set -DnextSnapshot versions:commit --no-transfer-progress
+  NEXT_SNAPSHOT=$(getVersion)
 	echo "commit new snapshot version"
 	git commit -a -m "Release $NEW_VERSION: set develop to next development version $NEXT_SNAPSHOT"
 
