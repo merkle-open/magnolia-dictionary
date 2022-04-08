@@ -20,11 +20,9 @@ if [[ $CURRENT_VERSION == *-SNAPSHOT ]]; then
 	echo "create tag for new release"
 	git tag -a $NEW_VERSION -m "Release $NEW_VERSION: tag release"
 
-	echo "merge master back to develop"
+	echo "update develop version"
 	git fetch --all
 	git checkout develop
-	git merge master
-
 	mvn versions:set -DnewVersion=$NEXT_SNAPSHOT versions:commit --no-transfer-progress
 
 	echo "commit new snapshot version"
