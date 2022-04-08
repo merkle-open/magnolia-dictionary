@@ -5,11 +5,7 @@
 
     <groupId>com.namics.oss.magnolia</groupId>
     <artifactId>magnolia-dictionary</artifactId>
-<<<<<<< HEAD
     <version>1.2.4-SNAPSHOT</version>
-=======
-    <version>1.2.3</version>
->>>>>>> master
     <packaging>jar</packaging>
 
     <name>${project.artifactId}</name>
