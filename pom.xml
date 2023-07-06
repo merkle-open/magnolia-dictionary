@@ -4,9 +4,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.namics.oss.magnolia</groupId>
-    <artifactId>magnolia-dictionary</artifactId>
+    <artifactId>magnolia-dictionary-parent</artifactId>
     <version>1.2.5-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
 
     <name>${project.artifactId}</name>
     <description>Magnolia dictionary app to manage i18n labels.</description>
@@ -28,27 +28,36 @@
         </developer>
     </developers>
 
-    <properties>
-        <magnolia.version>6.2.5</magnolia.version>
-        <magnolia.blossom.version>3.4.4</magnolia.blossom.version>
+    <modules>
+        <module>magnolia-dictionary</module>
+    </modules>
 
-        <java.version>11</java.version>
+    <properties>
+        <magnolia.version>6.2.35</magnolia.version>
+        <poi.version>5.2.3</poi.version>
+
+        <!--Test dependency versions-->
+        <junit.version>5.7.1</junit.version>
+        <mockito.version>3.7.7</mockito.version>
 
         <!-- Maven Plugins -->
-        <mvn.release.plugin.version>2.5.3</mvn.release.plugin.version>
-        <mvn.compiler.plugin.version>3.8.1</mvn.compiler.plugin.version>
-
-        <encoding>UTF-8</encoding>
-        <project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
+        <mvn.compiler.plugin.version>3.10.1</mvn.compiler.plugin.version>
+        <mvn.source.plugin.version>3.2.1</mvn.source.plugin.version>
+        <mvn.javadoc.version>3.5.0</mvn.javadoc.version>
+        <mvn.surefire.plugin.version>3.0.0-M7</mvn.surefire.plugin.version>
+        <mvn.gpg.plugin.version>3.0.1</mvn.gpg.plugin.version>
+        <mvn.nexus-staging.plugin.version>1.6.13</mvn.nexus-staging.plugin.version>
+        <mvn.plugin.version>3.9.0</mvn.plugin.version>
 
         <maven.build.timestamp.format>yyyy-MM-dd-z-HH-mm-ss</maven.build.timestamp.format>
-
         <git.build.time>${maven.build.timestamp}</git.build.time>
         <git.branch>unknown</git.branch>
         <git.commit.id>unknown</git.commit.id>
         <git.commit.time>unknown</git.commit.time>
-
-        <poi.version>4.0.1</poi.version>
+        <java.version>11</java.version>
+        <encoding>UTF-8</encoding>
+        <project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
+        <maven.deploy.skip>true</maven.deploy.skip>
     </properties>
 
     <dependencyManagement>
@@ -60,85 +69,70 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <dependency>
+                <groupId>info.magnolia.blossom</groupId>
+                <artifactId>magnolia-module-blossom</artifactId>
+                <version>${magnolia.blossom.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml</artifactId>
+                <version>${poi.version}</version>
+            </dependency>
+
+            <!-- TESTING DEPENDENCIES -->
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>${mockito.version}</version>
+                <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <dependencies>
-        <dependency>
-            <groupId>info.magnolia</groupId>
-            <artifactId>magnolia-core</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>info.magnolia.site</groupId>
-            <artifactId>magnolia-site</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>info.magnolia.publishing</groupId>
-            <artifactId>magnolia-publishing-core</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>info.magnolia.ui</groupId>
-            <artifactId>magnolia-ui-framework-compatibility</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>info.magnolia.ui</groupId>
-            <artifactId>magnolia-ui-admincentral</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>info.magnolia.ui</groupId>
-            <artifactId>magnolia-ui-contentapp</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>info.magnolia.blossom</groupId>
-            <artifactId>magnolia-module-blossom</artifactId>
-            <version>${magnolia.blossom.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi-ooxml</artifactId>
-            <version>${poi.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-    </dependencies>
 
     <build>
         <pluginManagement>
             <plugins>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>${mvn.compiler.plugin.version}</version>
-                    <configuration>
-                        <source>${java.version}</source>
-                        <target>${java.version}</target>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-release-plugin</artifactId>
-                    <version>${mvn.release.plugin.version}</version>
+                    <artifactId>maven-plugin-plugin</artifactId>
+                    <version>${mvn.plugin.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
-
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${mvn.compiler.plugin.version}</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>${mvn.source.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${mvn.surefire.plugin.version}</version>
             </plugin>
         </plugins>
 
@@ -173,10 +167,7 @@
         <!-- Vaadin -->
         <repository>
             <id>vaadin-addons</id>
-            <url>http://maven.vaadin.com/vaadin-addons</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
+            <url>https://maven.vaadin.com/vaadin-addons</url>
         </repository>
     </repositories>
 
@@ -204,8 +195,21 @@
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>${mvn.source.plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>3.1.1</version>
+                        <version>${mvn.javadoc.version}</version>
                         <configuration>
                             <failOnError>false</failOnError>
                         </configuration>
@@ -220,21 +224,8 @@
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-source-plugin</artifactId>
-                        <version>3.1.0</version>
-                        <executions>
-                            <execution>
-                                <id>attach-sources</id>
-                                <goals>
-                                    <goal>jar-no-fork</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.6</version>
+                        <version>${mvn.gpg.plugin.version}</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>
@@ -255,7 +246,7 @@
                     <plugin>
                         <groupId>org.sonatype.plugins</groupId>
                         <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>1.6.8</version>
+                        <version>${mvn.nexus-staging.plugin.version}</version>
                         <extensions>true</extensions>
                         <configuration>
                             <serverId>ossrh</serverId>
