@@ -30,11 +30,13 @@
 
     <modules>
         <module>magnolia-dictionary</module>
+        <module>json2properties-generator</module>
     </modules>
 
     <properties>
         <magnolia.version>6.2.35</magnolia.version>
         <poi.version>5.2.3</poi.version>
+        <gson.version>2.10.1</gson.version>
 
         <!--Test dependency versions-->
         <junit.version>5.7.1</junit.version>
@@ -78,6 +80,24 @@
                 <groupId>org.apache.poi</groupId>
                 <artifactId>poi-ooxml</artifactId>
                 <version>${poi.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-plugin-api</artifactId>
+                <version>${mvn.plugin.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven.plugin-tools</groupId>
+                <artifactId>maven-plugin-annotations</artifactId>
+                <version>${mvn.plugin.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>${gson.version}</version>
             </dependency>
 
             <!-- TESTING DEPENDENCIES -->

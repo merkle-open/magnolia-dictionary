@@ -1,0 +1,19 @@
+{
+	"web": {
+		"header": {
+			"menu": {
+				"buttonText": "Menu"
+			},
+			"overlay": {
+				"closeButtonText": "Close",
+				"backButtonText": "Back"
+			}
+		},
+		"video": {
+			"playButtonText": "Play Video"
+		}
+	},
+	"test.key": {
+		"shouldNotBeInPropertiesFile": "yes, should not be in properties file"
+	}
+}
