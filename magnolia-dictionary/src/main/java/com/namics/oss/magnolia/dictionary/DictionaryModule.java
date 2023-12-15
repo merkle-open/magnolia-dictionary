@@ -19,7 +19,6 @@ import javax.jcr.observation.Event;
 import java.lang.invoke.MethodHandles;
 
 public class DictionaryModule implements ModuleLifecycle {
-
 	private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	private static final long EVENT_DELAY = 2000;
@@ -28,6 +27,7 @@ public class DictionaryModule implements ModuleLifecycle {
 
 	private final DictionaryMessageBundlesInstaller messagesInstaller;
 	private WorkspaceEventListenerRegistration.Handle handle;
+	private boolean loadLabelsOnStartup = true;
 
 	@Inject
 	public DictionaryModule(final ComponentProvider componentProvider, final ResourceOrigin resourceOrigin) {
@@ -48,8 +48,10 @@ public class DictionaryModule implements ModuleLifecycle {
 			LOG.error("Could not register workspace event listener for workspace [{}]", DictionaryConfiguration.REPOSITORY, e);
 		}
 
-		LOG.info("Start Dictionary module: Load labels to dictionary");
-		messagesInstaller.loadLabelsToDictionary();
+		if(loadLabelsOnStartup()) {
+			LOG.info("Start Dictionary module: Load labels to dictionary");
+			messagesInstaller.loadLabelsToDictionary();
+		}
 	}
 
 	@Override
@@ -61,5 +63,13 @@ public class DictionaryModule implements ModuleLifecycle {
 				LOG.error("Could not unregister workspace event listener for workspace [{}]", DictionaryConfiguration.REPOSITORY, e);
 			}
 		}
+	}
+
+	public boolean loadLabelsOnStartup() {
+		return loadLabelsOnStartup;
+	}
+
+	public void setLoadLabelsOnStartup(final boolean loadLabelsOnStartup) {
+		this.loadLabelsOnStartup = loadLabelsOnStartup;
 	}
 }
