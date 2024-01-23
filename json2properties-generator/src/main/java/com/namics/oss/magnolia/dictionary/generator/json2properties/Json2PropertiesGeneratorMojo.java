@@ -10,8 +10,8 @@ import java.nio.file.Path;
 import java.util.Set;
 
 
-@Mojo(name = "json2properties-generator", defaultPhase = LifecyclePhase.GENERATE_RESOURCES)
-public class ReferenceGeneratorMojo extends AbstractMojo {
+@Mojo(name = "json2properties-generator", defaultPhase = LifecyclePhase.GENERATE_RESOURCES, threadSafe = true)
+public class Json2PropertiesGeneratorMojo extends AbstractMojo {
 	@Parameter(property = "source", required = true)
 	private String source;
 	@Parameter(property = "destination", required = true)
