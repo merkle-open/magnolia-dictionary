@@ -28,7 +28,7 @@ jobs:
           mgnl_nexus_pass: ${{secrets.MGNL_NEXUS_PASS}}
       # Install xmllint
       - name: Install dependencies
-        run: sudo apt-get install libxml2-utils
+        run: sudo apt-get update && sudo apt-get install libxml2-utils
       # Set git user name and email
       - name: Set up Git
         run: |
@@ -56,6 +56,11 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 17
+      - name: Maven setup
+        uses: ./.github/actions/mvn-setup
+        with:
+          mgnl_nexus_user: ${{secrets.MGNL_NEXUS_USER}}
+          mgnl_nexus_pass: ${{secrets.MGNL_NEXUS_PASS}}
       # Run maven verify
       - name: Maven verify
         run: mvn verify --batch-mode
