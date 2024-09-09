@@ -15,7 +15,7 @@ Magnolia dictionary app to manage i18n labels.
 <dependency>
     <groupId>com.namics.oss.magnolia</groupId>
     <artifactId>magnolia-dictionary</artifactId>
-    <version>1.2.8</version>
+    <version>1.3.0</version>
 </dependency>
 ```
 
