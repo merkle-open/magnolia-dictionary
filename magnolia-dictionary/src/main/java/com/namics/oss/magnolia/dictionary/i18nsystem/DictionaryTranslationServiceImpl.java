@@ -1,32 +1,37 @@
 package com.namics.oss.magnolia.dictionary.i18nsystem;
 
-import com.namics.oss.magnolia.dictionary.util.DictionaryUtils;
 import info.magnolia.cms.i18n.DefaultMessagesManager;
 import info.magnolia.cms.i18n.I18nContentSupport;
-import info.magnolia.context.MgnlContext;
 import info.magnolia.i18nsystem.DefaultMessageBundlesLoader;
+import info.magnolia.i18nsystem.I18nText;
 import info.magnolia.i18nsystem.LocaleProvider;
 import info.magnolia.i18nsystem.TranslationService;
 import info.magnolia.i18nsystem.TranslationServiceImpl;
-import info.magnolia.i18nsystem.I18nText;
 import info.magnolia.i18nsystem.module.I18nModule;
-import info.magnolia.module.site.ExtendedAggregationState;
 import info.magnolia.module.site.Site;
 import info.magnolia.module.site.SiteManager;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.resourceloader.ResourceOrigin;
-import org.apache.commons.lang3.ArrayUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.lang.invoke.MethodHandles;
+import java.util.Arrays;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Properties;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
-import java.lang.invoke.MethodHandles;
-import java.util.*;
+
+import org.apache.commons.lang3.ArrayUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.namics.oss.magnolia.dictionary.util.DictionaryUtils;
 
 /**
  * @author mrauch, Namics AG
@@ -131,32 +136,7 @@ public class DictionaryTranslationServiceImpl implements TranslationService, Eve
 	}
 
 	private Optional<I18nContentSupport> getSiteI18n() {
-		try {
-			if (isSitePresent()) {
-				Site currentSite = Components.getComponent(SiteManager.class).getCurrentSite();
-				return Optional.of(currentSite.getI18n());
-			}
-		} catch (RuntimeException e) {
-			LOG.debug("Error while getting I18nContentSupport: '{}'", e.getMessage());
-			LOG.trace("Error while getting I18nContentSupport", e);
-		}
-		return Optional.empty();
-	}
-
-	private boolean isSitePresent() {
-		// If a translation is requested before the site is
-		// set in the aggregationState, the SiteManager will
-		// log a warning (see info.magnolia.module.site.DefaultSiteManager.getCurrentSite).
-		// This happens, if the translation is requested in a
-		// filter which is located before the info.magnolia.multisite.filters.MultiSiteFilter.
-		// This is the case in Magnolia 5.7 info.magnolia.personalization.visitor.VisitorDetectorFilter.
-		if (MgnlContext.isWebContext()) {
-			return Optional.ofNullable(MgnlContext.getAggregationState())
-					.filter(state -> state instanceof ExtendedAggregationState)
-					.map(state -> ((ExtendedAggregationState) state).getSite())
-					.isPresent();
-		}
-		return Boolean.FALSE;
+		return Optional.of(Components.getComponent(SiteManager.class).getCurrentSite()).map(Site::getI18n);
 	}
 
 	private Locale getFallbackLocale() {

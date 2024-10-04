@@ -25,10 +25,6 @@
             <artifactId>magnolia-site</artifactId>
         </dependency>
         <dependency>
-            <groupId>info.magnolia.site</groupId>
-            <artifactId>magnolia-site-jcr</artifactId>
-        </dependency>
-        <dependency>
             <groupId>info.magnolia.publishing</groupId>
             <artifactId>magnolia-publishing-core</artifactId>
         </dependency>

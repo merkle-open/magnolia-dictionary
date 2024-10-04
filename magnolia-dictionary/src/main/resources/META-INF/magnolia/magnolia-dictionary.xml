@@ -32,23 +32,6 @@
         </component>
     </components>
 
-    <dependencies>
-        <dependency>
-            <name>core</name>
-            <version>*</version>
-        </dependency>
-        <dependency>
-            <name>site</name>
-            <version>*</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <name>multisite</name>
-            <version>*</version>
-            <optional>true</optional>
-        </dependency>
-    </dependencies>
-
     <repositories>
         <repository>
             <name>magnolia</name>
@@ -58,5 +41,4 @@
             <nodeTypeFile>/mgnl-nodetypes/magnolia-dictionary-nodetypes.xml</nodeTypeFile>
         </repository>
     </repositories>
-
 </module>
