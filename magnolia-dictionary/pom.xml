@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.namics.oss.magnolia</groupId>
         <artifactId>magnolia-dictionary-parent</artifactId>
-        <version>1.3.2-SNAPSHOT</version>
+        <version>1.3.2</version>
     </parent>
 
     <artifactId>magnolia-dictionary</artifactId>
