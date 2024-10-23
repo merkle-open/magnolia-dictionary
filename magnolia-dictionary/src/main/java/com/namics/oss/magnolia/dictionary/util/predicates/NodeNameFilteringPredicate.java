@@ -5,20 +5,19 @@ import org.apache.jackrabbit.commons.predicate.Predicate;
 
 import javax.jcr.Node;
 import java.util.List;
+import java.util.Set;
 
 public class NodeNameFilteringPredicate implements Predicate {
+	private final Set<String> filterNames;
 
-	private List<String> filterNames;
-
-	public NodeNameFilteringPredicate(List<String> filterNames) {
+	public NodeNameFilteringPredicate(final Set<String> filterNames) {
 		this.filterNames = filterNames;
 	}
 
 	@Override
-	public boolean evaluate(Object o) {
+	public boolean evaluate(final Object o) {
 		if (o instanceof Node) {
-			Node node = (Node) o;
-			String nodeName = NodeUtil.getName(node);
+			String nodeName = NodeUtil.getName((Node) o);
 			return !filterNames.contains(nodeName);
 		}
 		return false;
