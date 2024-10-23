@@ -13,6 +13,12 @@
         <component>
             <type>info.magnolia.i18nsystem.TranslationService</type>
             <implementation>com.namics.oss.magnolia.dictionary.i18nsystem.DictionaryTranslationServiceImpl</implementation>
+            <scope>singleton</scope>
+        </component>
+        <component>
+            <type>com.namics.oss.magnolia.dictionary.i18nsystem.DictionaryMessageBundlesLoader</type>
+            <implementation>com.namics.oss.magnolia.dictionary.i18nsystem.DictionaryMessageBundlesLoader</implementation>
+            <scope>singleton</scope>
         </component>
         <component>
             <type>com.namics.oss.magnolia.dictionary.i18nsystem.I18nResourcesProvider</type>
