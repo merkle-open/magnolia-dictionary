@@ -97,7 +97,8 @@ public class DictionaryTranslationServiceImpl implements TranslationService, Eve
                 .flatMap(properties ->
                         Arrays.stream(keys)
                                 .map(DictionaryUtils::getValidMessageNodeName)
-                                .map(properties::getProperty)
+                                .map(key -> Optional.ofNullable(properties.getProperty(key)))
+                                .flatMap(Optional::stream)
                 )
                 .findFirst();
     }

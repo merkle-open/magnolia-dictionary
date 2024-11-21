@@ -38,6 +38,13 @@
         </component>
     </components>
 
+    <dependencies>
+        <dependency>
+            <name>i18n</name>
+            <version>*/*</version>
+        </dependency>
+    </dependencies>
+    
     <repositories>
         <repository>
             <name>magnolia</name>
