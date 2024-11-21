@@ -55,7 +55,6 @@ public class DictionaryModule implements ModuleLifecycle {
 			LOG.info("Start Dictionary module: Load labels to dictionary");
 			messagesInstaller.loadLabelsToDictionary();
 		}
-		dictionaryMessageBundlesLoader.reload();
 	}
 
 	@Override

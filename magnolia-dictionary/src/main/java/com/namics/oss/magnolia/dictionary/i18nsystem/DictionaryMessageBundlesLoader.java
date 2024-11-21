@@ -37,7 +37,7 @@ import com.namics.oss.magnolia.dictionary.util.NodeUtil;
 public class DictionaryMessageBundlesLoader implements EventListener {
     private static final Logger LOG = LoggerFactory.getLogger(DictionaryMessageBundlesLoader.class);
     private final Provider<SystemContext> systemContextProvider;
-    private Map<Locale, Properties> messages = Collections.emptyMap();
+    private Map<Locale, Properties> messages;
 
     @Inject
     public DictionaryMessageBundlesLoader(final Provider<SystemContext> systemContextProvider) {
@@ -84,6 +84,9 @@ public class DictionaryMessageBundlesLoader implements EventListener {
     }
 
     public Map<Locale, Properties> getMessages() {
+        if(messages == null) {
+            reload();
+        }
         return messages;
     }
 

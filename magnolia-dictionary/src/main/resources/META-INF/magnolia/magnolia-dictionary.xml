@@ -43,6 +43,16 @@
             <name>i18n</name>
             <version>*/*</version>
         </dependency>
+        <dependency>
+            <name>site</name>
+            <version>*</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <name>multisite</name>
+            <version>*</version>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
     
     <repositories>
