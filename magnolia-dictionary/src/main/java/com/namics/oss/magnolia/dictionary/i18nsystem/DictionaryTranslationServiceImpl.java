@@ -104,7 +104,7 @@ public class DictionaryTranslationServiceImpl implements TranslationService, Eve
     }
 
     private Optional<Locale> getSiteFallbackLocale() {
-        return Optional.of(siteManager.getCurrentSite())
+        return Optional.ofNullable(siteManager.getCurrentSite())
                 .map(Site::getI18n)
                 .map(I18nContentSupport::getFallbackLocale);
     }
