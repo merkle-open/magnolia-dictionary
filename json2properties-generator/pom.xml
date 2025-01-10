@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.namics.oss.magnolia</groupId>
         <artifactId>magnolia-dictionary-parent</artifactId>
-        <version>1.3.5</version>
+        <version>1.3.6-SNAPSHOT</version>
     </parent>
 
     <artifactId>json2properties-generator</artifactId>
