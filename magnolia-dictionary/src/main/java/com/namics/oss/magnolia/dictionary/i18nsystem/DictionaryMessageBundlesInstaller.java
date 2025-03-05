@@ -1,11 +1,11 @@
 package com.namics.oss.magnolia.dictionary.i18nsystem;
 
-import com.machinezoo.noexception.Exceptions;
 import com.namics.oss.magnolia.dictionary.DictionaryConfiguration;
 import com.namics.oss.magnolia.dictionary.util.DictionaryUtils;
 import com.namics.oss.magnolia.dictionary.util.NodeUtil;
 import com.namics.oss.magnolia.dictionary.util.predicates.NodeNameFilteringPredicate;
 import com.namics.oss.magnolia.dictionary.util.predicates.SystemNodeFilteringPredicate;
+import info.magnolia.context.SystemContext;
 import info.magnolia.jcr.util.PropertyUtil;
 import info.magnolia.resourceloader.Resource;
 import info.magnolia.resourceloader.ResourceOrigin;
@@ -17,8 +17,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -33,18 +35,22 @@ public class DictionaryMessageBundlesInstaller {
 
     private final I18nResourcesProvider i18nResourcesProvider;
     private final ResourceOrigin<?> resourceOrigin;
+	private final Provider<SystemContext> systemContextProvider;
 
-    @Inject
+	@Inject
 	public DictionaryMessageBundlesInstaller(
 			final I18nResourcesProvider i18nResourcesProvider,
-			final ResourceOrigin resourceOrigin
+			final ResourceOrigin resourceOrigin,
+			final Provider<SystemContext> systemContextProvider
 	) {
         this.i18nResourcesProvider = i18nResourcesProvider;
         this.resourceOrigin = resourceOrigin;
+		this.systemContextProvider = systemContextProvider;
 	}
 
-	public void loadLabelsToDictionary() {
-		final Node dictionaryRoot = NodeUtil.getNodeByPathOrNull(DictionaryConfiguration.REPOSITORY, "/");
+	public void loadLabelsToDictionary() throws RepositoryException {
+		final Session session = systemContextProvider.get().getJCRSession(DictionaryConfiguration.REPOSITORY);
+		final Node dictionaryRoot = session.getRootNode();
 		setLastLoadedTime(dictionaryRoot);
 
 		final Set<String> notExpired = new HashSet<>();
@@ -62,7 +68,7 @@ public class DictionaryMessageBundlesInstaller {
 		});
 
 		markExpiredProperties(dictionaryRoot, notExpired);
-		Exceptions.wrap().run(() -> dictionaryRoot.getSession().save());
+		session.save();
 	}
 
 	private void markExpiredProperties(final Node dictionaryRoot, final Set<String> notExpired) {
