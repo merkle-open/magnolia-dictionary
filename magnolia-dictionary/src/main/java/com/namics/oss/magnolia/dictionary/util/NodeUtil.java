@@ -18,7 +18,10 @@ import java.util.List;
 
 /**
  * @author haug, Namics AG
+ * @deprecated
  */
+@Deprecated
+//TODO replace
 public class NodeUtil extends info.magnolia.jcr.util.NodeUtil {
 	private static final Logger LOG = LoggerFactory.getLogger(NodeUtil.class);
 
@@ -48,36 +51,20 @@ public class NodeUtil extends info.magnolia.jcr.util.NodeUtil {
 		}
 	}
 
-	public static Node getNodeByPathOrNull(String workspace, String path) {
-		Node node = null;
-
-		try {
-			node = MgnlContext.getJCRSession(workspace).getNode(path);
-		} catch (RepositoryException e) {
-			node = null;
-		}
-
-		return node;
-	}
-
-	public static String replaceIllegalJcrChars(String nodeName, char replacement) {
-		return StringUtils.replaceChars(nodeName, "%/:[]*'\"|\t\r\n", String.valueOf(replacement));
-	}
-
-	public static String replaceIllegalJcrChars(String nodeName) {
-		return replaceIllegalJcrChars(nodeName, '_');
-	}
-
 	public static String createValidNodeName(String nodeName) {
 		return replaceIllegalJcrChars(nodeName);
 	}
 
-	public static List<Node> asList(NodeIterator iterator) {
-		return asList(asIterable(iterator));
+	private static String replaceIllegalJcrChars(String nodeName, char replacement) {
+		return StringUtils.replaceChars(nodeName, "%/:[]*'\"|\t\r\n", String.valueOf(replacement));
 	}
 
-	public static Node getOrCreateNode(Node node, String relPath) {
-		return getOrCreateNode(node, relPath, NodeTypes.Content.NAME);
+	private static String replaceIllegalJcrChars(String nodeName) {
+		return replaceIllegalJcrChars(nodeName, '_');
+	}
+
+	public static List<Node> asList(NodeIterator iterator) {
+		return asList(asIterable(iterator));
 	}
 
 	public static Node getOrCreateNode(Node node, String relPath, String primaryNodeTypeName) {
@@ -99,7 +86,7 @@ public class NodeUtil extends info.magnolia.jcr.util.NodeUtil {
 		return overwriteOrCreateNode(parentNode, nodeName, nodeTypeIfMissing, null);
 	}
 
-	public static Node overwriteOrCreateNode(Node parentNode, String nodeName, String nodeTypeIfMissing, String nodeTypeForced) throws RepositoryException {
+	private static Node overwriteOrCreateNode(Node parentNode, String nodeName, String nodeTypeIfMissing, String nodeTypeForced) throws RepositoryException {
 		if (parentNode == null) {
 			throw new NullPointerException("parentNode cannot be null");
 		}
