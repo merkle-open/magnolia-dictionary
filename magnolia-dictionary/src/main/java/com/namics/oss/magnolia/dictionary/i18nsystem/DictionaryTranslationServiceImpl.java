@@ -22,7 +22,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.namics.oss.magnolia.dictionary.util.DictionaryUtils;
+import com.namics.oss.magnolia.dictionary.util.NodeUtil;
 
 public class DictionaryTranslationServiceImpl implements TranslationService, EventListener {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -96,7 +96,7 @@ public class DictionaryTranslationServiceImpl implements TranslationService, Eve
                 .stream()
                 .flatMap(properties ->
                         Arrays.stream(keys)
-                                .map(DictionaryUtils::getValidMessageNodeName)
+                                .map(NodeUtil::createValidNodeName)
                                 .map(key -> Optional.ofNullable(properties.getProperty(key)))
                                 .flatMap(Optional::stream)
                 )

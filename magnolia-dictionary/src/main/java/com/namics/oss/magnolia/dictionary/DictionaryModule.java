@@ -14,6 +14,7 @@ import javax.jcr.observation.Event;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.machinezoo.noexception.Exceptions;
 import com.namics.oss.magnolia.dictionary.i18nsystem.DictionaryMessageBundlesInstaller;
 import com.namics.oss.magnolia.dictionary.i18nsystem.DictionaryMessageBundlesLoader;
 
@@ -53,7 +54,7 @@ public class DictionaryModule implements ModuleLifecycle {
 
 		if(loadLabelsOnStartup()) {
 			LOG.info("Start Dictionary module: Load labels to dictionary");
-			messagesInstaller.loadLabelsToDictionary();
+			Exceptions.wrap().run(messagesInstaller::loadLabelsToDictionary);
 		}
 	}
 
