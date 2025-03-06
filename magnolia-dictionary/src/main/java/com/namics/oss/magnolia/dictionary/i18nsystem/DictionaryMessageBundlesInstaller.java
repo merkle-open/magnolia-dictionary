@@ -1,7 +1,6 @@
 package com.namics.oss.magnolia.dictionary.i18nsystem;
 
 import com.namics.oss.magnolia.dictionary.DictionaryConfiguration;
-import com.namics.oss.magnolia.dictionary.util.DictionaryUtils;
 import com.namics.oss.magnolia.dictionary.util.NodeUtil;
 import com.namics.oss.magnolia.dictionary.util.predicates.NodeNameFilteringPredicate;
 import com.namics.oss.magnolia.dictionary.util.predicates.SystemNodeFilteringPredicate;
@@ -58,7 +57,7 @@ public class DictionaryMessageBundlesInstaller {
 		streamPropertyEntries().forEach(message -> {
 			final String messageValue = message.getValue().toString();
 			final String messageName = message.getKey().toString();
-			final String messageNodeName = DictionaryUtils.getValidMessageNodeName(messageName);
+			final String messageNodeName = NodeUtil.createValidNodeName(messageName);
 			if (!messageName.equals(messageNodeName)) {
 				LOG.info("Label name changed from '{}' to '{}'", messageName, messageNodeName);
 			}
