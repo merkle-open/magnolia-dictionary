@@ -36,7 +36,7 @@
     <properties>
         <!-- check for new versions:  mvn versions:display-property-updates -->
         <magnolia.version>6.3.0</magnolia.version>
-        <poi.version>5.3.0</poi.version>
+        <poi.version>5.4.0</poi.version>
         <gson.version>2.11.0</gson.version>
         <jsr305.nullable.version>3.0.2</jsr305.nullable.version>
 
