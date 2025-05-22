@@ -54,10 +54,6 @@
         <mvn.plugin.version>3.9.0</mvn.plugin.version>
 
         <maven.build.timestamp.format>yyyy-MM-dd-z-HH-mm-ss</maven.build.timestamp.format>
-        <git.build.time>${maven.build.timestamp}</git.build.time>
-        <git.branch>unknown</git.branch>
-        <git.commit.id>unknown</git.commit.id>
-        <git.commit.time>unknown</git.commit.time>
         <java.version>17</java.version>
         <encoding>UTF-8</encoding>
         <project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
