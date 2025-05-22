@@ -4,35 +4,35 @@
     <name>magnolia-dictionary</name>
     <displayName>Dictionary</displayName>
     <description>Dictionary app for label translations.</description>
-    <class>com.namics.oss.magnolia.dictionary.DictionaryModule</class>
-    <versionHandler>com.namics.oss.magnolia.dictionary.setup.DictionaryModuleVersionHandler</versionHandler>
+    <class>com.merkle.oss.magnolia.dictionary.DictionaryModule</class>
+    <versionHandler>com.merkle.oss.magnolia.dictionary.setup.DictionaryModuleVersionHandler</versionHandler>
     <version>${project.version}</version>
 
     <components>
         <id>main</id>
         <component>
             <type>info.magnolia.i18nsystem.TranslationService</type>
-            <implementation>com.namics.oss.magnolia.dictionary.i18nsystem.DictionaryTranslationServiceImpl</implementation>
+            <implementation>com.merkle.oss.magnolia.dictionary.i18nsystem.DictionaryTranslationServiceImpl</implementation>
             <scope>singleton</scope>
         </component>
         <component>
-            <type>com.namics.oss.magnolia.dictionary.i18nsystem.DictionaryMessageBundlesLoader</type>
-            <implementation>com.namics.oss.magnolia.dictionary.i18nsystem.DictionaryMessageBundlesLoader</implementation>
+            <type>com.merkle.oss.magnolia.dictionary.i18nsystem.DictionaryMessageBundlesLoader</type>
+            <implementation>com.merkle.oss.magnolia.dictionary.i18nsystem.DictionaryMessageBundlesLoader</implementation>
             <scope>singleton</scope>
         </component>
         <component>
-            <type>com.namics.oss.magnolia.dictionary.i18nsystem.I18nResourcesProvider</type>
-            <implementation>com.namics.oss.magnolia.dictionary.i18nsystem.DefaultI18nResourcesProvider</implementation>
+            <type>com.merkle.oss.magnolia.dictionary.i18nsystem.I18nResourcesProvider</type>
+            <implementation>com.merkle.oss.magnolia.dictionary.i18nsystem.DefaultI18nResourcesProvider</implementation>
         </component>
         <component>
-            <type>com.namics.oss.magnolia.dictionary.services.XlsExportService</type>
-            <implementation>com.namics.oss.magnolia.dictionary.services.XlsExportService</implementation>
+            <type>com.merkle.oss.magnolia.dictionary.services.XlsExportService</type>
+            <implementation>com.merkle.oss.magnolia.dictionary.services.XlsExportService</implementation>
             <scope>singleton</scope>
             <lazy>false</lazy>
         </component>
         <component>
-            <type>com.namics.oss.magnolia.dictionary.services.XlsImportService</type>
-            <implementation>com.namics.oss.magnolia.dictionary.services.XlsImportService</implementation>
+            <type>com.merkle.oss.magnolia.dictionary.services.XlsImportService</type>
+            <implementation>com.merkle.oss.magnolia.dictionary.services.XlsImportService</implementation>
             <scope>singleton</scope>
             <lazy>false</lazy>
         </component>

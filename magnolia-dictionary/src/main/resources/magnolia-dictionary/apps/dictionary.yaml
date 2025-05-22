@@ -39,7 +39,7 @@ subApps:
     actions:
       exportLabels:
         icon: icon-export
-        class: com.namics.oss.magnolia.dictionary.actions.importexport.XlsExportActionDefinition
+        class: com.merkle.oss.magnolia.dictionary.actions.importexport.XlsExportActionDefinition
         availability:
           multiple: true
           root: true
@@ -109,14 +109,14 @@ subApps:
         class: info.magnolia.ui.framework.action.ActivationActionDefinition
       deleteAllExpired:
         icon: icon-delete
-        implementationClass: com.namics.oss.magnolia.dictionary.actions.delete.DeleteAllExpiredLabelNodeAction
+        implementationClass: com.merkle.oss.magnolia.dictionary.actions.delete.DeleteAllExpiredLabelNodeAction
         class: info.magnolia.ui.api.action.ConfiguredActionDefinition
         availability:
           root: true
           writePermissionRequired: true
       deleteExpired:
         icon: icon-delete
-        implementationClass: com.namics.oss.magnolia.dictionary.actions.delete.DeleteExpiredLabelNodeAction
+        implementationClass: com.merkle.oss.magnolia.dictionary.actions.delete.DeleteExpiredLabelNodeAction
         class: info.magnolia.ui.api.action.ConfiguredActionDefinition
         availability:
           multiple: true
@@ -143,12 +143,12 @@ subApps:
               editable: false
               sortable: false
               propertyName: multi
-              formatterClass: com.namics.oss.magnolia.dictionary.workbench.column.MultiColumnFormatter
+              formatterClass: com.merkle.oss.magnolia.dictionary.workbench.column.MultiColumnFormatter
               class: info.magnolia.ui.workbench.column.definition.PropertyColumnDefinition
             - name: expired
               editable: false
               sortable: true
-              formatterClass: com.namics.oss.magnolia.dictionary.workbench.column.LabelExpiredColumnFormatter
+              formatterClass: com.merkle.oss.magnolia.dictionary.workbench.column.LabelExpiredColumnFormatter
               class: info.magnolia.ui.workbench.column.definition.PropertyColumnDefinition
             - name: status
               width: 45
@@ -200,7 +200,7 @@ subApps:
                 class: info.magnolia.ui.form.field.definition.TextFieldDefinition
                 readOnly: true
               - name: multi
-                class: com.namics.oss.magnolia.dictionary.field.MultiTextFieldDefinition
+                class: com.merkle.oss.magnolia.dictionary.field.MultiTextFieldDefinition
                 label: Translation
       nodeType:
         icon: icon-items

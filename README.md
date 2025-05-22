@@ -3,7 +3,7 @@ System        | Status
 --------------|------------------------------------------------
 CI master     | ![release](https://github.com/namics/magnolia-dictionary/workflows/release%20and%20deploy/badge.svg)
 CI develop    | ![snapshot](https://github.com/namics/magnolia-dictionary/workflows/deploy%20snapshot/badge.svg)
-Dependency    | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.namics.oss.magnolia/magnolia-dictionary/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.namics.oss.magnolia/magnolia-dictionary)
+Dependency    | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.merkle.oss.magnolia/magnolia-dictionary/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.merkle.oss.magnolia/magnolia-dictionary)
 
 
 Magnolia dictionary app to manage i18n labels.
@@ -13,13 +13,13 @@ Magnolia dictionary app to manage i18n labels.
 ### Maven Dependency (Latest Version in `pom.xml`):
 ```xml
 <dependency>
-    <groupId>com.namics.oss.magnolia</groupId>
+    <groupId>com.merkle.oss.magnolia</groupId>
     <artifactId>magnolia-dictionary</artifactId>
     <version>1.2.3</version>
 </dependency>
 ```
 
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.namics.oss.magnolia/magnolia-dictionary/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.namics.oss.magnolia/magnolia-dictionary)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.merkle.oss.magnolia/magnolia-dictionary/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.merkle.oss.magnolia/magnolia-dictionary)
 
 ### Available Languages
 

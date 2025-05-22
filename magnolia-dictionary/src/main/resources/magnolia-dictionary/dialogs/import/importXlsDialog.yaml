@@ -1,6 +1,6 @@
 actions:
   commit:
-    class: com.namics.oss.magnolia.dictionary.actions.importexport.XlsImportActionDefinition
+    class: com.merkle.oss.magnolia.dictionary.actions.importexport.XlsImportActionDefinition
     command: import
   cancel:
     class: info.magnolia.ui.dialog.action.CancelDialogActionDefinition
