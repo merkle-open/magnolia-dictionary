@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>magnolia-dictionary</artifactId>
+    <name>${project.artifactId}</name>
 
     <properties>
         <maven.deploy.skip>false</maven.deploy.skip>
