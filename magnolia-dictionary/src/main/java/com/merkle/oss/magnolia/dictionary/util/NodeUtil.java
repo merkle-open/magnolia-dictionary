@@ -4,17 +4,18 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.nodebuilder.AbstractNodeOperation;
 import info.magnolia.jcr.nodebuilder.ErrorHandler;
 import info.magnolia.jcr.nodebuilder.NodeOperation;
-import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.jcr.util.PropertyUtil;
-import org.apache.commons.collections4.IterableUtils;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
-import java.util.List;
+
+import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author haug, Namics AG
@@ -128,9 +129,9 @@ public class NodeUtil extends info.magnolia.jcr.util.NodeUtil {
 			@Override
 			protected Node doExec(Node context, ErrorHandler errorHandler) throws RepositoryException {
 				Object value = newValue;
-				if (value instanceof Integer) {
+				if (value instanceof Integer integer) {
 					// prevent java.lang.IllegalArgumentException for integer values
-					value = Long.valueOf((Integer) value);
+					value = Long.valueOf(integer);
 				}
 
 				StringUtils.trim(name); // prevent "trailing spaces not allowed exception

@@ -6,7 +6,7 @@ import com.merkle.oss.magnolia.dictionary.util.LocaleUtils;
 import com.vaadin.server.StreamResource;
 import info.magnolia.jcr.util.PropertyUtil;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;

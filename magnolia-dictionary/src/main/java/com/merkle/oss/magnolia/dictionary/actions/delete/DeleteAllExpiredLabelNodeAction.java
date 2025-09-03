@@ -17,8 +17,8 @@ import org.apache.jackrabbit.commons.predicate.Predicates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import java.lang.invoke.MethodHandles;

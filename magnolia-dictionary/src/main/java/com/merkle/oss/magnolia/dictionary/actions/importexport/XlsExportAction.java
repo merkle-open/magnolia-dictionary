@@ -74,8 +74,7 @@ public class XlsExportAction extends AbstractAction<XlsExportActionDefinition> {
 	private List<Node> itemsToNodes(List<JcrItemAdapter> items) {
 		return items.stream()
 				.map(this::itemToNode)
-				.filter(Optional::isPresent)
-				.map(Optional::get)
+				.flatMap(Optional::stream)
 				.collect(Collectors.toList());
 	}
 
