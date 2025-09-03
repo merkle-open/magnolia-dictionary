@@ -10,8 +10,7 @@ import javax.jcr.Node;
 public class SystemNodeFilteringPredicate implements Predicate {
 	@Override
 	public boolean evaluate(Object o) {
-		if (o instanceof Node) {
-			Node node = (Node) o;
+		if (o instanceof Node node) {
 			return !StringUtils.startsWithAny(NodeUtil.getName(node),
 					NodeTypes.JCR_PREFIX,
 					NodeTypes.REP_PREFIX,
