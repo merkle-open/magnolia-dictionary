@@ -5,7 +5,7 @@ import com.vaadin.v7.ui.Table;
 import info.magnolia.jcr.util.PropertyUtil;
 import info.magnolia.ui.workbench.column.AbstractColumnFormatter;
 import info.magnolia.ui.workbench.column.definition.PropertyColumnDefinition;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.jcr.Item;
 import javax.jcr.Node;
