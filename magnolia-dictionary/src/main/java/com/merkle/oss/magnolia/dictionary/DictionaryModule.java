@@ -7,7 +7,7 @@ import info.magnolia.observation.WorkspaceEventListenerRegistration;
 
 import java.lang.invoke.MethodHandles;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import javax.jcr.RepositoryException;
 import javax.jcr.observation.Event;
 

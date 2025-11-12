@@ -16,8 +16,8 @@ public class NodeNameFilteringPredicate implements Predicate {
 
 	@Override
 	public boolean evaluate(final Object o) {
-		if (o instanceof Node) {
-			String nodeName = NodeUtil.getName((Node) o);
+		if (o instanceof Node node) {
+			String nodeName = NodeUtil.getName(node);
 			return !filterNames.contains(nodeName);
 		}
 		return false;
