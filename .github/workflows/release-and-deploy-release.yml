@@ -1,9 +1,9 @@
-name: release and deploy
+name: release and deploy (6_3)
 
 on:
   push:
     branches:
-      - main
+      - main-6_3
 
 jobs:
   release:
