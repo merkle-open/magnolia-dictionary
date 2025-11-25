@@ -1,10 +1,82 @@
-appClass: info.magnolia.ui.contentapp.ContentApp
-class: info.magnolia.ui.contentapp.ContentAppDescriptor
+class: info.magnolia.ui.contentapp.configuration.ContentAppDescriptor
+appClass: info.magnolia.ui.framework.app.BaseApp
+
+datasource: &dictionaryDatasource
+  $type: jcrDatasource
+  workspace: dictionary
+  allowedNodeTypes:
+    - mgnl:label
 
 subApps:
   browser:
-    subAppClass: info.magnolia.ui.contentapp.browser.BrowserSubApp
-    class: info.magnolia.ui.contentapp.browser.BrowserSubAppDescriptor
+    class: info.magnolia.ui.contentapp.configuration.BrowserDescriptor
+    actions:
+      exportLabels:
+        icon: icon-export
+        class: com.merkle.oss.magnolia.dictionary.actions.importexport.XlsExportAction$Definition
+        availability:
+          multiple: true
+          root: true
+          nodeTypes:
+            - mgnl:label
+      importLabels:
+        icon: icon-import
+        $type: openDialogAction
+        dialogId: magnolia-dictionary:import/importXlsDialog
+        availability:
+          root: true
+          writePermissionRequired: true
+      editLabel:
+        icon: icon-edit
+        $type: openDetailSubappAction
+        appName: dictionary
+        subAppName: detail
+        viewType: edit
+        availability:
+          writePermissionRequired: true
+          nodeTypes:
+            - mgnl:label
+      publish:
+        icon: icon-publish
+        $type: jcrCommandAction
+        command: publish
+        asynchronous: true
+        params:
+          recursive: true
+        availability:
+          root: true
+          writePermissionRequired: true
+          rules:
+            notDeleted: &notDeleted
+              $type: jcrIsDeletedRule
+              negate: true
+            isPublishable:
+              $type: jcrPublishableRule
+              name: isPublishable
+      unpublish:
+        icon: icon-unpublish
+        $type: jcrCommandAction
+        command: unpublish
+        availability:
+          root: true
+          writePermissionRequired: true
+          rules:
+            notDeleted: *notDeleted
+            isPublished:
+              $type: jcrPublishedRule
+              name: isPublished
+      deleteAllExpired:
+        icon: icon-delete
+        class: com.merkle.oss.magnolia.dictionary.actions.delete.DeleteAllExpiredLabels$Definition
+        availability:
+          root: true
+          writePermissionRequired: true
+      deleteExpired:
+        icon: icon-delete
+        class: com.merkle.oss.magnolia.dictionary.actions.delete.DeleteExpiredLabel$Definition
+        availability:
+          writePermissionRequired: true
+          multiple: true
     actionbar:
       defaultAction: editLabel
       sections:
@@ -17,10 +89,10 @@ subApps:
             - name: importexport
               items:
                 - name: exportLabels
-            - name: activateActions
+            - name: publishActions
               items:
-                - name: activate
-                - name: deactivate
+                - name: publish
+                - name: unpublish
           availability:
             nodeTypes:
               - mgnl:label
@@ -32,178 +104,59 @@ subApps:
                 - name: importLabels
             - name: dictionary
               items:
-                - name: activateAll
+                - name: publish
                 - name: deleteAllExpired
           availability:
             root: true
-    actions:
-      exportLabels:
-        icon: icon-export
-        class: com.merkle.oss.magnolia.dictionary.actions.importexport.XlsExportActionDefinition
-        availability:
-          multiple: true
-          root: true
-          nodeTypes:
-            - mgnl:label
-      importLabels:
-        icon: icon-import
-        name: import
-        dialogName: magnolia-dictionary:import/importXlsDialog
-        class: info.magnolia.ui.framework.action.OpenCreateDialogActionDefinition
-        availability:
-          root: true
-          writePermissionRequired: true
-      addLabel:
-        subAppId: detail
-        icon: icon-add-item
-        nodeType: mgnl:label
-        appName: dictionary
-        class: info.magnolia.ui.contentapp.detail.action.CreateItemActionDefinition
-        availability:
-          root: true
-          writePermissionRequired: true
-      editLabel:
-        subAppId: detail
-        icon: icon-edit
-        appName: dictionary
-        class: info.magnolia.ui.contentapp.detail.action.EditItemActionDefinition
-        availability:
-          writePermissionRequired: true
-          nodeTypes:
-            - mgnl:label
-      deleteLabel:
-        icon: icon-delete
-        class: info.magnolia.ui.framework.action.DeleteItemActionDefinition
-        availability:
-          writePermissionRequired: true
-      activate:
-        availability:
-          multiple: true
-          writePermissionRequired: true
-          rules:
-            - implementationClass: info.magnolia.ui.framework.availability.IsNotDeletedRule
-        command: publish
-        icon: icon-publish
-        catalog: versioned
-        class: info.magnolia.ui.framework.action.ActivationActionDefinition
-      deactivate:
-        availability:
-          multiple: true
-          writePermissionRequired: true
-          rules:
-            - implementationClass: info.magnolia.ui.framework.availability.IsNotDeletedRule
-            - implementationClass: info.magnolia.ui.framework.availability.IsPublishedRule
-        command: unpublish
-        icon: icon-unpublish
-        catalog: versioned
-        class: info.magnolia.ui.framework.action.ActivationActionDefinition
-      activateAll:
-        availability:
-          root: true
-          writePermissionRequired: true
-        command: publishAll
-        catalog: versioned
-        icon: icon-publish
-        recursive: true
-        asynchronous: true
-        class: info.magnolia.ui.framework.action.ActivationActionDefinition
-      deleteAllExpired:
-        icon: icon-delete
-        implementationClass: com.merkle.oss.magnolia.dictionary.actions.delete.DeleteAllExpiredLabelNodeAction
-        class: info.magnolia.ui.api.action.ConfiguredActionDefinition
-        availability:
-          root: true
-          writePermissionRequired: true
-      deleteExpired:
-        icon: icon-delete
-        implementationClass: com.merkle.oss.magnolia.dictionary.actions.delete.DeleteExpiredLabelNodeAction
-        class: info.magnolia.ui.api.action.ConfiguredActionDefinition
-        availability:
-          multiple: true
-          writePermissionRequired: true
+
     workbench:
-      dropConstraintClass: info.magnolia.ui.workbench.tree.drop.AlwaysTrueDropConstraint
-      editable: false
       contentViews:
         - name: tree
-          class: info.magnolia.ui.workbench.tree.TreePresenterDefinition
-          sortable: true
-          columns: &myColumns
-            - name: name
-              editable: true
-              sortable: true
-              propertyName: jcrName
-              class: info.magnolia.ui.workbench.column.definition.PropertyColumnDefinition
-            - name: value
-              editable: true
-              sortable: true
-              propertyName: value
-              class: info.magnolia.ui.workbench.column.definition.PropertyColumnDefinition
-            - name: multi
+          multiSelect: true
+          $type: treeView
+          rowStyleGenerator: info.magnolia.ui.contentapp.row.StatusRowStyleGenerator
+          columns: &treeColumns
+            jcrName:
+              $type: titleColumn
               editable: false
-              sortable: false
-              propertyName: multi
-              formatterClass: com.merkle.oss.magnolia.dictionary.workbench.column.MultiColumnFormatter
-              class: info.magnolia.ui.workbench.column.definition.PropertyColumnDefinition
-            - name: expired
+            value:
+              $type: componentColumn
               editable: false
-              sortable: true
-              formatterClass: com.merkle.oss.magnolia.dictionary.workbench.column.LabelExpiredColumnFormatter
-              class: info.magnolia.ui.workbench.column.definition.PropertyColumnDefinition
-            - name: status
-              width: 45
-              displayInChooseDialog: false
-              formatterClass: info.magnolia.ui.workbench.column.StatusColumnFormatter
-              class: info.magnolia.ui.workbench.column.definition.StatusColumnDefinition
-            - name: moddate
-              width: 160
-              sortable: true
-              displayInChooseDialog: false
-              formatterClass: info.magnolia.ui.workbench.column.DateColumnFormatter
-              propertyName: mgnl:lastModified
-              class: info.magnolia.ui.workbench.column.definition.MetaDataColumnDefinition
+            multi:
+              class: info.magnolia.ui.contentapp.configuration.column.ConfiguredColumnDefinition
+              valueProvider: com.merkle.oss.magnolia.dictionary.workbench.column.MultiColumnValueProvider
+              editable: false
+            expired:
+              class: info.magnolia.ui.contentapp.configuration.column.ConfiguredColumnDefinition
+              valueProvider: com.merkle.oss.magnolia.dictionary.workbench.column.ExpiredColumnValueProvider
+              editable: false
+            jcrPublishingStatus:
+              $type: jcrStatusColumn
+              width: 130
+            mgnl:lastModified:
+              $type: dateColumn
+              editable: false
+              width: 200
         - name: list
-          class: info.magnolia.ui.workbench.list.ListPresenterDefinition
-          columns: *myColumns
-        - name: search
-          class: info.magnolia.ui.workbench.search.SearchPresenterDefinition
-          columns: *myColumns
-    contentConnector:
-      includeProperties: false
-      workspace: dictionary
-      rootPath: /
-      defaultOrder: jcrName
-      nodeTypes:
-        - name: mgnl:label
-          icon: icon-items
+          $type: listView
+          multiSelect: true
+          columns: *treeColumns
+
   detail:
-    subAppClass: info.magnolia.ui.contentapp.detail.DetailSubApp
-    class: info.magnolia.ui.contentapp.detail.DetailSubAppDescriptor
-    actions:
-      commit:
-        implementationClass: info.magnolia.ui.form.action.SaveFormAction
-        class: info.magnolia.ui.form.action.SaveFormActionDefinition
-      cancel:
-        class: info.magnolia.ui.form.action.CancelFormActionDefinition
-    editor:
-      actions:
-        - name: commit
-        - name: cancel
-      form:
-        tabs:
-          - name: label
-            fields:
-              - name: name
-                class: info.magnolia.ui.form.field.definition.TextFieldDefinition
-                readOnly: true
-              - name: value
-                class: info.magnolia.ui.form.field.definition.TextFieldDefinition
-                readOnly: true
-              - name: multi
-                class: com.merkle.oss.magnolia.dictionary.field.MultiTextFieldDefinition
-                label: Translation
-      nodeType:
-        icon: icon-items
-        name: mgnl:label
-    contentConnector:
-      workspace: dictionary
+    class: info.magnolia.ui.contentapp.detail.DetailDescriptor
+    itemProvider:
+      $type: jcrNodeFromLocationProvider
+      nodeType: mgnl:label
+    datasource:
+      <<: *dictionaryDatasource
+      describeByProperty: jcrName
+    form:
+      properties:
+        name:
+          $type: textField
+          readOnly: true
+        value:
+          $type: textField
+          readOnly: true
+        multi:
+          class: com.merkle.oss.magnolia.dictionary.field.MultiTextFieldDefinition

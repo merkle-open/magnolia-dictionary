@@ -1,10 +1,19 @@
 package com.merkle.oss.magnolia.dictionary.services;
 
-import com.merkle.oss.magnolia.dictionary.DictionaryConfiguration;
-import com.merkle.oss.magnolia.dictionary.DictionaryConfiguration.ImportExport;
-import com.merkle.oss.magnolia.dictionary.util.LocaleUtils;
-import com.vaadin.server.StreamResource;
 import info.magnolia.jcr.util.PropertyUtil;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.lang.invoke.MethodHandles;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
@@ -16,37 +25,32 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.lang.invoke.MethodHandles;
-import java.text.MessageFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import com.merkle.oss.magnolia.dictionary.DictionaryConfiguration.ImportExport;
+import com.merkle.oss.magnolia.dictionary.util.LocaleUtils;
 
-import static com.merkle.oss.magnolia.dictionary.DictionaryConfiguration.ImportExport.FILENAME_TEMPLATE;
+import jakarta.inject.Inject;
 
 public class XlsExportService {
 	private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private final LocaleUtils localeUtils;
 
-	public ByteArrayOutputStream exportXls(List<Node> nodes) throws IOException, RepositoryException {
-		List<String> exportProperties = getExportProperties();
-		XSSFWorkbook workbook = new XSSFWorkbook();
-		XSSFSheet sheet = workbook.createSheet(ImportExport.SHEET_NAME);
-		CellStyle dateCellStyle = getDateCellStyle(workbook);
+    @Inject
+    public XlsExportService(final LocaleUtils localeUtils) {
+        this.localeUtils = localeUtils;
+    }
+
+    public ByteArrayOutputStream exportXls(final Collection<Node> nodes) throws IOException, RepositoryException {
+		final List<String> exportProperties = getExportProperties();
+        final XSSFWorkbook workbook = new XSSFWorkbook();
+        final XSSFSheet sheet = workbook.createSheet(ImportExport.SHEET_NAME);
+        final CellStyle dateCellStyle = getDateCellStyle(workbook);
 
 		LOG.info("Start node export for '{}' nodes with properties '{}'", CollectionUtils.size(nodes), exportProperties);
 
 		int rowNum = 0;
 		int headColNum = 0;
 
-		Row headRow = sheet.createRow(rowNum++);
+        final Row headRow = sheet.createRow(rowNum++);
 
 		for (String property : exportProperties) {
 			Cell cell = headRow.createCell(headColNum++);
@@ -63,20 +67,19 @@ public class XlsExportService {
 			}
 		}
 
-		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		workbook.write(outputStream);
-
 		return outputStream;
 	}
 
-	public CellStyle getDateCellStyle(XSSFWorkbook workbook) {
-		CellStyle dateCellStyle = workbook.createCellStyle();
-		CreationHelper createHelper = workbook.getCreationHelper();
+	public CellStyle getDateCellStyle(final XSSFWorkbook workbook) {
+        final CellStyle dateCellStyle = workbook.createCellStyle();
+        final CreationHelper createHelper = workbook.getCreationHelper();
 		dateCellStyle.setDataFormat(createHelper.createDataFormat().getFormat(ImportExport.DATE_FORMAT_PATTERN));
 		return dateCellStyle;
 	}
 
-	private void setCellValue(Node node, Cell cell, String property, CellStyle dateCellStyle) throws RepositoryException {
+	private void setCellValue(final Node node, final Cell cell, final String property, final CellStyle dateCellStyle) throws RepositoryException {
 		if (ImportExport.JCR_NAME.equals(property)) {
 			cell.setCellValue(node.getName());
 			return;
@@ -95,28 +98,18 @@ public class XlsExportService {
 		cell.setCellValue(PropertyUtil.getString(node, property, StringUtils.EMPTY));
 	}
 
-	public StreamResource getDownloadStream(ByteArrayOutputStream outputStream) {
-		SimpleDateFormat dateFormat = new SimpleDateFormat(ImportExport.DATE_FORMAT_PATTERN);
-		StreamResource.StreamSource source = (StreamResource.StreamSource) () -> new ByteArrayInputStream(outputStream.toByteArray());
-		String filename = MessageFormat.format(FILENAME_TEMPLATE, DictionaryConfiguration.REPOSITORY, dateFormat.format(new Date()));
-		StreamResource resource = new StreamResource(source, filename);
-		resource.setCacheTime(-1);
-		resource.getStream().setParameter("Content-Disposition", "attachment; filename=" + filename);
-		return resource;
-	}
-
 	private List<String> getExportProperties() {
-		List<String> props = new LinkedList<>();
-		props.addAll(ImportExport.STATIC_EXPORT_PROPERTIES);
-		props.addAll(getAllLanguages());
-		props.addAll(ImportExport.DATE_EXPORT_PROPERTIES);
-		props.addAll(ImportExport.STATUS_EXPORT_PROPERTIES);
-		return props;
+		return Stream.of(
+                ImportExport.STATIC_EXPORT_PROPERTIES,
+                getAllLanguages(),
+                ImportExport.DATE_EXPORT_PROPERTIES,
+                ImportExport.STATUS_EXPORT_PROPERTIES
+        ).flatMap(Collection::stream).collect(Collectors.toList());
 	}
 
 	private List<String> getAllLanguages() {
-		return LocaleUtils.getLocalesOfAllSiteDefinitions().stream()
-				.map(LocaleUtils::getLocaleString)
+		return localeUtils.streamLocalesOfAllSites()
+				.map(localeUtils::getLocaleString)
 				.collect(Collectors.toList());
 	}
 }

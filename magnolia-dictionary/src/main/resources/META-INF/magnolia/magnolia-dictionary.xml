@@ -5,7 +5,6 @@
     <displayName>Dictionary</displayName>
     <description>Dictionary app for label translations.</description>
     <class>com.merkle.oss.magnolia.dictionary.DictionaryModule</class>
-    <versionHandler>com.merkle.oss.magnolia.dictionary.setup.DictionaryModuleVersionHandler</versionHandler>
     <version>${project.version}</version>
 
     <components>
@@ -23,6 +22,10 @@
         <component>
             <type>com.merkle.oss.magnolia.dictionary.i18nsystem.I18nResourcesProvider</type>
             <implementation>com.merkle.oss.magnolia.dictionary.i18nsystem.DefaultI18nResourcesProvider</implementation>
+        </component>
+        <component>
+            <type>com.merkle.oss.magnolia.dictionary.util.LocaleUtils</type>
+            <implementation>com.merkle.oss.magnolia.dictionary.util.LocaleUtils</implementation>
         </component>
         <component>
             <type>com.merkle.oss.magnolia.dictionary.services.XlsExportService</type>
@@ -46,15 +49,9 @@
         <dependency>
             <name>site</name>
             <version>*</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <name>multisite</name>
-            <version>*</version>
-            <optional>true</optional>
         </dependency>
     </dependencies>
-    
+
     <repositories>
         <repository>
             <name>magnolia</name>

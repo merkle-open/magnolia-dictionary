@@ -44,14 +44,6 @@ public class NodeUtil extends info.magnolia.jcr.util.NodeUtil {
 		return childNode;
 	}
 
-	public static Iterable<Node> getNodes(Node node, String nodeTypeName) {
-		try {
-			return info.magnolia.jcr.util.NodeUtil.getNodes(node, nodeTypeName);
-		} catch (RepositoryException e) {
-			return IterableUtils.emptyIterable();
-		}
-	}
-
 	public static String createValidNodeName(String nodeName) {
 		return replaceIllegalJcrChars(nodeName);
 	}
@@ -62,10 +54,6 @@ public class NodeUtil extends info.magnolia.jcr.util.NodeUtil {
 
 	private static String replaceIllegalJcrChars(String nodeName) {
 		return replaceIllegalJcrChars(nodeName, '_');
-	}
-
-	public static List<Node> asList(NodeIterator iterator) {
-		return asList(asIterable(iterator));
 	}
 
 	public static Node getOrCreateNode(Node node, String relPath, String primaryNodeTypeName) {
@@ -122,24 +110,6 @@ public class NodeUtil extends info.magnolia.jcr.util.NodeUtil {
 		}
 
 		return newNode;
-	}
-
-	public static NodeOperation setOrAddProperty(final String name, final Object newValue) {
-		return new AbstractNodeOperation() {
-			@Override
-			protected Node doExec(Node context, ErrorHandler errorHandler) throws RepositoryException {
-				Object value = newValue;
-				if (value instanceof Integer integer) {
-					// prevent java.lang.IllegalArgumentException for integer values
-					value = Long.valueOf(integer);
-				}
-
-				StringUtils.trim(name); // prevent "trailing spaces not allowed exception
-
-				PropertyUtil.setProperty(context, name, value);
-				return context;
-			}
-		};
 	}
 
 	public static boolean hasNode(Node node, String childName) {

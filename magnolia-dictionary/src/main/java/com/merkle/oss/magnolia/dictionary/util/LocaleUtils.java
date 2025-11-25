@@ -8,37 +8,39 @@ import info.magnolia.objectfactory.Components;
 import java.lang.invoke.MethodHandles;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * @author mrauch, Namics AG
- * @since 15.03.2016
- */
+import jakarta.inject.Inject;
+
 public class LocaleUtils {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private final SiteManager siteManager;
 
-	public static String getLocaleString(Locale locale) {
-		return locale.toString();
-	}
+    @Inject
+    public LocaleUtils(final SiteManager siteManager) {
+        this.siteManager = siteManager;
+    }
 
-	public static List<Locale> getLocalesOfAllSiteDefinitions() {
+	public Stream<Locale> streamLocalesOfAllSites() {
         try {
-            final SiteManager manager = Components.getComponent(SiteManager.class);
-            return manager.getSites()
+            return siteManager.getSites()
                     .stream()
                     .map(Site::getI18n)
                     .map(I18nContentSupport::getLocales)
                     .flatMap(Collection::stream)
-                    .distinct()
-                    .collect(Collectors.toList());
+                    .distinct();
         } catch (Exception e) {
             LOG.error("Failed to get locales of all sites", e);
-            return Collections.emptyList();
+            return Stream.empty();
         }
 	}
+
+    public String getLocaleString(final Locale locale) {
+        return locale.toString();
+    }
 }

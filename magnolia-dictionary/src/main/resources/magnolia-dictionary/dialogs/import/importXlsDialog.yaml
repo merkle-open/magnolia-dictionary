@@ -1,15 +1,15 @@
+form:
+  properties:
+    contentStream:
+      $type: uploadField
+      required: true
+      allowedMimeTypePattern: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
 actions:
   commit:
-    class: com.merkle.oss.magnolia.dictionary.actions.importexport.XlsImportActionDefinition
-    command: import
+    class: com.merkle.oss.magnolia.dictionary.actions.importexport.XlsImportAction$Definition
+    availability:
+      root: true
   cancel:
-    class: info.magnolia.ui.dialog.action.CancelDialogActionDefinition
-form:
-  tabs:
-    import:
-      fields:
-        name:
-          allowedMimeTypePattern: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
-          binaryNodeName: import
-          class: info.magnolia.ui.form.field.definition.BasicUploadFieldDefinition
-          required: true
+    $type: closeAction
+    availability:
+      root: true

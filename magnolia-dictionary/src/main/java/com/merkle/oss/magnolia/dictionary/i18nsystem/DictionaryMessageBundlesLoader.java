@@ -1,10 +1,8 @@
 package com.merkle.oss.magnolia.dictionary.i18nsystem;
 
-import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.jcr.util.PropertyUtil;
 
-import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
@@ -36,11 +34,16 @@ import com.merkle.oss.magnolia.dictionary.util.NodeUtil;
 @Singleton
 public class DictionaryMessageBundlesLoader implements EventListener {
     private static final Logger LOG = LoggerFactory.getLogger(DictionaryMessageBundlesLoader.class);
+    private final LocaleUtils localeUtils;
     private final Provider<SystemContext> systemContextProvider;
     private Map<Locale, Properties> messages;
 
     @Inject
-    public DictionaryMessageBundlesLoader(final Provider<SystemContext> systemContextProvider) {
+    public DictionaryMessageBundlesLoader(
+            final LocaleUtils localeUtils,
+            final Provider<SystemContext> systemContextProvider
+    ) {
+        this.localeUtils = localeUtils;
         this.systemContextProvider = systemContextProvider;
     }
 
@@ -54,7 +57,7 @@ public class DictionaryMessageBundlesLoader implements EventListener {
 
     private void loadMessages(final Session session) throws RepositoryException {
         final Node root = session.getRootNode();
-        messages = LocaleUtils.getLocalesOfAllSiteDefinitions().stream().collect(Collectors.toMap(
+        messages = localeUtils.streamLocalesOfAllSites().collect(Collectors.toMap(
                 Function.identity(),
                 locale -> getProperties(locale, root))
         );
@@ -76,7 +79,7 @@ public class DictionaryMessageBundlesLoader implements EventListener {
                         false
                 )
                 .map(message ->
-                        Optional.ofNullable(PropertyUtil.getString(message, LocaleUtils.getLocaleString(locale))).map(value ->
+                        Optional.ofNullable(PropertyUtil.getString(message, localeUtils.getLocaleString(locale))).map(value ->
                                 Map.entry(NodeUtil.getName(message), value)
                         )
                 )
