@@ -6,6 +6,7 @@ datasource: &dictionaryDatasource
   workspace: dictionary
   allowedNodeTypes:
     - mgnl:label
+    - mgnl:siteSpecificLabel
 
 subApps:
   browser:
@@ -22,20 +23,21 @@ subApps:
       importLabels:
         icon: icon-import
         $type: openDialogAction
-        dialogId: magnolia-dictionary:import/importXlsDialog
+        dialogId: magnolia-dictionary:importXlsDialog
         availability:
           root: true
           writePermissionRequired: true
-      editLabel:
-        icon: icon-edit
-        $type: openDetailSubappAction
-        appName: dictionary
-        subAppName: detail
-        viewType: edit
+      addSiteSpecificLabel:
+        icon: icon-app
+        $type: openDialogAction
+        dialogId: magnolia-dictionary:siteSelectionDialog
         availability:
+          root: false
           writePermissionRequired: true
           nodeTypes:
             - mgnl:label
+      editLabel:
+        class: com.merkle.oss.magnolia.dictionary.actions.label.EditLabelAction$Definition
       publish:
         icon: icon-publish
         $type: jcrCommandAction
@@ -77,6 +79,8 @@ subApps:
         availability:
           writePermissionRequired: true
           multiple: true
+          nodeTypes:
+            - mgnl:label
     actionbar:
       defaultAction: editLabel
       sections:
@@ -84,6 +88,7 @@ subApps:
           groups:
             - name: editActions
               items:
+                - name: addSiteSpecificLabel
                 - name: editLabel
                 - name: deleteExpired
             - name: importexport
@@ -96,6 +101,7 @@ subApps:
           availability:
             nodeTypes:
               - mgnl:label
+              - mgnl:siteSpecificLabel
         - name: root
           groups:
             - name: importexport
@@ -110,17 +116,26 @@ subApps:
             root: true
 
     workbench:
+      # see info.magnolia.ui.contentapp.JcrDataProvider
+      filters:
+        - name: site
+          icon: icon-app
+          filterOperator: CONTAINS
+          $type: dropdownMultiselect
+          datasource:
+            $type: siteOptionDatasource
+            includeGeneric: true
       contentViews:
         - name: tree
           multiSelect: true
           $type: treeView
           rowStyleGenerator: info.magnolia.ui.contentapp.row.StatusRowStyleGenerator
-          columns: &treeColumns
+          columns:
             jcrName:
-              $type: titleColumn
-              editable: false
+              class: com.merkle.oss.magnolia.dictionary.workbench.column.TitleColumnDefinition
             value:
-              $type: componentColumn
+              class: info.magnolia.ui.contentapp.configuration.column.ConfiguredColumnDefinition
+              valueProvider: com.merkle.oss.magnolia.dictionary.workbench.column.LabelNodeColumnValueProvider
               editable: false
             multi:
               class: info.magnolia.ui.contentapp.configuration.column.ConfiguredColumnDefinition
@@ -137,26 +152,34 @@ subApps:
               $type: dateColumn
               editable: false
               width: 200
-        - name: list
-          $type: listView
-          multiSelect: true
-          columns: *treeColumns
 
   detail:
     class: info.magnolia.ui.contentapp.detail.DetailDescriptor
     itemProvider:
-      $type: jcrNodeFromLocationProvider
-      nodeType: mgnl:label
+      class: com.merkle.oss.magnolia.dictionary.field.LabelJcrNodeFromLocationProvider$Definition
     datasource:
       <<: *dictionaryDatasource
       describeByProperty: jcrName
     form:
       properties:
-        name:
-          $type: textField
-          readOnly: true
-        value:
-          $type: textField
-          readOnly: true
+        composite:
+          $type: compositeField
+          label: ""
+          itemProvider:
+            class: com.merkle.oss.magnolia.dictionary.field.LabelJcrNodeProvider$Definition
+          properties:
+            name:
+              $type: textField
+              readOnly: true
+            value:
+              $type: textField
+              readOnly: true
+        site:
+          $type: hiddenField
         multi:
-          class: com.merkle.oss.magnolia.dictionary.field.MultiTextFieldDefinition
+          class: com.merkle.oss.magnolia.dictionary.field.TranslationsTextFieldDefinition
+    actions:
+      commit:
+        class: com.merkle.oss.magnolia.dictionary.actions.label.EditLabelSaveAction$Definition
+      cancel:
+        $type: closeAction

@@ -12,8 +12,12 @@ import info.magnolia.module.site.SiteManager;
 import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.Properties;
 
+import jakarta.annotation.Nullable;
 import jakarta.inject.Inject;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
@@ -24,7 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import com.merkle.oss.magnolia.dictionary.util.NodeUtil;
 
-public class DictionaryTranslationServiceImpl implements TranslationService, EventListener {
+public class DictionaryTranslationServiceImpl implements DictionaryTranslationService, EventListener {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final TranslationService wrapper;
@@ -47,11 +51,19 @@ public class DictionaryTranslationServiceImpl implements TranslationService, Eve
 
     @Override
     public String translate(final LocaleProvider localeProvider, final String[] keys) {
-        return translate(localeProvider, keys, I18nText.NO_FALLBACK);
+        return translate(getSite().orElse(null), localeProvider, keys);
+    }
+    @Override
+    public String translate(final LocaleProvider localeProvider, final String[] keys, final String fallback) {
+        return translate(getSite().orElse(null), localeProvider, keys, fallback);
     }
 
     @Override
-    public String translate(final LocaleProvider localeProvider, final String[] keys, final String fallback) {
+    public String translate(@Nullable final Site site, final LocaleProvider localeProvider, final String[] keys) {
+        return translate(site, localeProvider, keys, I18nText.NO_FALLBACK);
+    }
+    @Override
+    public String translate(@Nullable final Site site, final LocaleProvider localeProvider, final String[] keys, final String fallback) {
         final Locale locale = localeProvider.getLocale();
         if (locale == null) {
             throw new IllegalArgumentException("Locale can't be null");
@@ -59,9 +71,9 @@ public class DictionaryTranslationServiceImpl implements TranslationService, Eve
         if (ArrayUtils.isEmpty(keys)) {
             throw new IllegalArgumentException("Keys can't be null or empty");
         }
-        return lookUpKeyInDictionary(keys, locale).orElseGet(() ->
-            // not found in dictionary, translate using Magnolia's default service
-            wrapper.translate(localeProvider, keys, fallback)
+        return lookUpKeyInDictionary(site, keys, locale).orElseGet(() ->
+                // not found in dictionary, translate using Magnolia's default service
+                wrapper.translate(localeProvider, keys, fallback)
         );
     }
 
@@ -80,34 +92,38 @@ public class DictionaryTranslationServiceImpl implements TranslationService, Eve
         dictionaryMessageBundlesLoader.reload();
     }
 
-    protected Optional<String> lookUpKeyInDictionary(final String[] keys, final Locale locale) {
+    private Optional<String> lookUpKeyInDictionary(@Nullable final Site site, final String[] keys, final Locale locale) {
         LOG.trace("Looking up in dictionary message bundle with key '{}' and Locale '{}'", Arrays.asList(keys), locale);
         // fallback chain similar to info.magnolia.i18nsystem.TranslationServiceImpl.lookUpKeyUntilFound
-        return doGetMessage(keys, locale)
-                .or(() -> doGetMessage(keys, new Locale(locale.getLanguage(), locale.getCountry())))
-                .or(() -> doGetMessage(keys, new Locale(locale.getLanguage())))
-                .or(() -> getSiteFallbackLocale().flatMap(fallbackLocale -> doGetMessage(keys, fallbackLocale)))
-                .or(() -> doGetMessage(keys, defaultMessagesManager.getDefaultLocale()));
+        return doGetMessage(site, keys, locale)
+                .or(() -> doGetMessage(site, keys, new Locale(locale.getLanguage(), locale.getCountry())))
+                .or(() -> doGetMessage(site, keys, new Locale(locale.getLanguage())))
+                .or(() -> Optional.ofNullable(site).map(Site::getI18n).map(I18nContentSupport::getFallbackLocale).flatMap(fallbackLocale -> doGetMessage(site, keys, fallbackLocale)))
+                .or(() -> doGetMessage(site, keys, defaultMessagesManager.getDefaultLocale()));
     }
 
-    protected Optional<String> doGetMessage(final String[] keys, final Locale locale) {
+    private Optional<String> doGetMessage(@Nullable final Site site, final String[] keys, final Locale locale) {
+        return Optional.ofNullable(site).flatMap(safeSite -> doGetMessage(dictionaryMessageBundlesLoader.getMessages(safeSite), keys, locale)).or(() ->
+                doGetMessage(dictionaryMessageBundlesLoader.getGenericMessages(), keys, locale)
+        );
+    }
+    private Optional<String> doGetMessage(final Map<Locale, Properties> localizedProperties, final String[] keys, final Locale locale) {
         return Optional
-                .ofNullable(dictionaryMessageBundlesLoader.getMessages().get(locale))
+                .ofNullable(localizedProperties.get(locale))
                 .stream()
                 .flatMap(properties ->
                         Arrays.stream(keys)
-                                .map(NodeUtil::createValidNodeName)
                                 .map(key -> Optional.ofNullable(properties.getProperty(key)))
                                 .flatMap(Optional::stream)
                 )
                 .findFirst();
     }
 
-    private Optional<Locale> getSiteFallbackLocale() {
+    private Optional<Site> getSite() {
         try {
-            return Optional.ofNullable(siteManager.getCurrentSite())
-                    .map(Site::getI18n)
-                    .map(I18nContentSupport::getFallbackLocale);
+            return Optional
+                    .ofNullable(siteManager.getCurrentSite())
+                    .filter(site -> !Objects.equals(siteManager.getDefaultSite().getName(), site.getName()));
         } catch (Exception e) {
             return Optional.empty();
         }

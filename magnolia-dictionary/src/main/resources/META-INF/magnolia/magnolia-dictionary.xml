@@ -11,6 +11,10 @@
         <id>main</id>
         <component>
             <type>info.magnolia.i18nsystem.TranslationService</type>
+            <implementation>com.merkle.oss.magnolia.dictionary.i18nsystem.DictionaryTranslationService</implementation>
+        </component>
+        <component>
+            <type>com.merkle.oss.magnolia.dictionary.i18nsystem.DictionaryTranslationService</type>
             <implementation>com.merkle.oss.magnolia.dictionary.i18nsystem.DictionaryTranslationServiceImpl</implementation>
             <scope>singleton</scope>
         </component>
@@ -24,20 +28,46 @@
             <implementation>com.merkle.oss.magnolia.dictionary.i18nsystem.DefaultI18nResourcesProvider</implementation>
         </component>
         <component>
-            <type>com.merkle.oss.magnolia.dictionary.util.LocaleUtils</type>
-            <implementation>com.merkle.oss.magnolia.dictionary.util.LocaleUtils</implementation>
+            <type>com.merkle.oss.magnolia.dictionary.util.LocaleUtil</type>
+            <implementation>com.merkle.oss.magnolia.dictionary.util.LocaleUtil</implementation>
         </component>
         <component>
-            <type>com.merkle.oss.magnolia.dictionary.services.XlsExportService</type>
-            <implementation>com.merkle.oss.magnolia.dictionary.services.XlsExportService</implementation>
+            <type>com.merkle.oss.magnolia.dictionary.util.SiteProvider</type>
+            <implementation>com.merkle.oss.magnolia.dictionary.util.SiteProvider</implementation>
+            <scope>singleton</scope>
+        </component>
+        <component>
+            <type>com.merkle.oss.magnolia.dictionary.field.LocationBasedNodeProvider</type>
+            <implementation>com.merkle.oss.magnolia.dictionary.field.LocationBasedNodeProvider</implementation>
+        </component>
+        <component>
+            <type>com.merkle.oss.magnolia.dictionary.i18nsystem.Label$Persistor</type>
+            <implementation>com.merkle.oss.magnolia.dictionary.i18nsystem.Label$Persistor</implementation>
+        </component>
+        <component>
+            <type>com.merkle.oss.magnolia.dictionary.i18nsystem.Label$Factory</type>
+            <implementation>com.merkle.oss.magnolia.dictionary.i18nsystem.Label$Factory</implementation>
+            <scope>singleton</scope>
+        </component>
+        <component>
+            <type>com.merkle.oss.magnolia.dictionary.services.importexport.XlsExportService</type>
+            <implementation>com.merkle.oss.magnolia.dictionary.services.importexport.XlsExportService</implementation>
             <scope>singleton</scope>
             <lazy>false</lazy>
         </component>
         <component>
-            <type>com.merkle.oss.magnolia.dictionary.services.XlsImportService</type>
-            <implementation>com.merkle.oss.magnolia.dictionary.services.XlsImportService</implementation>
+            <type>com.merkle.oss.magnolia.dictionary.services.importexport.XlsImportService</type>
+            <implementation>com.merkle.oss.magnolia.dictionary.services.importexport.XlsImportService</implementation>
             <scope>singleton</scope>
             <lazy>false</lazy>
+        </component>
+    </components>
+
+    <components>
+        <id>datasource-siteOption</id>
+        <component>
+            <type>info.magnolia.ui.field.SelectFieldSupport</type>
+            <implementation>com.merkle.oss.magnolia.dictionary.field.SiteOptionDatasourceDefinition$SelectFieldSupport</implementation>
         </component>
     </components>
 

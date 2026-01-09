@@ -10,7 +10,6 @@ import info.magnolia.ui.CloseHandler;
 import info.magnolia.ui.ValueContext;
 import info.magnolia.ui.contentapp.action.JcrCommandAction;
 import info.magnolia.ui.contentapp.action.JcrCommandActionDefinition;
-import info.magnolia.ui.contentapp.action.JcrCommandParamsResolver;
 import info.magnolia.ui.contentapp.async.AsyncActionExecutor;
 import info.magnolia.ui.datasource.jcr.JcrDatasource;
 import info.magnolia.ui.editor.FormView;
@@ -32,7 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.merkle.oss.magnolia.dictionary.DictionaryConfiguration;
-import com.merkle.oss.magnolia.dictionary.services.XlsImportService;
+import com.merkle.oss.magnolia.dictionary.services.importexport.XlsImportService;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;

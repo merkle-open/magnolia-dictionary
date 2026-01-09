@@ -7,6 +7,7 @@ import info.magnolia.jcr.nodebuilder.NodeOperation;
 import info.magnolia.jcr.util.PropertyUtil;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -16,6 +17,8 @@ import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import jakarta.annotation.Nullable;
 
 /**
  * @author haug, Namics AG
@@ -30,31 +33,15 @@ public class NodeUtil extends info.magnolia.jcr.util.NodeUtil {
 		return MgnlContext.getJCRSession(workspaceName).getRootNode();
 	}
 
-	public static Node getNode(Node node, String relPath) {
-		Node childNode = null;
-
+	public static Optional<Node> getNode(Node node, String relPath) {
 		try {
 			if (node.hasNode(relPath)) {
-				childNode = node.getNode(relPath);
+				return Optional.of(node.getNode(relPath));
 			}
-		} catch (RepositoryException e) {
-			LOG.debug("Could not get node", e);
-		}
-
-		return childNode;
+		} catch (RepositoryException e) {}
+		return Optional.empty();
 	}
 
-	public static String createValidNodeName(String nodeName) {
-		return replaceIllegalJcrChars(nodeName);
-	}
-
-	private static String replaceIllegalJcrChars(String nodeName, char replacement) {
-		return StringUtils.replaceChars(nodeName, "%/:[]*'\"|\t\r\n", String.valueOf(replacement));
-	}
-
-	private static String replaceIllegalJcrChars(String nodeName) {
-		return replaceIllegalJcrChars(nodeName, '_');
-	}
 
 	public static Node getOrCreateNode(Node node, String relPath, String primaryNodeTypeName) {
 		Node childNode = null;
@@ -82,7 +69,8 @@ public class NodeUtil extends info.magnolia.jcr.util.NodeUtil {
 
 		String newNodeType;
 
-		Node nodeToOverwrite = NodeUtil.getNode(parentNode, nodeName);
+		@Nullable
+		Node nodeToOverwrite = NodeUtil.getNode(parentNode, nodeName).orElse(null);
 		Node siblingAfter = null;
 
 		if (nodeToOverwrite != null) { // node exists. use original node type
