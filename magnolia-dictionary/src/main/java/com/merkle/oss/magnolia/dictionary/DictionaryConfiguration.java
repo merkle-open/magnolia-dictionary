@@ -5,13 +5,17 @@ import info.magnolia.jcr.util.NodeTypes;
 import java.util.List;
 
 public final class DictionaryConfiguration {
+	public static final String APP_NAME = "dictionary";
+	public static final String EDIT_SUB_APP_NAME = "detail";
 	public static final String REPOSITORY = "dictionary";
-	public static final String NODE_TYPE = "mgnl:label";
+	public static final String LABEL_NODE_TYPE = "mgnl:label";
+	public static final String SITE_SPECIFIC_LABEL_NODE_TYPE = "mgnl:siteSpecificLabel";
 	public static final String DICTIONARY_CONFIG_NODE_TYPE = "mgnl:dictionaryConfig";
 
 	public static final class Prop {
 		public static final String VALUE = "value";
 		public static final String NAME = "name";
+		public static final String SITE = "site";
 		public static final String EXPIRED = "expired";
 	}
 

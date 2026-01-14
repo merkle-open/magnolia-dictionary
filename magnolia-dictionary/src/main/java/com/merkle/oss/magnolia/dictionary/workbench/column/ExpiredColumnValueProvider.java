@@ -1,21 +1,27 @@
 package com.merkle.oss.magnolia.dictionary.workbench.column;
 
-import info.magnolia.jcr.util.PropertyUtil;
+import info.magnolia.ui.contentapp.configuration.column.ConfiguredColumnDefinition;
 
 import javax.jcr.Item;
-import javax.jcr.Node;
 
-import com.merkle.oss.magnolia.dictionary.DictionaryConfiguration;
+import com.merkle.oss.magnolia.dictionary.field.LabelJcrNodeProvider;
 
-public class ExpiredColumnValueProvider implements com.vaadin.data.ValueProvider<Item, String> {
+import jakarta.inject.Inject;
+
+public class ExpiredColumnValueProvider extends LabelNodeColumnValueProvider {
+
+    @Inject
+    public ExpiredColumnValueProvider(
+            final ConfiguredColumnDefinition<Item> columnDefinition,
+            final LabelJcrNodeProvider labelJcrNodeProvider
+    ) {
+        super(columnDefinition, labelJcrNodeProvider);
+    }
+
     @Override
     public String apply(final Item item) {
-        if (item != null && item.isNode()) {
-            final Node node = (Node) item;
-            final boolean isExpired = PropertyUtil.getBoolean(node, DictionaryConfiguration.Prop.EXPIRED, false);
-            if (isExpired) {
-                return "╳";
-            }
+        if(Boolean.parseBoolean(super.apply(item))) {
+            return "╳";
         }
         return "";
     }

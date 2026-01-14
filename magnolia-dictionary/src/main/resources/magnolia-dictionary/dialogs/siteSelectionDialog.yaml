@@ -1,0 +1,11 @@
+form:
+  properties:
+    site:
+      class: com.merkle.oss.magnolia.dictionary.field.SiteSelectionFieldDefinition
+      required: true
+      emptySelectionAllowed: false
+actions:
+  commit:
+    class: com.merkle.oss.magnolia.dictionary.actions.label.CreateSiteSpecificLabelAction$Definition
+  cancel:
+    $type: closeAction
