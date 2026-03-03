@@ -1,8 +1,10 @@
 package com.merkle.oss.magnolia.dictionary.actions.label;
 
+import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.ui.CloseHandler;
 import info.magnolia.ui.ValueContext;
+import info.magnolia.ui.api.action.ActionDefinition;
 import info.magnolia.ui.api.availability.ConfiguredAvailabilityDefinition;
 import info.magnolia.ui.contentapp.Datasource;
 import info.magnolia.ui.contentapp.action.CommitAction;
@@ -43,26 +45,31 @@ public class CreateSiteSpecificLabelAction extends CommitAction<Node> {
     }
 
     @Override
-    public void execute() {
-        if (validateForm()) {
-            Exceptions.wrap().run(() -> {
-                final PowerNode parent = getValueContext().getSingle().map(powerNodeService::convertToPowerNode).orElseThrow(() ->
-                    new NullPointerException("parent node not present!")
-                );
-                final Option siteOption = (Option)getForm().getPropertyValue("site").orElseThrow(() ->
-                        new NullPointerException("site not present!")
-                );
-                /*
-                 * node name can contain illegal chars. This is necessary to transmit the site name (which can contain illegal node name chars).
-                 * The node is not persisted here and only used to pass via url param to com.merkle.oss.magnolia.dictionary.field.LabelJcrNodeFromLocationProvider
-                 */
-                final PowerNode node = parent.getOrAddChild(siteOption.getValue(), DictionaryConfiguration.SITE_SPECIFIC_LABEL_NODE_TYPE);
-                getValueContext().set(node);
+    protected void write() {
+        Exceptions.wrap().run(() -> {
+            final Node parent = getValueContext().getSingle().orElseGet(getDatasource()::getRoot);
+            final Option siteOption = (Option)getForm().getPropertyValue("site").orElseThrow(() ->
+                    new NullPointerException("site not present!")
+            );
+            final String nodeName = siteOption.getValue();
+            /*
+             * node name can contain illegal chars. This is necessary to transmit the site name (which can contain illegal node name chars).
+             * The node is not persisted here and only used to pass via url param to com.merkle.oss.magnolia.dictionary.field.LabelJcrNodeFromLocationProvider
+             */
+            final Node node = NodeUtil.createPath(parent, nodeName, DictionaryConfiguration.SITE_SPECIFIC_LABEL_NODE_TYPE);
 
-                final EditLabelAction.Definition editLabelAction = new EditLabelAction.Definition(ContentDetailSubApp.VIEW_TYPE_ADD);
-                componentProvider.newInstance(editLabelAction.getImplementationClass(), editLabelAction, getValueContext()).execute();
-            });
-        }
+            getForm().write(node);
+            getDatasource().save(node);
+            getValueContext().set(node);
+            if (ActionDefinition.RefreshBehavior.ITEMS.equals(getDefinition().getDatasourceRefreshBehavior())) {
+                getDatasourceObservation().trigger(node);
+            } else {
+                getDatasourceObservation().trigger();
+            }
+
+            final EditLabelAction.Definition editLabelAction = new EditLabelAction.Definition(ContentDetailSubApp.VIEW_TYPE_ADD);
+            componentProvider.newInstance(editLabelAction.getImplementationClass(), editLabelAction, getValueContext()).execute();
+        });
     }
 
     @Override
