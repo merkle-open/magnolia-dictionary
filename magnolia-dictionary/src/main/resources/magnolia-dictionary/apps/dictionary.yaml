@@ -36,6 +36,14 @@ subApps:
           writePermissionRequired: true
           nodeTypes:
             - mgnl:label
+      removeSiteSpecificLabel:
+        icon: icon-delete
+        class: com.merkle.oss.magnolia.dictionary.actions.label.DeleteSiteSpecificLabelAction$Definition
+        availability:
+          writePermissionRequired: true
+          multiple: true
+          nodeTypes:
+            - mgnl:siteSpecificLabel
       editLabel:
         class: com.merkle.oss.magnolia.dictionary.actions.label.EditLabelAction$Definition
       publish:
@@ -101,6 +109,14 @@ subApps:
           availability:
             nodeTypes:
               - mgnl:label
+        - name: siteSpecificLabel
+          groups:
+            - name: editActions
+              items:
+                - name: removeSiteSpecificLabel
+                - name: editLabel
+          availability:
+            nodeTypes:
               - mgnl:siteSpecificLabel
         - name: root
           groups:
