@@ -37,6 +37,10 @@
             <scope>singleton</scope>
         </component>
         <component>
+            <type>com.merkle.oss.magnolia.dictionary.util.CurrentNodeProvider</type>
+            <implementation>com.merkle.oss.magnolia.dictionary.util.CurrentNodeProvider$SubAppContextBeanStoreCurrentNodeProvider</implementation>
+        </component>
+        <component>
             <type>com.merkle.oss.magnolia.dictionary.field.LocationBasedNodeProvider</type>
             <implementation>com.merkle.oss.magnolia.dictionary.field.LocationBasedNodeProvider</implementation>
         </component>

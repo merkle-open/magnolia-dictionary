@@ -13,8 +13,11 @@ import java.util.Collection;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import javax.jcr.Node;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +49,15 @@ public class SiteProvider {
         })::get;
     }
 
+    public Optional<Site> getCurrentSite() {
+        return Optional.ofNullable(siteManager.getCurrentSite())
+                .filter(Predicate.not(this::isFallback));
+    }
+    public Optional<Site> getSite(final Node node) {
+        return Optional.ofNullable(siteManager.getAssignedSite(node))
+                .filter(Predicate.not(this::isFallback));
+    }
+
     public Site getGenericSite() {
         return gernericSiteProvider.get();
     }
@@ -61,11 +73,17 @@ public class SiteProvider {
         final Site defaultSite = siteManager.getDefaultSite();
         return Stream.concat(
                 Stream.of(getGenericSite()).filter(ignored -> includeGeneric),
-                siteManager.getSites().stream().filter(site -> !Objects.equals(defaultSite.getName(), site.getName()))
+                siteManager.getSites().stream().filter(site -> !equals(defaultSite, site))
         );
     }
 
-    private Stream<Locale> streamLocalesOfAllSites() {
+    protected boolean isFallback(final Site site) {
+        return equals(siteManager.getDefaultSite(), site);
+    }
+    protected boolean equals(final Site site1, final Site site2) {
+        return Objects.equals(site1.getName(), site2.getName());
+    }
+    protected Stream<Locale> streamLocalesOfAllSites() {
         try {
             return siteManager.getSites()
                     .stream()

@@ -7,13 +7,11 @@ import info.magnolia.i18nsystem.LocaleProvider;
 import info.magnolia.i18nsystem.TranslationService;
 import info.magnolia.i18nsystem.TranslationServiceImpl;
 import info.magnolia.module.site.Site;
-import info.magnolia.module.site.SiteManager;
 
 import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 
@@ -26,13 +24,15 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.merkle.oss.magnolia.dictionary.util.NodeUtil;
+import com.merkle.oss.magnolia.dictionary.util.CurrentNodeProvider;
+import com.merkle.oss.magnolia.dictionary.util.SiteProvider;
 
 public class DictionaryTranslationServiceImpl implements DictionaryTranslationService, EventListener {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final TranslationService wrapper;
-    private final SiteManager siteManager;
+    private final SiteProvider siteProvider;
+    private final CurrentNodeProvider nodeProvider;
     private final DefaultMessagesManager defaultMessagesManager;
     private final DictionaryMessageBundlesLoader dictionaryMessageBundlesLoader;
 
@@ -41,12 +41,14 @@ public class DictionaryTranslationServiceImpl implements DictionaryTranslationSe
             final TranslationServiceImpl wrapper,
             final DictionaryMessageBundlesLoader dictionaryMessageBundlesLoader,
             final DefaultMessagesManager defaultMessagesManager,
-            final SiteManager siteManager
+            final SiteProvider siteProvider,
+            final CurrentNodeProvider nodeProvider
     ) {
         this.dictionaryMessageBundlesLoader = dictionaryMessageBundlesLoader;
         this.defaultMessagesManager = defaultMessagesManager;
         this.wrapper = wrapper;
-        this.siteManager = siteManager;
+        this.siteProvider = siteProvider;
+        this.nodeProvider = nodeProvider;
     }
 
     @Override
@@ -119,11 +121,9 @@ public class DictionaryTranslationServiceImpl implements DictionaryTranslationSe
                 .findFirst();
     }
 
-    private Optional<Site> getSite() {
+    protected Optional<Site> getSite() {
         try {
-            return Optional
-                    .ofNullable(siteManager.getCurrentSite())
-                    .filter(site -> !Objects.equals(siteManager.getDefaultSite().getName(), site.getName()));
+            return siteProvider.getCurrentSite().or(() -> nodeProvider.get().flatMap(siteProvider::getSite));
         } catch (Exception e) {
             return Optional.empty();
         }
