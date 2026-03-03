@@ -1,24 +1,15 @@
 package com.merkle.oss.magnolia.dictionary.services.importexport;
 
-import info.magnolia.jcr.predicate.NodeTypePredicate;
-import info.magnolia.jcr.util.NodeUtil;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.Spliterator;
-import java.util.Spliterators;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
-
-import javax.jcr.Node;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -27,12 +18,13 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.machinezoo.noexception.Exceptions;
 import com.merkle.oss.magnolia.dictionary.DictionaryConfiguration;
 import com.merkle.oss.magnolia.dictionary.DictionaryConfiguration.ImportExport;
 import com.merkle.oss.magnolia.dictionary.i18nsystem.Label;
 import com.merkle.oss.magnolia.dictionary.util.LocaleUtil;
 import com.merkle.oss.magnolia.dictionary.util.SiteProvider;
+import com.merkle.oss.magnolia.powernode.PowerNode;
+import com.merkle.oss.magnolia.powernode.predicate.IsPrimaryNodeType;
 
 import jakarta.inject.Inject;
 
@@ -58,7 +50,7 @@ public class XlsExportService {
         this.localeUtil = localeUtil;
     }
 
-    public ByteArrayOutputStream exportXls(final Collection<Node> nodes) throws IOException {
+    public ByteArrayOutputStream exportXls(final Collection<PowerNode> nodes) throws IOException {
 		LOG.info("Start exporting labels...");
 		final XSSFWorkbook workbook = new XSSFWorkbook();
         final XSSFSheet sheet = workbook.createSheet(ImportExport.SHEET_NAME);
@@ -69,7 +61,7 @@ public class XlsExportService {
 		nodes.stream()
 				.flatMap(labelNode -> Stream.concat(
 						Stream.of(labelNode),
-						streamSiteSpecificLabelNode(labelNode)
+						labelNode.streamChildren(new IsPrimaryNodeType<>(DictionaryConfiguration.SITE_SPECIFIC_LABEL_NODE_TYPE))
 				))
 				.map(labelFactory::create)
 				.flatMap(Optional::stream)
@@ -81,15 +73,6 @@ public class XlsExportService {
 		workbook.write(outputStream);
 		LOG.info("Done exporting labels");
 		return outputStream;
-	}
-
-	private Stream<Node> streamSiteSpecificLabelNode(final Node labelNode) {
-		final Iterator<Node> nodes = Exceptions.wrap().get(() -> NodeUtil.getNodes(
-				labelNode,
-				new NodeTypePredicate(DictionaryConfiguration.SITE_SPECIFIC_LABEL_NODE_TYPE)
-		)).iterator();
-		return StreamSupport
-				.stream(Spliterators.spliteratorUnknownSize(nodes, Spliterator.ORDERED),false);
 	}
 
 	private void createHeaderRow(final List<Locale> locales, final XSSFSheet sheet) {

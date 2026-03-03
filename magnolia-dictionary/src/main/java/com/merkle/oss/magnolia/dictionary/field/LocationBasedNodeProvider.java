@@ -1,6 +1,5 @@
 package com.merkle.oss.magnolia.dictionary.field;
 
-import info.magnolia.context.MgnlContext;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.ui.api.location.LocationController;
@@ -15,18 +14,25 @@ import javax.jcr.Item;
 import javax.jcr.Node;
 
 import com.merkle.oss.magnolia.dictionary.DictionaryConfiguration;
+import com.merkle.oss.magnolia.powernode.PowerNode;
+import com.merkle.oss.magnolia.powernode.PowerNodeService;
 
 import jakarta.inject.Inject;
 
 public class LocationBasedNodeProvider {
     private final ComponentProvider componentProvider;
+    private final PowerNodeService powerNodeService;
 
     @Inject
-    public LocationBasedNodeProvider(final ComponentProvider componentProvider) {
+    public LocationBasedNodeProvider(
+            final ComponentProvider componentProvider,
+            final PowerNodeService powerNodeService
+    ) {
         this.componentProvider = componentProvider;
+        this.powerNodeService = powerNodeService;
     }
 
-    public Optional<Node> getNode() {
+    public Optional<PowerNode> getNode() {
         return Optional
                 .of(Components.getComponent(LocationController.class).getWhere())
                 .map(ContentDetailSubApp.DetailLocation::wrap)
@@ -34,7 +40,7 @@ public class LocationBasedNodeProvider {
                 .flatMap(this::getNode);
     }
 
-    private Optional<Node> getNode(final String path) {
+    private Optional<PowerNode> getNode(final String path) {
         try {
             final JcrDatasourceDefinition datasourceDefinition = new JcrDatasourceDefinition();
             datasourceDefinition.setWorkspace(DictionaryConfiguration.REPOSITORY);
@@ -42,7 +48,8 @@ public class LocationBasedNodeProvider {
             final JcrNodeResolver jcrNodeResolver = componentProvider.newInstance(JcrNodeResolver.class, jcrDatasource);
             return jcrNodeResolver.getItemById(path)
                     .filter(Item::isNode)
-                    .map(Node.class::cast);
+                    .map(Node.class::cast)
+                    .map(powerNodeService::convertToPowerNode);
         } catch (Exception e) {
             return Optional.empty();
         }

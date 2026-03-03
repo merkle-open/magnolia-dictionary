@@ -12,9 +12,11 @@ import info.magnolia.ui.editor.EditorView;
 import info.magnolia.ui.observation.DatasourceObservation;
 
 import javax.jcr.Node;
-import javax.jcr.RepositoryException;
 
 import com.merkle.oss.magnolia.dictionary.DictionaryConfiguration;
+import com.merkle.oss.magnolia.powernode.PowerNode;
+import com.merkle.oss.magnolia.powernode.PowerNodeService;
+import com.merkle.oss.magnolia.powernode.ValueConverter;
 
 import jakarta.inject.Inject;
 
@@ -22,6 +24,7 @@ import jakarta.inject.Inject;
  * Used to save name and value into the jcr of the siteSpecificLabel node to be able to find the siteSpecificLabel with the search (only jcr props can be searched, value provider do not work!)
  */
 public class EditLabelSaveAction extends SaveDetailSubAppAction<Node> {
+    private final PowerNodeService powerNodeService;
 
     @Inject
     public EditLabelSaveAction(
@@ -33,15 +36,17 @@ public class EditLabelSaveAction extends SaveDetailSubAppAction<Node> {
             final DatasourceObservation.Manual datasourceObservation,
             final LocationController locationController,
             final AppContext appContext,
-            final ItemResolver<Node> itemResolver
+            final ItemResolver<Node> itemResolver,
+            final PowerNodeService powerNodeService
     ) {
         super(definition, closeHandler, valueContext, form, datasource, datasourceObservation, locationController, appContext, itemResolver);
+        this.powerNodeService = powerNodeService;
     }
 
     @Override
     protected void write() {
         try {
-            final Node node = getValueContext().getSingleOrThrow();
+            final PowerNode node = powerNodeService.convertToPowerNode(getValueContext().getSingleOrThrow());
             setPropertyOrThrow(node, DictionaryConfiguration.Prop.NAME);
             setPropertyOrThrow(node, DictionaryConfiguration.Prop.VALUE);
         } catch (Exception e) {
@@ -50,9 +55,9 @@ public class EditLabelSaveAction extends SaveDetailSubAppAction<Node> {
         super.write();
     }
 
-    private void setPropertyOrThrow(final Node node, final String propName) throws RepositoryException {
+    private void setPropertyOrThrow(final PowerNode node, final String propName) {
         final String propValue = (String) getForm().getPropertyValue(propName).orElseThrow();
-        node.setProperty(propName, propValue);
+        node.setProperty(propName, propValue, ValueConverter::toValue);
     }
 
     public static class Definition extends SaveDetailSubAppActionDefinition {

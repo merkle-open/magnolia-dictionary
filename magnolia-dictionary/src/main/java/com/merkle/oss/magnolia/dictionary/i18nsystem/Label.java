@@ -1,8 +1,6 @@
 package com.merkle.oss.magnolia.dictionary.i18nsystem;
 
 import info.magnolia.jcr.util.NodeNameHelper;
-import info.magnolia.jcr.util.NodeUtil;
-import info.magnolia.jcr.util.PropertyUtil;
 
 import java.lang.invoke.MethodHandles;
 import java.util.Iterator;
@@ -15,7 +13,6 @@ import java.util.Spliterators;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import javax.jcr.Node;
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
@@ -28,6 +25,8 @@ import com.merkle.oss.magnolia.dictionary.DictionaryConfiguration;
 import com.merkle.oss.magnolia.dictionary.util.Lazy;
 import com.merkle.oss.magnolia.dictionary.util.LocaleUtil;
 import com.merkle.oss.magnolia.dictionary.util.SiteProvider;
+import com.merkle.oss.magnolia.powernode.PowerNode;
+import com.merkle.oss.magnolia.powernode.ValueConverter;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
@@ -51,28 +50,24 @@ public record Label(String key, String siteName, String defaultValue, Map<Locale
             this.localeUtils = localeUtils;
         }
 
-        public Optional<Label> create(final Node node) {
-            return Optional.ofNullable(PropertyUtil.getString(node, DictionaryConfiguration.Prop.NAME, null)).flatMap(key ->
-                    Optional.ofNullable(PropertyUtil.getString(node, DictionaryConfiguration.Prop.SITE, null)).flatMap(siteName ->
-                            Optional.ofNullable(PropertyUtil.getString(node, DictionaryConfiguration.Prop.VALUE, null)).map(defautValue ->
+        public Optional<Label> create(final PowerNode node) {
+            return node.getProperty(DictionaryConfiguration.Prop.NAME, ValueConverter::getString).flatMap(key ->
+                    node.getProperty(DictionaryConfiguration.Prop.SITE, ValueConverter::getString).flatMap(siteName ->
+                            node.getProperty(DictionaryConfiguration.Prop.VALUE, ValueConverter::getString).map(defautValue ->
                                     new Label(key, siteName, defautValue, getValues(node))
                             )
                     )
             );
         }
 
-        private Map<Locale, String> getValues(final Node node) {
-            try {
-                final Iterator<Property> properties = node.getProperties(availableLanguagesProvider.get());
-                return StreamSupport
-                        .stream(Spliterators.spliteratorUnknownSize(properties, Spliterator.CONCURRENT),true)
-                        .collect(Collectors.toMap(
-                                property -> localeUtils.fromLocaleString(Exceptions.wrap().get(property::getName)),
-                                property -> Exceptions.wrap().get(property::getString)
-                        ));
-            } catch (RepositoryException e) {
-                throw new RuntimeException(e);
-            }
+        private Map<Locale, String> getValues(final PowerNode node) {
+            final Iterator<Property> properties = node.getProperties(availableLanguagesProvider.get());
+            return StreamSupport
+                    .stream(Spliterators.spliteratorUnknownSize(properties, Spliterator.CONCURRENT),true)
+                    .collect(Collectors.toMap(
+                            property -> localeUtils.fromLocaleString(Exceptions.wrap().get(property::getName)),
+                            property -> Exceptions.wrap().get(property::getString)
+                    ));
         }
     }
 
@@ -90,23 +85,23 @@ public record Label(String key, String siteName, String defaultValue, Map<Locale
             this.localeUtils = localeUtils;
         }
 
-        public void persist(final Node dictionaryRootNode, final Label label) {
+        public void persist(final PowerNode dictionaryRootNode, final Label label) {
             persist(dictionaryRootNode, label, false);
         }
-        public void persist(final Node dictionaryRootNode, final Label label, final boolean isInstall) {
+        public void persist(final PowerNode dictionaryRootNode, final Label label, final boolean isInstall) {
             try {
-                final Node labelNode = getLabelNode(dictionaryRootNode, label);
+                final PowerNode labelNode = getLabelNode(dictionaryRootNode, label);
                 if (isInstall) {
-                    PropertyUtil.setProperty(labelNode, DictionaryConfiguration.Prop.NAME, label.key());
-                    PropertyUtil.setProperty(labelNode, DictionaryConfiguration.Prop.VALUE, label.defaultValue());
-                    PropertyUtil.setProperty(labelNode, DictionaryConfiguration.Prop.SITE, label.siteName());
-                    PropertyUtil.setProperty(labelNode, DictionaryConfiguration.Prop.EXPIRED, null);
+                    labelNode.setProperty(DictionaryConfiguration.Prop.NAME, label.key(), ValueConverter::toValue);
+                    labelNode.setProperty(DictionaryConfiguration.Prop.VALUE, label.defaultValue(), ValueConverter::toValue);
+                    labelNode.setProperty(DictionaryConfiguration.Prop.SITE, label.siteName(), ValueConverter::toValue);
+                    labelNode.removeProperty(DictionaryConfiguration.Prop.EXPIRED);
                 }
-                for(Map.Entry<Locale, String> entry :label.values().entrySet()) {
-                    PropertyUtil.setProperty(
-                            labelNode,
+                for(final Map.Entry<Locale, String> entry :label.values().entrySet()) {
+                    labelNode.setProperty(
                             localeUtils.toLocaleString(entry.getKey()),
-                            Optional.of(entry.getValue()).filter(StringUtils::isNotEmpty).orElse(null)
+                            Optional.of(entry.getValue()).filter(StringUtils::isNotEmpty).orElse(null),
+                            ValueConverter::toValue
                     );
                 }
             } catch (RepositoryException e) {
@@ -114,14 +109,14 @@ public record Label(String key, String siteName, String defaultValue, Map<Locale
             }
         }
 
-        private Node getLabelNode(final Node dictionaryRootNode, final Label label) throws RepositoryException {
+        private PowerNode getLabelNode(final PowerNode dictionaryRootNode, final Label label) throws RepositoryException {
             final String labelNodeName = createValidNodeName(label.key());
-            final Node labelNode = NodeUtil.createPath(dictionaryRootNode, labelNodeName, DictionaryConfiguration.LABEL_NODE_TYPE);
+            final PowerNode labelNode = dictionaryRootNode.getOrAddChild(labelNodeName, DictionaryConfiguration.LABEL_NODE_TYPE);
             if(Objects.equals(label.siteName(), SiteProvider.GENERIC_SITE_NAME)) {
                 return labelNode;
             }
             final String siteSpecificLabelNodeName = nodeNameHelper.getValidatedName(label.siteName());
-            return NodeUtil.createPath(labelNode, siteSpecificLabelNodeName, DictionaryConfiguration.SITE_SPECIFIC_LABEL_NODE_TYPE);
+            return labelNode.getOrAddChild(siteSpecificLabelNodeName, DictionaryConfiguration.SITE_SPECIFIC_LABEL_NODE_TYPE);
         }
 
         private String createValidNodeName(final String nodeName) {

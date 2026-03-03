@@ -5,6 +5,7 @@ import info.magnolia.ui.contentapp.configuration.column.ConfiguredColumnDefiniti
 import javax.jcr.Item;
 
 import com.merkle.oss.magnolia.dictionary.field.LabelJcrNodeProvider;
+import com.merkle.oss.magnolia.powernode.PowerNodeService;
 
 import jakarta.inject.Inject;
 
@@ -13,9 +14,10 @@ public class ExpiredColumnValueProvider extends LabelNodeColumnValueProvider {
     @Inject
     public ExpiredColumnValueProvider(
             final ConfiguredColumnDefinition<Item> columnDefinition,
-            final LabelJcrNodeProvider labelJcrNodeProvider
+            final LabelJcrNodeProvider labelJcrNodeProvider,
+            final PowerNodeService powerNodeService
     ) {
-        super(columnDefinition, labelJcrNodeProvider);
+        super(columnDefinition, labelJcrNodeProvider, powerNodeService);
     }
 
     @Override

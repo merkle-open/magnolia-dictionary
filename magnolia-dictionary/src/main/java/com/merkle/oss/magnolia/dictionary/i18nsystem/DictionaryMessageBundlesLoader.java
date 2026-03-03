@@ -3,11 +3,10 @@ package com.merkle.oss.magnolia.dictionary.i18nsystem;
 import static javax.jcr.query.Query.JCR_SQL2;
 
 import info.magnolia.context.SystemContext;
-import info.magnolia.jcr.util.NodeUtil;
-import info.magnolia.jcr.util.PropertyUtil;
 import info.magnolia.module.site.Site;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
@@ -20,7 +19,6 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import javax.jcr.Node;
-import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
@@ -35,6 +33,9 @@ import com.machinezoo.noexception.Exceptions;
 import com.merkle.oss.magnolia.dictionary.DictionaryConfiguration;
 import com.merkle.oss.magnolia.dictionary.util.LocaleUtil;
 import com.merkle.oss.magnolia.dictionary.util.SiteProvider;
+import com.merkle.oss.magnolia.powernode.PowerNode;
+import com.merkle.oss.magnolia.powernode.PowerNodeService;
+import com.merkle.oss.magnolia.powernode.ValueConverter;
 
 import jakarta.inject.Provider;
 
@@ -44,17 +45,20 @@ public class DictionaryMessageBundlesLoader implements EventListener {
     private final SiteProvider siteProvider;
     private final LocaleUtil localeUtils;
     private final Provider<SystemContext> systemContextProvider;
+    private final PowerNodeService powerNodeService;
     private Map<String, Map<Locale, Properties>> messages;
 
     @Inject
     public DictionaryMessageBundlesLoader(
             final SiteProvider siteProvider,
             final LocaleUtil localeUtils,
-            final Provider<SystemContext> systemContextProvider
+            final Provider<SystemContext> systemContextProvider,
+            final PowerNodeService powerNodeService
     ) {
         this.siteProvider = siteProvider;
         this.localeUtils = localeUtils;
         this.systemContextProvider = systemContextProvider;
+        this.powerNodeService = powerNodeService;
     }
 
     public Map<Locale, Properties> getGenericMessages() {
@@ -77,12 +81,12 @@ public class DictionaryMessageBundlesLoader implements EventListener {
             session.logout();
         });
     }
-    private void loadMessages(final Session session) throws RepositoryException {
-        final Node root = session.getRootNode();
+    private void loadMessages(final Session session) {
+        final PowerNode root = powerNodeService.getRootNode(session);
         messages = getProperties(root);
     }
 
-    private Map<String, Map<Locale, Properties>> getProperties(final Node root) {
+    private Map<String, Map<Locale, Properties>> getProperties(final PowerNode root) {
         LOG.debug("Loading dictionary properties...");
         return streamMessages(root).collect(Collectors.groupingBy(
                 message -> message.site().getName(),
@@ -98,48 +102,49 @@ public class DictionaryMessageBundlesLoader implements EventListener {
         ));
     }
 
-    private Stream<Message> streamMessages(final Node root) {
+    private Stream<Message> streamMessages(final PowerNode root) {
         final Set<Site> sites = siteProvider.streamAllSites().collect(Collectors.toSet());
-        return StreamSupport
-                .stream(
-                        Spliterators.spliteratorUnknownSize(Exceptions.wrap().get(() -> NodeUtil.getNodes(root)).iterator(), Spliterator.ORDERED),
-                        false
-                )
-                .flatMap(labelNode -> {
-                    final String messageKey = PropertyUtil.getString(labelNode, DictionaryConfiguration.Prop.NAME);
-                    return sites.stream().flatMap(site ->
+        return root.streamChildren().flatMap(labelNode ->
+            labelNode.getProperty(DictionaryConfiguration.Prop.NAME, ValueConverter::getString).stream().flatMap(messageKey ->
+                    sites.stream().flatMap(site ->
                             streamMessageValues(site, labelNode).map(entry ->
                                     new Message(messageKey, site, entry.getKey(), entry.getValue())
                             )
-                    );
-                });
+                    )
+            )
+        );
     }
 
-    private Stream<Map.Entry<Locale, String>> streamMessageValues(final Site site, final Node messageRootNode) {
+    private Stream<Map.Entry<Locale, String>> streamMessageValues(final Site site, final PowerNode messageRootNode) {
         return getMessageNode(site, messageRootNode)
                 .stream()
                 .flatMap(messageNode ->
                         site.getI18n().getLocales().stream().map(locale ->
-                            Optional.ofNullable(PropertyUtil.getString(messageNode, localeUtils.toLocaleString(locale))).map(value ->
+                            messageNode.getProperty(localeUtils.toLocaleString(locale), ValueConverter::getString).map(value ->
                                 Map.entry(locale, value)
                             )
                         )
                 )
                 .flatMap(Optional::stream);
     }
-    private Optional<Node> getMessageNode(final Site site, final Node messageRootNode) {
+    private Optional<PowerNode> getMessageNode(final Site site, final PowerNode messageRootNode) {
         if(SiteProvider.GENERIC_SITE_NAME.equals(site.getName())) {
             return Optional.of(messageRootNode);
         }
         return getSiteMessageNode(messageRootNode, site);
     }
 
-    private Optional<Node> getSiteMessageNode(final Node messageRootNode, final Site site) {
+    private Optional<PowerNode> getSiteMessageNode(final PowerNode messageRootNode, final Site site) {
         try {
             final Session jcrSession = messageRootNode.getSession();
             final String statement = String.format("SELECT * FROM [nt:base] AS node WHERE ISDESCENDANTNODE(node, '%s') AND [%s]='%s'", messageRootNode.getPath(), DictionaryConfiguration.Prop.SITE, site.getName());
             final Query query = jcrSession.getWorkspace().getQueryManager().createQuery(statement, JCR_SQL2);
-            return NodeUtil.getCollectionFromNodeIterator(query.execute().getNodes()).stream().findFirst();
+
+            final Iterator<Node> nodes = query.execute().getNodes();
+            return StreamSupport
+                    .stream(Spliterators.spliteratorUnknownSize(nodes, Spliterator.ORDERED),false)
+                    .findFirst()
+                    .map(powerNodeService::convertToPowerNode);
         } catch (Exception e) {
             return Optional.empty();
         }

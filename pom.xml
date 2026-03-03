@@ -36,6 +36,7 @@
     <properties>
         <!-- check for new versions:  mvn versions:display-property-updates -->
         <magnolia.version>6.4.3</magnolia.version>
+        <merkle.oss.powernode.version>2.3.2</merkle.oss.powernode.version>
         <poi.version>5.5.1</poi.version>
         <gson.version>2.13.2</gson.version>
 
@@ -96,6 +97,12 @@
                 <groupId>com.google.code.gson</groupId>
                 <artifactId>gson</artifactId>
                 <version>${gson.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.merkle.oss.magnolia</groupId>
+                <artifactId>magnolia-powernode</artifactId>
+                <version>${merkle.oss.powernode.version}</version>
             </dependency>
 
             <!-- TESTING DEPENDENCIES -->

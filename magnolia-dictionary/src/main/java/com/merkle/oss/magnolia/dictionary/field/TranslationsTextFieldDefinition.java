@@ -1,6 +1,5 @@
 package com.merkle.oss.magnolia.dictionary.field;
 
-import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.module.site.Site;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.ui.editor.CurrentItemProviderDefinition;
@@ -17,6 +16,7 @@ import javax.jcr.Node;
 
 import com.merkle.oss.magnolia.dictionary.util.LocaleUtil;
 import com.merkle.oss.magnolia.dictionary.util.SiteProvider;
+import com.merkle.oss.magnolia.powernode.PowerNode;
 
 public class TranslationsTextFieldDefinition extends CompositeFieldDefinition<Node> {
     private final SiteProvider siteProvider;
@@ -33,7 +33,7 @@ public class TranslationsTextFieldDefinition extends CompositeFieldDefinition<No
     @Override
     public List<EditorPropertyDefinition> getProperties() {
         final Site site = locationBasedNodeProvider.getNode()
-                .map(NodeUtil::getName)
+                .map(PowerNode::getName)
                 .flatMap(siteProvider::getSite)
                 .orElseGet(siteProvider::getGenericSite);
         return site.getI18n().getLocales().stream()

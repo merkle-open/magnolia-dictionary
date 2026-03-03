@@ -1,6 +1,5 @@
 package com.merkle.oss.magnolia.dictionary.actions.label;
 
-import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.ui.CloseHandler;
 import info.magnolia.ui.ValueContext;
@@ -18,11 +17,14 @@ import javax.jcr.Node;
 
 import com.machinezoo.noexception.Exceptions;
 import com.merkle.oss.magnolia.dictionary.DictionaryConfiguration;
+import com.merkle.oss.magnolia.powernode.PowerNode;
+import com.merkle.oss.magnolia.powernode.PowerNodeService;
 
 import jakarta.inject.Inject;
 
 public class CreateSiteSpecificLabelAction extends CommitAction<Node> {
     private final ComponentProvider componentProvider;
+    private final PowerNodeService powerNodeService;
 
     @Inject
 	public CreateSiteSpecificLabelAction(
@@ -32,17 +34,19 @@ public class CreateSiteSpecificLabelAction extends CommitAction<Node> {
             final EditorView<Node> form,
             final Datasource<Node> datasource,
             final DatasourceObservation.Manual<Node> datasourceObservation,
-            final ComponentProvider componentProvider
+            final ComponentProvider componentProvider,
+            final PowerNodeService powerNodeService
     ) {
         super(definition, closeHandler, valueContext, form, datasource, datasourceObservation);
         this.componentProvider = componentProvider;
+        this.powerNodeService = powerNodeService;
     }
 
     @Override
     public void execute() {
         if (validateForm()) {
             Exceptions.wrap().run(() -> {
-                final Node parent = getValueContext().getSingle().orElseThrow(() ->
+                final PowerNode parent = getValueContext().getSingle().map(powerNodeService::convertToPowerNode).orElseThrow(() ->
                     new NullPointerException("parent node not present!")
                 );
                 final Option siteOption = (Option)getForm().getPropertyValue("site").orElseThrow(() ->
@@ -52,7 +56,7 @@ public class CreateSiteSpecificLabelAction extends CommitAction<Node> {
                  * node name can contain illegal chars. This is necessary to transmit the site name (which can contain illegal node name chars).
                  * The node is not persisted here and only used to pass via url param to com.merkle.oss.magnolia.dictionary.field.LabelJcrNodeFromLocationProvider
                  */
-                final Node node = NodeUtil.createPath(parent, siteOption.getValue(), DictionaryConfiguration.SITE_SPECIFIC_LABEL_NODE_TYPE);
+                final PowerNode node = parent.getOrAddChild(siteOption.getValue(), DictionaryConfiguration.SITE_SPECIFIC_LABEL_NODE_TYPE);
                 getValueContext().set(node);
 
                 final EditLabelAction.Definition editLabelAction = new EditLabelAction.Definition(ContentDetailSubApp.VIEW_TYPE_ADD);

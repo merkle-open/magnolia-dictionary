@@ -1,7 +1,7 @@
 package com.merkle.oss.magnolia.dictionary.actions.importexport;
 
 import static com.merkle.oss.magnolia.dictionary.DictionaryConfiguration.ImportExport.FILENAME_TEMPLATE;
-import static com.vaadin.shared.Position.*;
+import static com.vaadin.shared.Position.MIDDLE_CENTER;
 import static com.vaadin.ui.Notification.DELAY_FOREVER;
 import static com.vaadin.ui.Notification.Type.WARNING_MESSAGE;
 
@@ -26,8 +26,9 @@ import java.text.MessageFormat;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.jcr.Node;
 
@@ -36,6 +37,8 @@ import org.slf4j.LoggerFactory;
 
 import com.merkle.oss.magnolia.dictionary.DictionaryConfiguration;
 import com.merkle.oss.magnolia.dictionary.services.importexport.XlsExportService;
+import com.merkle.oss.magnolia.powernode.PowerNode;
+import com.merkle.oss.magnolia.powernode.PowerNodeService;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
@@ -46,6 +49,7 @@ public class XlsExportAction extends JcrCommandAction<Node, XlsExportAction.Defi
     private final DownloadHelper downloadHelper;
     private final Provider<Notification> notificationProvider;
     private final XlsExportService exportService;
+    private final PowerNodeService powerNodeService;
     private TempFileStreamResource tempFileStreamResource;
 
     @Inject
@@ -59,17 +63,19 @@ public class XlsExportAction extends JcrCommandAction<Node, XlsExportAction.Defi
             final DatasourceObservation.Manual datasourceObservation,
             final DownloadHelper downloadHelper,
             final Provider<Notification> notificationProvider,
-            final XlsExportService exportService
+            final XlsExportService exportService,
+            final PowerNodeService powerNodeService
     ) {
 		super(definition, commandsManager, valueContext, context, asyncActionExecutor, jcrDatasource, datasourceObservation);
         this.downloadHelper = downloadHelper;
         this.notificationProvider = notificationProvider;
         this.exportService = exportService;
-	}
+        this.powerNodeService = powerNodeService;
+    }
 
 	@Override
 	public void execute() {
-        final Collection<Node> nodes = resolveTargetItems();
+        final List<PowerNode> nodes = resolveTargetItems().stream().map(powerNodeService::convertToPowerNode).collect(Collectors.toList());
         try (ByteArrayOutputStream outputStream = exportService.exportXls(nodes)) {
             tempFileStreamResource = new TempFileStreamResource();
             tempFileStreamResource.setStreamSource(new Resource(new ByteArrayInputStream(outputStream.toByteArray())));

@@ -1,11 +1,10 @@
 package com.merkle.oss.magnolia.dictionary.actions.delete;
 
-import static com.vaadin.shared.Position.*;
+import static com.vaadin.shared.Position.MIDDLE_CENTER;
 import static com.vaadin.ui.Notification.Type.*;
 
 import info.magnolia.commands.CommandsManager;
 import info.magnolia.context.Context;
-import info.magnolia.jcr.util.PropertyUtil;
 import info.magnolia.ui.ValueContext;
 import info.magnolia.ui.contentapp.action.JcrCommandAction;
 import info.magnolia.ui.contentapp.action.JcrCommandActionDefinition;
@@ -24,12 +23,16 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 import com.merkle.oss.magnolia.dictionary.DictionaryConfiguration;
+import com.merkle.oss.magnolia.powernode.PowerNode;
+import com.merkle.oss.magnolia.powernode.PowerNodeService;
+import com.merkle.oss.magnolia.powernode.ValueConverter;
 
 import jakarta.inject.Provider;
 
 public class DeleteExpiredLabel extends JcrCommandAction<Node, DeleteExpiredLabel.Definition> {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final Provider<Notification> notificationProvider;
+    private final PowerNodeService powerNodeService;
 
     @Inject
 	public DeleteExpiredLabel(
@@ -40,20 +43,22 @@ public class DeleteExpiredLabel extends JcrCommandAction<Node, DeleteExpiredLabe
             final AsyncActionExecutor asyncActionExecutor,
             final JcrDatasource jcrDatasource,
             final DatasourceObservation.Manual datasourceObservation,
-            final Provider<Notification> notificationProvider
+            final Provider<Notification> notificationProvider,
+            final PowerNodeService powerNodeService
     ) {
 		super(definition, commandsManager, valueContext, context, asyncActionExecutor, jcrDatasource, datasourceObservation);
         this.notificationProvider = notificationProvider;
+        this.powerNodeService = powerNodeService;
     }
 
 	@Override
 	public void execute() {
         try {
-            final Node labelNode = getValueContext().getSingleOrThrow();
+            final PowerNode labelNode = powerNodeService.convertToPowerNode(getValueContext().getSingleOrThrow());
             if (!isExpired(labelNode)) {
                 throw new IllegalStateException("The selected label is not expired.");
             } else {
-                final String labelName = PropertyUtil.getString(labelNode, DictionaryConfiguration.Prop.NAME, StringUtils.EMPTY);
+                final String labelName = labelNode.getProperty(DictionaryConfiguration.Prop.NAME, ValueConverter::getString).orElse(StringUtils.EMPTY);
                 labelNode.remove();
                 labelNode.getSession().save();
                 notificationProvider.get()
@@ -72,8 +77,8 @@ public class DeleteExpiredLabel extends JcrCommandAction<Node, DeleteExpiredLabe
         }
 	}
 
-	private boolean isExpired(Node labelNode) {
-		return PropertyUtil.getBoolean(labelNode, DictionaryConfiguration.Prop.EXPIRED, false);
+	private boolean isExpired(PowerNode labelNode) {
+		return labelNode.getProperty(DictionaryConfiguration.Prop.EXPIRED, ValueConverter::getBoolean).orElse(false);
 	}
 
     public static class Definition extends JcrCommandActionDefinition {

@@ -86,7 +86,7 @@ public class XlsImportAction  extends JcrCommandAction<Node, XlsImportAction.Def
 	}
 
     @Override
-    protected Map<String, Object> buildParams(Node item) {
+    protected Map<String, Object> buildParams(final Node item) {
         Map<String, Object> params = super.buildParams(item);
         getUploadedFile().ifPresent(file -> {
             try {

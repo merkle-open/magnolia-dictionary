@@ -1,6 +1,5 @@
 package com.merkle.oss.magnolia.dictionary.services.importexport;
 
-import info.magnolia.context.MgnlContext;
 import info.magnolia.ui.AlertBuilder;
 
 import java.io.IOException;
@@ -15,7 +14,6 @@ import java.util.Spliterators;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -29,8 +27,9 @@ import org.slf4j.LoggerFactory;
 import com.google.common.collect.Streams;
 import com.merkle.oss.magnolia.dictionary.i18nsystem.Label;
 import com.merkle.oss.magnolia.dictionary.util.LocaleUtil;
-import com.merkle.oss.magnolia.dictionary.util.NodeUtil;
 import com.merkle.oss.magnolia.dictionary.util.SiteProvider;
+import com.merkle.oss.magnolia.powernode.PowerNode;
+import com.merkle.oss.magnolia.powernode.PowerNodeService;
 import com.vaadin.ui.Notification;
 
 import jakarta.inject.Inject;
@@ -39,21 +38,26 @@ public class XlsImportService {
 	private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final Label.Persistor labelPersistor;
     private final LocaleUtil localeUtil;
+    private final PowerNodeService powerNodeService;
 
-	@Inject
+    @Inject
     public XlsImportService(
 			final Label.Persistor labelPersistor,
-			final LocaleUtil localeUtil
+			final LocaleUtil localeUtil,
+			final PowerNodeService powerNodeService
 	) {
         this.labelPersistor = labelPersistor;
         this.localeUtil = localeUtil;
-	}
+        this.powerNodeService = powerNodeService;
+    }
 
     public void importXls(final String repository, final InputStream inputStream) throws IOException, RepositoryException {
 		LOG.info("Start import to repository '{}'", repository);
         final Workbook workbook = new XSSFWorkbook(inputStream);
         final Sheet sheet = workbook.getSheetAt(0);
-        final Node dictionaryRootNode = MgnlContext.getJCRSession(repository).getRootNode();
+        final PowerNode dictionaryRootNode = powerNodeService.getRootNode(repository).orElseThrow(() ->
+			new NullPointerException("dictionary root node not present!")
+		);
 
         final Row headerRow = sheet.getRow(0);
         validateHeaderRow(headerRow);
@@ -89,8 +93,8 @@ public class XlsImportService {
 		return row.getCell(index).getStringCellValue();
 	}
 
-	private boolean isValid(final Label label, final Node dictionaryRootNode) {
-		if (!NodeUtil.hasNode(dictionaryRootNode, label.key())) {
+	private boolean isValid(final Label label, final PowerNode dictionaryRootNode) {
+		if (!dictionaryRootNode.hasNode(label.key())) {
 			LOG.info("Can't find label '{}', skipping this row", label);
 			return false;
 		}

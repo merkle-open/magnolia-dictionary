@@ -41,5 +41,9 @@
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.merkle.oss.magnolia</groupId>
+            <artifactId>magnolia-powernode</artifactId>
+        </dependency>
     </dependencies>
 </project>
