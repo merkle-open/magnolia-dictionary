@@ -6,6 +6,7 @@ import info.magnolia.module.ModuleLifecycleContext;
 import info.magnolia.observation.WorkspaceEventListenerRegistration;
 
 import java.lang.invoke.MethodHandles;
+import java.time.Duration;
 
 import jakarta.inject.Inject;
 import javax.jcr.RepositoryException;
@@ -21,12 +22,12 @@ import com.merkle.oss.magnolia.dictionary.i18nsystem.DictionaryMessageBundlesLoa
 public class DictionaryModule implements ModuleLifecycle {
 	private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-	private static final long EVENT_DELAY = 2000;
-	private static final long EVENT_DELAY_MAX = 30000;
+	private static final Duration EVENT_DELAY = Duration.ofSeconds(2);
 	private static final String OBSERVATION_PATH = "/";
 
 	private final DictionaryMessageBundlesInstaller messagesInstaller;
     private final DictionaryMessageBundlesLoader dictionaryMessageBundlesLoader;
+
     private WorkspaceEventListenerRegistration.Handle handle;
 	private boolean loadLabelsOnStartup = true;
 
@@ -45,7 +46,7 @@ public class DictionaryModule implements ModuleLifecycle {
 			this.handle = WorkspaceEventListenerRegistration
 					.observe(DictionaryConfiguration.REPOSITORY, OBSERVATION_PATH, new FilteredEventListener(dictionaryMessageBundlesLoader, FilteredEventListener.JCR_SYSTEM_EXCLUDING_PREDICATE))
 					.withSubNodes(true)
-					.withDelay(EVENT_DELAY, EVENT_DELAY_MAX)
+					.withDelay(EVENT_DELAY.toMillis())
 					.withEventTypesMask(Event.NODE_ADDED | Event.NODE_REMOVED | Event.PROPERTY_CHANGED)
 					.register();
 		} catch (RepositoryException e) {
