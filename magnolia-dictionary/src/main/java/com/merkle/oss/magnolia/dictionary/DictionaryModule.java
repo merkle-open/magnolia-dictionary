@@ -30,6 +30,7 @@ public class DictionaryModule implements ModuleLifecycle {
 
     private WorkspaceEventListenerRegistration.Handle handle;
 	private boolean loadLabelsOnStartup = true;
+	private boolean populateMessagesOnStartup = true;
 
 	@Inject
 	public DictionaryModule(
@@ -57,6 +58,11 @@ public class DictionaryModule implements ModuleLifecycle {
 			LOG.info("Start Dictionary module: Load labels to dictionary");
 			Exceptions.wrap().run(messagesInstaller::loadLabelsToDictionary);
 		}
+		if(populateMessagesOnStartup()) {
+			LOG.info("Start Dictionary module: populate message bundle");
+			dictionaryMessageBundlesLoader.reload();
+		}
+		LOG.info("Start Dictionary module complete");
 	}
 
 	@Override
@@ -73,8 +79,14 @@ public class DictionaryModule implements ModuleLifecycle {
 	public boolean loadLabelsOnStartup() {
 		return loadLabelsOnStartup;
 	}
-
 	public void setLoadLabelsOnStartup(final boolean loadLabelsOnStartup) {
 		this.loadLabelsOnStartup = loadLabelsOnStartup;
+	}
+
+	public boolean populateMessagesOnStartup() {
+		return populateMessagesOnStartup;
+	}
+	public void setPopulateMessagesOnStartup(final boolean populateMessagesOnStartup) {
+		this.populateMessagesOnStartup = populateMessagesOnStartup;
 	}
 }
