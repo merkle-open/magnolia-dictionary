@@ -59,13 +59,7 @@ public class CreateSiteSpecificLabelAction extends CommitAction<Node> {
             final Node node = NodeUtil.createPath(parent, nodeName, DictionaryConfiguration.SITE_SPECIFIC_LABEL_NODE_TYPE);
 
             getForm().write(node);
-            getDatasource().save(node);
             getValueContext().set(node);
-            if (ActionDefinition.RefreshBehavior.ITEMS.equals(getDefinition().getDatasourceRefreshBehavior())) {
-                getDatasourceObservation().trigger(node);
-            } else {
-                getDatasourceObservation().trigger();
-            }
 
             final EditLabelAction.Definition editLabelAction = new EditLabelAction.Definition(ContentDetailSubApp.VIEW_TYPE_ADD);
             componentProvider.newInstance(editLabelAction.getImplementationClass(), editLabelAction, getValueContext()).execute();
