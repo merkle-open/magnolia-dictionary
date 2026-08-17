@@ -178,6 +178,9 @@ subApps:
       describeByProperty: jcrName
     form:
       properties:
+        site:
+          $type: textField
+          readOnly: true
         composite:
           $type: compositeField
           label: ""
@@ -190,8 +193,6 @@ subApps:
             value:
               $type: textField
               readOnly: true
-        site:
-          $type: hiddenField
         multi:
           class: com.merkle.oss.magnolia.dictionary.field.TranslationsTextFieldDefinition
     actions:
