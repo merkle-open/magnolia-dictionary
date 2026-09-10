@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import javax.jcr.Property;
-import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -104,12 +103,12 @@ public record Label(String key, String siteName, String defaultValue, Map<Locale
                             ValueConverter::toValue
                     );
                 }
-            } catch (RepositoryException e) {
+            } catch (Exception e) {
                 LOG.warn("Could not create label: '{}'", label, e);
             }
         }
 
-        private PowerNode getLabelNode(final PowerNode dictionaryRootNode, final Label label) throws RepositoryException {
+        private PowerNode getLabelNode(final PowerNode dictionaryRootNode, final Label label) {
             final String labelNodeName = createValidNodeName(label.key());
             final PowerNode labelNode = dictionaryRootNode.getOrAddChild(labelNodeName, DictionaryConfiguration.LABEL_NODE_TYPE);
             if(Objects.equals(label.siteName(), SiteProvider.GENERIC_SITE_NAME)) {
