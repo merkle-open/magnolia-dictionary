@@ -37,15 +37,7 @@ if [[ $CURRENT_VERSION == *-SNAPSHOT ]]; then
 	git checkout $DEVELOP_BRANCH
 	git merge $CURRENT_BRANCH
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 	../mvnw versions:set -DnewVersion=$NEXT_SNAPSHOT_VERSION versions:commit --no-transfer-progress
-=======
-	../mvnwmvn versions:set -DnewVersion=$NEXT_SNAPSHOT_VERSION versions:commit --no-transfer-progress
->>>>>>> main
-=======
-	../mvnw versions:set -DnewVersion=$NEXT_SNAPSHOT_VERSION versions:commit --no-transfer-progress
->>>>>>> main
 
 	echo "commit new snapshot version"
 	git commit -a -m "Release $NEW_VERSION: set develop to next development version $NEXT_SNAPSHOT_VERSION"
