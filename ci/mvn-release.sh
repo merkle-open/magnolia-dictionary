@@ -38,9 +38,13 @@ if [[ $CURRENT_VERSION == *-SNAPSHOT ]]; then
 	git merge $CURRENT_BRANCH
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	../mvnw versions:set -DnewVersion=$NEXT_SNAPSHOT_VERSION versions:commit --no-transfer-progress
 =======
 	../mvnwmvn versions:set -DnewVersion=$NEXT_SNAPSHOT_VERSION versions:commit --no-transfer-progress
+>>>>>>> main
+=======
+	../mvnw versions:set -DnewVersion=$NEXT_SNAPSHOT_VERSION versions:commit --no-transfer-progress
 >>>>>>> main
 
 	echo "commit new snapshot version"
