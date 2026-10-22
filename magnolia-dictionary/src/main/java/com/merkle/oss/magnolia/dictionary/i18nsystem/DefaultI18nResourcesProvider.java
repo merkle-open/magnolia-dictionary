@@ -9,11 +9,11 @@ import java.util.Collection;
 import java.util.function.Predicate;
 
 public class DefaultI18nResourcesProvider implements I18nResourcesProvider {
-	private static final Predicate<Resource> DIRECTORY_PREDICATE = Functions.pathStartsWith("/");
+	private static final Predicate<Resource> DIRECTORY_PREDICATE = Functions.pathStartsWith("/WEB-INF").negate();
 	private static final Predicate<Resource> RESOURCE_PREDICATE = Functions.pathMatches("(/*/i18n/.*dictionary-messages.*\\.properties|/mgnl-i18n/.*dictionary-messages.*\\.properties)");
 
 	@Override
-	public Collection<Resource> getI18nResources(final ResourceOrigin resourceOrigin) {
+	public Collection<Resource> getI18nResources(final ResourceOrigin<?> resourceOrigin) {
 		final FileResourceCollectorVisitor visitor = FileResourceCollectorVisitor.on(DIRECTORY_PREDICATE, RESOURCE_PREDICATE);
 		resourceOrigin.traverseWith(visitor);
 		return visitor.getCollectedResources();
