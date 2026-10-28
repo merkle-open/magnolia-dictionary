@@ -100,8 +100,7 @@ public class DictionaryTranslationServiceImpl implements DictionaryTranslationSe
         return doGetMessage(site, keys, locale)
                 .or(() -> doGetMessage(site, keys, new Locale(locale.getLanguage(), locale.getCountry())))
                 .or(() -> doGetMessage(site, keys, new Locale(locale.getLanguage())))
-                .or(() -> Optional.ofNullable(site).map(Site::getI18n).map(I18nContentSupport::getFallbackLocale).flatMap(fallbackLocale -> doGetMessage(site, keys, fallbackLocale)))
-                .or(() -> doGetMessage(site, keys, defaultMessagesManager.getDefaultLocale()));
+                .or(() -> Optional.ofNullable(site).map(Site::getI18n).map(I18nContentSupport::getFallbackLocale).flatMap(fallbackLocale -> doGetMessage(site, keys, fallbackLocale)));
     }
 
     private Optional<String> doGetMessage(@Nullable final Site site, final String[] keys, final Locale locale) {
