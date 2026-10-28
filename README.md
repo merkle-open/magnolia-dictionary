@@ -15,7 +15,7 @@ Magnolia dictionary app to manage i18n labels.
 <dependency>
     <groupId>com.merkle.oss.magnolia</groupId>
     <artifactId>magnolia-dictionary</artifactId>
-    <version>1.4.11</version>
+    <version>1.4.12</version>
 </dependency>
 ```
 
