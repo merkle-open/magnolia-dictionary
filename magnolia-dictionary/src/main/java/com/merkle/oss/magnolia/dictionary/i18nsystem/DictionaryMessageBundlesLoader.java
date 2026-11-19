@@ -25,6 +25,7 @@ import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
 import javax.jcr.query.Query;
 
+import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -90,8 +91,10 @@ public class DictionaryMessageBundlesLoader implements EventListener {
     }
 
     private Map<String, Map<Locale, Properties>> getProperties(final PowerNode root) {
+        final StopWatch stopWatch = new StopWatch("getProperties");
+        stopWatch.start();
         LOG.debug("Loading dictionary properties...");
-        return streamMessages(root).collect(Collectors.groupingBy(
+        final Map<String, Map<Locale,Properties>> properties = streamMessages(root).collect(Collectors.groupingBy(
                 message -> message.site().getName(),
                 Collectors.groupingBy(
                         Message::locale,
@@ -103,6 +106,9 @@ public class DictionaryMessageBundlesLoader implements EventListener {
                         )
                 )
         ));
+        stopWatch.stop();
+        LOG.debug("Loading dictionary properties took {}ms", stopWatch.getDuration().toMillis());
+        return properties;
     }
 
     private Stream<Message> streamMessages(final PowerNode root) {

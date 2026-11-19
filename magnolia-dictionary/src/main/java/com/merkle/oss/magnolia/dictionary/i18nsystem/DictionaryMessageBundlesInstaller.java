@@ -21,6 +21,7 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
 import org.apache.commons.io.input.BOMInputStream;
+import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,6 +60,9 @@ public class DictionaryMessageBundlesInstaller {
     }
 
 	public void loadLabelsToDictionary() throws RepositoryException {
+		final StopWatch stopWatch = new StopWatch("loadLabelsToDictionary");
+		stopWatch.start();
+		LOG.debug("Loading labels to dictionary...");
 		final Session session = systemContextProvider.get().getJCRSession(DictionaryConfiguration.REPOSITORY);
 		final PowerNode dictionaryRoot = powerNodeService.getRootNode(session);
 
@@ -73,6 +77,8 @@ public class DictionaryMessageBundlesInstaller {
 
 		markExpiredProperties(dictionaryRoot, notExpired);
 		session.save();
+		stopWatch.stop();
+		LOG.debug("Loading labels to dictionary took {}ms", stopWatch.getDuration().toMillis());
 	}
 
 	private void markExpiredProperties(final PowerNode dictionaryRoot, final Set<String> notExpired) {
