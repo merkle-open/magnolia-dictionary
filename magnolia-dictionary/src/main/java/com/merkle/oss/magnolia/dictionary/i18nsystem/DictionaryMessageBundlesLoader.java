@@ -2,6 +2,7 @@ package com.merkle.oss.magnolia.dictionary.i18nsystem;
 
 import static javax.jcr.query.Query.JCR_SQL2;
 
+import info.magnolia.commands.CommandsManager;
 import info.magnolia.context.SystemContext;
 import info.magnolia.module.site.Site;
 
@@ -46,6 +47,7 @@ public class DictionaryMessageBundlesLoader implements EventListener {
     private final LocaleUtil localeUtils;
     private final Provider<SystemContext> systemContextProvider;
     private final PowerNodeService powerNodeService;
+    private final CommandsManager commandsManager;
     private Map<String, Map<Locale, Properties>> messages;
 
     @Inject
@@ -53,12 +55,14 @@ public class DictionaryMessageBundlesLoader implements EventListener {
             final SiteProvider siteProvider,
             final LocaleUtil localeUtils,
             final Provider<SystemContext> systemContextProvider,
-            final PowerNodeService powerNodeService
+            final PowerNodeService powerNodeService,
+            final CommandsManager commandsManager
     ) {
         this.siteProvider = siteProvider;
         this.localeUtils = localeUtils;
         this.systemContextProvider = systemContextProvider;
         this.powerNodeService = powerNodeService;
+        this.commandsManager = commandsManager;
     }
 
     public Map<Locale, Properties> getGenericMessages() {
@@ -151,9 +155,19 @@ public class DictionaryMessageBundlesLoader implements EventListener {
     }
 
     @Override
-    public void onEvent(EventIterator events) {
+    public void onEvent(final EventIterator events) {
         if (events.getSize() > 0) {
             reload();
+            flushCache();
+        }
+    }
+
+    protected void flushCache() {
+        try {
+            LOG.debug("Flushing magnolia cache...");
+            commandsManager.getCommand("cache", "flushAll").execute(systemContextProvider.get());
+        } catch (Exception e) {
+            LOG.error("Failed to flush cache after dictionary messages have been reloaded!", e);
         }
     }
 
