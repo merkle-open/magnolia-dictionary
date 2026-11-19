@@ -1,6 +1,5 @@
 package com.merkle.oss.magnolia.dictionary.i18nsystem;
 
-import info.magnolia.cms.i18n.DefaultMessagesManager;
 import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.i18nsystem.I18nText;
 import info.magnolia.i18nsystem.LocaleProvider;
@@ -15,11 +14,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 
-import jakarta.annotation.Nullable;
-import jakarta.inject.Inject;
-import javax.jcr.observation.EventIterator;
-import javax.jcr.observation.EventListener;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,25 +21,25 @@ import org.slf4j.LoggerFactory;
 import com.merkle.oss.magnolia.dictionary.util.CurrentNodeProvider;
 import com.merkle.oss.magnolia.dictionary.util.SiteProvider;
 
-public class DictionaryTranslationServiceImpl implements DictionaryTranslationService, EventListener {
+import jakarta.annotation.Nullable;
+import jakarta.inject.Inject;
+
+public class DictionaryTranslationServiceImpl implements DictionaryTranslationService {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final TranslationService wrapper;
     private final SiteProvider siteProvider;
     private final CurrentNodeProvider nodeProvider;
-    private final DefaultMessagesManager defaultMessagesManager;
     private final DictionaryMessageBundlesLoader dictionaryMessageBundlesLoader;
 
     @Inject
     public DictionaryTranslationServiceImpl(
             final TranslationServiceImpl wrapper,
             final DictionaryMessageBundlesLoader dictionaryMessageBundlesLoader,
-            final DefaultMessagesManager defaultMessagesManager,
             final SiteProvider siteProvider,
             final CurrentNodeProvider nodeProvider
     ) {
         this.dictionaryMessageBundlesLoader = dictionaryMessageBundlesLoader;
-        this.defaultMessagesManager = defaultMessagesManager;
         this.wrapper = wrapper;
         this.siteProvider = siteProvider;
         this.nodeProvider = nodeProvider;
@@ -125,13 +119,6 @@ public class DictionaryTranslationServiceImpl implements DictionaryTranslationSe
             return siteProvider.getCurrentSite().or(() -> nodeProvider.get().flatMap(siteProvider::getSite));
         } catch (Exception e) {
             return Optional.empty();
-        }
-    }
-
-    @Override
-    public void onEvent(EventIterator events) {
-        if (events.getSize() > 0) {
-            dictionaryMessageBundlesLoader.reload();
         }
     }
 }
