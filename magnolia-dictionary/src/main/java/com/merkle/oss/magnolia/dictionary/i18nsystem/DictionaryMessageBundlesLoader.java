@@ -82,7 +82,6 @@ public class DictionaryMessageBundlesLoader implements EventListener {
         Exceptions.wrap().run(() -> {
             final Session session = systemContextProvider.get().getJCRSession(DictionaryConfiguration.REPOSITORY);
             loadMessages(session);
-            session.logout();
         });
     }
     private void loadMessages(final Session session) {
