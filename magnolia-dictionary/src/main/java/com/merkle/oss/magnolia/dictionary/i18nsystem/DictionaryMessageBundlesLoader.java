@@ -38,6 +38,7 @@ import com.merkle.oss.magnolia.dictionary.util.SiteProvider;
 import com.merkle.oss.magnolia.powernode.PowerNode;
 import com.merkle.oss.magnolia.powernode.PowerNodeService;
 import com.merkle.oss.magnolia.powernode.ValueConverter;
+import com.merkle.oss.magnolia.powernode.predicate.IsPrimaryNodeType;
 
 import jakarta.inject.Provider;
 
@@ -144,19 +145,7 @@ public class DictionaryMessageBundlesLoader implements EventListener {
     }
 
     private Optional<PowerNode> getSiteMessageNode(final PowerNode messageRootNode, final Site site) {
-        try {
-            final Session jcrSession = messageRootNode.getSession();
-            final String statement = String.format("SELECT * FROM [nt:base] AS node WHERE ISDESCENDANTNODE(node, '%s') AND [%s]='%s'", messageRootNode.getPath(), DictionaryConfiguration.Prop.SITE, site.getName());
-            final Query query = jcrSession.getWorkspace().getQueryManager().createQuery(statement, JCR_SQL2);
-
-            final Iterator<Node> nodes = query.execute().getNodes();
-            return StreamSupport
-                    .stream(Spliterators.spliteratorUnknownSize(nodes, Spliterator.ORDERED),false)
-                    .findFirst()
-                    .map(powerNodeService::convertToPowerNode);
-        } catch (Exception e) {
-            return Optional.empty();
-        }
+        return messageRootNode.getChild(site.getName()).filter(new IsPrimaryNodeType<>(DictionaryConfiguration.SITE_SPECIFIC_LABEL_NODE_TYPE));
     }
 
     @Override
